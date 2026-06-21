@@ -2,10 +2,54 @@
   "common": {
     "siteName": "Curepick",
     "getStarted": "Get Started",
-    "learnMore": "Learn More"
+    "learnMore": "Learn More",
+    "login": "Log in",
+    "signup": "Sign up",
+    "logout": "Log out",
+    "myPage": "My Page",
+    "language": "Language"
   },
   "home": {
     "title": "Find the Right Care in Korea",
     "subtitle": "Discover, compare, and inquire about medical services in Korea."
+  },
+  "header": {
+    "categories": "Categories",
+    "services": "Services",
+    "hospitals": "Hospitals",
+    "menu": "Menu"
+  },
+  "footer": {
+    "description": "Your trusted medical tourism marketplace. Discover, compare, and inquire about medical services in Korea.",
+    "services": "Services",
+    "categories": "Categories",
+    "allServices": "All Services",
+    "company": "Company",
+    "about": "About Us",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contactInfo": "Contact",
+    "email": "info@curepick.com",
+    "phone": "+82-2-1234-5678",
+    "copyright": "© {year} Curepick. All rights reserved.",
+    "social": "Follow Us"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "categories": "Categories",
+    "services": "Services",
+    "hospitals": "Hospitals",
+    "doctors": "Doctors",
+    "inquiry": "Inquiry",
+    "reviews": "Reviews"
+  },
+  "cta": {
+    "getConsultation": "Get a Consultation",
+    "inquireNow": "Inquire Now"
+  },
+  "mobileNav": {
+    "close": "Close menu",
+    "navigation": "Navigation"
   }
 }

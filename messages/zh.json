@@ -1,0 +1,55 @@
+{
+  "common": {
+    "siteName": "Curepick",
+    "getStarted": "开始",
+    "learnMore": "了解更多",
+    "login": "登录",
+    "signup": "注册",
+    "logout": "退出",
+    "myPage": "我的页面",
+    "language": "语言"
+  },
+  "home": {
+    "title": "在韩国找到合适的治疗",
+    "subtitle": "发现、比较和咨询韩国的医疗服务。"
+  },
+  "header": {
+    "categories": "分类",
+    "services": "服务",
+    "hospitals": "医院",
+    "menu": "菜单"
+  },
+  "footer": {
+    "description": "值得信赖的医疗旅游平台。发现、比较和咨询韩国的医疗服务。",
+    "services": "服务",
+    "categories": "分类",
+    "allServices": "所有服务",
+    "company": "公司",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "contactInfo": "联系方式",
+    "email": "info@curepick.com",
+    "phone": "+82-2-1234-5678",
+    "copyright": "© {year} Curepick. All rights reserved.",
+    "social": "关注我们"
+  },
+  "breadcrumb": {
+    "home": "首页",
+    "categories": "分类",
+    "services": "服务",
+    "hospitals": "医院",
+    "doctors": "医生",
+    "inquiry": "咨询",
+    "reviews": "评价"
+  },
+  "cta": {
+    "getConsultation": "获取咨询",
+    "inquireNow": "立即咨询"
+  },
+  "mobileNav": {
+    "close": "关闭菜单",
+    "navigation": "导航"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "common": {
+    "siteName": "Curepick",
+    "getStarted": "始める",
+    "learnMore": "詳しく見る",
+    "login": "ログイン",
+    "signup": "会員登録",
+    "logout": "ログアウト",
+    "myPage": "マイページ",
+    "language": "言語"
+  },
+  "home": {
+    "title": "韓国で適切な治療を見つけましょう",
+    "subtitle": "韓国の医療サービスを発見し、比較し、お問い合わせください。"
+  },
+  "header": {
+    "categories": "カテゴリー",
+    "services": "サービス",
+    "hospitals": "病院",
+    "menu": "メニュー"
+  },
+  "footer": {
+    "description": "信頼できる医療ツーリズムマーケットプレイス。韓国の医療サービスを発見し、比較し、お問い合わせください。",
+    "services": "サービス",
+    "categories": "カテゴリー",
+    "allServices": "全サービス",
+    "company": "会社",
+    "about": "会社概要",
+    "contact": "お問い合わせ",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "contactInfo": "連絡先",
+    "email": "info@curepick.com",
+    "phone": "+82-2-1234-5678",
+    "copyright": "© {year} Curepick. All rights reserved.",
+    "social": "フォロー"
+  },
+  "breadcrumb": {
+    "home": "ホーム",
+    "categories": "カテゴリー",
+    "services": "サービス",
+    "hospitals": "病院",
+    "doctors": "医師",
+    "inquiry": "お問い合わせ",
+    "reviews": "レビュー"
+  },
+  "cta": {
+    "getConsultation": "相談する",
+    "inquireNow": "今すぐお問い合わせ"
+  },
+  "mobileNav": {
+    "close": "メニューを閉じる",
+    "navigation": "ナビゲーション"
+  }
+}

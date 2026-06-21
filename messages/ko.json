@@ -1,0 +1,55 @@
+{
+  "common": {
+    "siteName": "큐어픽",
+    "getStarted": "시작하기",
+    "learnMore": "자세히 보기",
+    "login": "로그인",
+    "signup": "회원가입",
+    "logout": "로그아웃",
+    "myPage": "마이페이지",
+    "language": "언어"
+  },
+  "home": {
+    "title": "한국에서 올바른 치료를 찾으세요",
+    "subtitle": "한국의 의료 서비스를 발견하고, 비교하고, 문의하세요."
+  },
+  "header": {
+    "categories": "카테고리",
+    "services": "서비스",
+    "hospitals": "병원",
+    "menu": "메뉴"
+  },
+  "footer": {
+    "description": "신뢰할 수 있는 의료 관광 마켓플레이스. 한국의 의료 서비스를 발견하고, 비교하고, 문의하세요.",
+    "services": "서비스",
+    "categories": "카테고리",
+    "allServices": "전체 서비스",
+    "company": "회사",
+    "about": "회사 소개",
+    "contact": "문의하기",
+    "privacy": "개인정보처리방침",
+    "terms": "이용약관",
+    "contactInfo": "연락처",
+    "email": "info@curepick.com",
+    "phone": "+82-2-1234-5678",
+    "copyright": "© {year} Curepick. All rights reserved.",
+    "social": "팔로우"
+  },
+  "breadcrumb": {
+    "home": "홈",
+    "categories": "카테고리",
+    "services": "서비스",
+    "hospitals": "병원",
+    "doctors": "의사",
+    "inquiry": "문의",
+    "reviews": "후기"
+  },
+  "cta": {
+    "getConsultation": "상담 받기",
+    "inquireNow": "지금 문의하기"
+  },
+  "mobileNav": {
+    "close": "메뉴 닫기",
+    "navigation": "내비게이션"
+  }
+}

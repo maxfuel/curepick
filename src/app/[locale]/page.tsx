@@ -1,18 +1,28 @@
+import { useTranslations } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+
 export default async function HomePage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
+
+  return <HomeContent />;
+}
+
+function HomeContent() {
+  const t = useTranslations();
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-8 px-6 py-24">
+    <div className="flex flex-1 flex-col items-center justify-center gap-8 px-6 py-24">
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          Curepick
+          {t("common.siteName")}
         </h1>
         <p className="text-lg text-muted-foreground max-w-md">
-          Find the Right Care in Korea
+          {t("home.title")}
         </p>
       </div>
       <div className="flex gap-4">
@@ -20,18 +30,15 @@ export default async function HomePage({
           href="#"
           className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          Get Started
+          {t("common.getStarted")}
         </a>
         <a
           href="#"
           className="inline-flex items-center justify-center rounded-lg border border-border px-6 py-3 text-sm font-medium transition-colors hover:bg-muted"
         >
-          Learn More
+          {t("common.learnMore")}
         </a>
       </div>
-      <p className="text-sm text-muted-foreground">
-        Locale: {locale}
-      </p>
-    </main>
+    </div>
   );
 }

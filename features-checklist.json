@@ -213,14 +213,14 @@
           "description": "로고, 네비게이션, 언어 선택, 로그인 버튼이 포함된 헤더",
           "phase": "phase-2",
           "category": "layout",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "로고 + 홈 링크", "done": false },
-            { "task": "Category Navigation (메인 메뉴)", "done": false },
-            { "task": "언어 선택 드롭다운", "done": false },
-            { "task": "로그인/회원가입 버튼 (비로그인 시)", "done": false },
-            { "task": "사용자 메뉴 (로그인 시)", "done": false },
-            { "task": "반응형 디자인 (Desktop/Mobile)", "done": false }
+            { "task": "로고 + 홈 링크", "done": true },
+            { "task": "Category Navigation (메인 메뉴)", "done": true },
+            { "task": "언어 선택 드롭다운", "done": true },
+            { "task": "로그인/회원가입 버튼 (비로그인 시)", "done": true },
+            { "task": "사용자 메뉴 (로그인 시)", "done": true },
+            { "task": "반응형 디자인 (Desktop/Mobile)", "done": true }
           ]
         },
         {
@@ -229,13 +229,13 @@
           "description": "모바일용 햄버거 메뉴 및 사이드바",
           "phase": "phase-2",
           "category": "layout",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "햄버거 메뉴 버튼", "done": false },
-            { "task": "사이드바/드로어 메뉴", "done": false },
-            { "task": "Category 목록 표시", "done": false },
-            { "task": "언어 선택", "done": false },
-            { "task": "로그인/사용자 메뉴", "done": false }
+            { "task": "햄버거 메뉴 버튼", "done": true },
+            { "task": "사이드바/드로어 메뉴", "done": true },
+            { "task": "Category 목록 표시", "done": true },
+            { "task": "언어 선택", "done": true },
+            { "task": "로그인/사용자 메뉴", "done": true }
           ]
         },
         {
@@ -244,12 +244,12 @@
           "description": "링크, 연락처, 소셜 미디어가 포함된 푸터",
           "phase": "phase-2",
           "category": "layout",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "사이트맵 링크 (Categories, About, Contact)", "done": false },
-            { "task": "연락처 정보", "done": false },
-            { "task": "소셜 미디어 링크", "done": false },
-            { "task": "Copyright 표시", "done": false }
+            { "task": "사이트맵 링크 (Categories, About, Contact)", "done": true },
+            { "task": "연락처 정보", "done": true },
+            { "task": "소셜 미디어 링크", "done": true },
+            { "task": "Copyright 표시", "done": true }
           ]
         },
         {
@@ -258,10 +258,10 @@
           "description": "페이지 탐색 경로를 표시하는 Breadcrumb",
           "phase": "phase-2",
           "category": "ui-component",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "동적 경로 기반 Breadcrumb 생성", "done": false },
-            { "task": "다국어 지원", "done": false }
+            { "task": "동적 경로 기반 Breadcrumb 생성", "done": true },
+            { "task": "다국어 지원", "done": true }
           ]
         },
         {
@@ -270,10 +270,10 @@
           "description": "문의하기 Call-to-Action 버튼 (여러 페이지에서 재사용)",
           "phase": "phase-2",
           "category": "ui-component",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "CTA 버튼 디자인 및 구현", "done": false },
-            { "task": "Inquiry 페이지로 링크 (context 전달: service, hospital 등)", "done": false }
+            { "task": "CTA 버튼 디자인 및 구현", "done": true },
+            { "task": "Inquiry 페이지로 링크 (context 전달: service, hospital 등)", "done": true }
           ]
         },
         {
@@ -282,12 +282,12 @@
           "description": "next-intl을 이용한 다국어 기본 구조 구축",
           "phase": "phase-2",
           "category": "i18n",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "next-intl 설치 및 설정", "done": false },
-            { "task": "locale 라우팅 설정 ([locale] 경로)", "done": false },
-            { "task": "영어(en) 기본 번역 파일 작성 (messages/en.json)", "done": false },
-            { "task": "레이아웃 텍스트 다국어 적용", "done": false }
+            { "task": "next-intl 설치 및 설정", "done": true },
+            { "task": "locale 라우팅 설정 ([locale] 경로)", "done": true },
+            { "task": "영어(en) 기본 번역 파일 작성 (messages/en.json)", "done": true },
+            { "task": "레이아웃 텍스트 다국어 적용", "done": true }
           ]
         }
       ]
