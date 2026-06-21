@@ -1,0 +1,1023 @@
+{
+  "project": "Curepick",
+  "version": "MVP+",
+  "last_updated": "2026-06-21",
+  "phases": [
+    {
+      "id": "phase-0",
+      "name": "Project Foundation",
+      "description": "Next.js 프로젝트 생성 및 기본 인프라 구축",
+      "features": [
+        {
+          "id": "F-000",
+          "name": "Next.js 프로젝트 생성",
+          "description": "App Router 기반 Next.js 15 프로젝트 초기화",
+          "phase": "phase-0",
+          "category": "infrastructure",
+          "status": "done",
+          "tasks": [
+            { "task": "create-next-app으로 프로젝트 생성 (App Router)", "done": true },
+            { "task": "TypeScript 설정", "done": true },
+            { "task": "Tailwind CSS 설정", "done": true },
+            { "task": "shadcn/ui 설치 및 설정", "done": true }
+          ]
+        },
+        {
+          "id": "F-001",
+          "name": "프로젝트 폴더 구조 설계",
+          "description": "src/app, components, lib 등 폴더 구조 정의",
+          "phase": "phase-0",
+          "category": "infrastructure",
+          "status": "done",
+          "tasks": [
+            { "task": "src/app/[locale]/ 라우트 구조 생성", "done": true },
+            { "task": "src/components/ui/ 공통 UI 폴더 생성", "done": true },
+            { "task": "src/components/layout/ 레이아웃 폴더 생성", "done": true },
+            { "task": "src/lib/ 유틸리티 폴더 생성", "done": true },
+            { "task": "messages/ 번역 파일 폴더 생성", "done": true }
+          ]
+        },
+        {
+          "id": "F-002",
+          "name": "Supabase 연결",
+          "description": "Supabase 프로젝트 생성 및 Next.js와 연결",
+          "phase": "phase-0",
+          "category": "infrastructure",
+          "status": "done",
+          "tasks": [
+            { "task": "Supabase 프로젝트 생성", "done": true },
+            { "task": "Supabase JS Client 설치", "done": true },
+            { "task": "src/lib/supabase.ts 클라이언트 작성", "done": true },
+            { "task": "환경 변수 설정 (.env.local)", "done": true }
+          ]
+        },
+        {
+          "id": "F-003",
+          "name": "개발 환경 설정",
+          "description": "ESLint, Prettier, Git 등 개발 도구 설정",
+          "phase": "phase-0",
+          "category": "infrastructure",
+          "status": "done",
+          "tasks": [
+            { "task": "ESLint 설정", "done": true },
+            { "task": "Prettier 설정", "done": true },
+            { "task": "Git 저장소 초기화", "done": true },
+            { "task": ".gitignore 설정", "done": true }
+          ]
+        },
+        {
+          "id": "F-004",
+          "name": "Vercel 배포",
+          "description": "Vercel에 프로젝트 배포 연결",
+          "phase": "phase-0",
+          "category": "infrastructure",
+          "status": "pending",
+          "tasks": [
+            { "task": "Vercel 프로젝트 연결", "done": false },
+            { "task": "환경 변수 Vercel에 등록", "done": false },
+            { "task": "초기 배포 확인", "done": false }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-1",
+      "name": "Database & Data Model",
+      "description": "Supabase에 전체 데이터 모델 구축 + Seed 데이터 입력",
+      "features": [
+        {
+          "id": "F-010",
+          "name": "Service Graph 테이블 생성",
+          "description": "intents, categories, services, procedures 테이블 생성",
+          "phase": "phase-1",
+          "category": "database",
+          "status": "done",
+          "tasks": [
+            { "task": "intents 테이블 생성 (id, name:json, slug, sort_order)", "done": true },
+            { "task": "categories 테이블 생성 (id, intent_id, name:json, slug, description:json, image_url, sort_order)", "done": true },
+            { "task": "services 테이블 생성 (id, category_id, name:json, slug, description:json, overview:json, image_url, sort_order, is_featured)", "done": true },
+            { "task": "procedures 테이블 생성 (id, service_id, name:json, slug, description:json, sort_order)", "done": true },
+            { "task": "FK 관계 설정 (intent → category → service → procedure)", "done": true }
+          ]
+        },
+        {
+          "id": "F-011",
+          "name": "Hospital & Doctor 테이블 생성",
+          "description": "hospitals, doctors 테이블 생성",
+          "phase": "phase-1",
+          "category": "database",
+          "status": "done",
+          "tasks": [
+            { "task": "hospitals 테이블 생성 (id, name:json, slug, description:json, address:json, city, accreditation, international_center, languages, phone, email, website, logo_url, hero_image_url, is_featured)", "done": true },
+            { "task": "doctors 테이블 생성 (id, hospital_id, name:json, slug, specialty:json, experience_years, bio:json, photo_url, languages, publications:json)", "done": true },
+            { "task": "FK 관계 설정 (doctor → hospital)", "done": true }
+          ]
+        },
+        {
+          "id": "F-012",
+          "name": "HospitalProcedure & Evidence 테이블 생성",
+          "description": "병원-시술 연결 및 근거 데이터 테이블",
+          "phase": "phase-1",
+          "category": "database",
+          "status": "done",
+          "tasks": [
+            { "task": "hospital_procedures 테이블 생성 (id, hospital_id, procedure_id, annual_volume, specialist_count, waiting_time_days, cost_min, cost_max, cost_currency, languages, intl_patient_support, evidence_score, is_featured)", "done": true },
+            { "task": "evidence 테이블 생성 (id, hospital_procedure_id, source_type, source_url, description, verified_at)", "done": true },
+            { "task": "FK 관계 설정", "done": true }
+          ]
+        },
+        {
+          "id": "F-013",
+          "name": "Profiles & Inquiries 테이블 생성",
+          "description": "사용자 프로필 및 문의 테이블",
+          "phase": "phase-1",
+          "category": "database",
+          "status": "done",
+          "tasks": [
+            { "task": "profiles 테이블 생성 (id, email, full_name, nationality, phone, avatar_url, role, hospital_id, auth_provider, created_at)", "done": true },
+            { "task": "inquiries 테이블 생성 (id, user_id, name, email, phone, nationality, service_id, procedure_id, hospital_id, message, status, created_at)", "done": true },
+            { "task": "faqs 테이블 생성 (id, service_id, question:json, answer:json, sort_order)", "done": true }
+          ]
+        },
+        {
+          "id": "F-017",
+          "name": "Reviews & Comments 테이블 생성",
+          "description": "후기 및 댓글 테이블 생성",
+          "phase": "phase-1",
+          "category": "database",
+          "status": "done",
+          "tasks": [
+            { "task": "reviews 테이블 생성 (id, user_id, hospital_id, procedure_id, rating, title, content, media:json, is_verified, status, created_at)", "done": true },
+            { "task": "review_comments 테이블 생성 (id, review_id, user_id, content, created_at)", "done": true },
+            { "task": "FK 관계 설정 (review → user, hospital, procedure / comment → review, user)", "done": true }
+          ]
+        },
+        {
+          "id": "F-014",
+          "name": "RLS 정책 설정",
+          "description": "Row Level Security 정책으로 데이터 접근 제어",
+          "phase": "phase-1",
+          "category": "database",
+          "status": "done",
+          "tasks": [
+            { "task": "Public 읽기 정책 (intents, categories, services, procedures, hospitals, doctors, hospital_procedures, faqs)", "done": true },
+            { "task": "profiles: 본인 데이터만 읽기/수정", "done": true },
+            { "task": "inquiries: 본인 문의만 읽기, 누구나 생성 가능", "done": true },
+            { "task": "hospital_staff: 자기 hospital_id 데이터만 접근", "done": true },
+            { "task": "admin: 전체 데이터 접근", "done": true },
+            { "task": "reviews: approved만 Public 읽기, 로그인 사용자 생성, 본인 수정/삭제", "done": true },
+            { "task": "review_comments: Public 읽기, 로그인 사용자 생성", "done": true },
+            { "task": "reviews: hospital_staff는 자기 병원 건만 읽기", "done": true }
+          ]
+        },
+        {
+          "id": "F-015",
+          "name": "Seed 데이터 입력",
+          "description": "초기 테스트용 데이터 준비 및 입력",
+          "phase": "phase-1",
+          "category": "database",
+          "status": "done",
+          "tasks": [
+            { "task": "4개 Intent 데이터 입력", "done": true },
+            { "task": "Beauty & Skin 카테고리 + 서비스 3개 (Ultherapy, Thermage, Rejuran)", "done": true },
+            { "task": "Dental 카테고리 + 서비스 2개 (Implant, Wisdom Tooth)", "done": true },
+            { "task": "Hospital 3개 데이터 입력", "done": true },
+            { "task": "Doctor 5명 데이터 입력", "done": true },
+            { "task": "hospital_procedures 연결 데이터 입력", "done": true },
+            { "task": "FAQ 샘플 데이터 입력", "done": true }
+          ]
+        },
+        {
+          "id": "F-016",
+          "name": "TypeScript 타입 생성",
+          "description": "Supabase DB 스키마 기반 TypeScript 타입 자동 생성",
+          "phase": "phase-1",
+          "category": "database",
+          "status": "done",
+          "tasks": [
+            { "task": "supabase gen types 설정", "done": true },
+            { "task": "src/lib/types.ts에 타입 정의", "done": true },
+            { "task": "Supabase 클라이언트에 타입 적용", "done": true }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "Core Layout & Navigation",
+      "description": "공통 레이아웃, 헤더, 푸터, 네비게이션 구축",
+      "features": [
+        {
+          "id": "F-020",
+          "name": "Header 컴포넌트",
+          "description": "로고, 네비게이션, 언어 선택, 로그인 버튼이 포함된 헤더",
+          "phase": "phase-2",
+          "category": "layout",
+          "status": "pending",
+          "tasks": [
+            { "task": "로고 + 홈 링크", "done": false },
+            { "task": "Category Navigation (메인 메뉴)", "done": false },
+            { "task": "언어 선택 드롭다운", "done": false },
+            { "task": "로그인/회원가입 버튼 (비로그인 시)", "done": false },
+            { "task": "사용자 메뉴 (로그인 시)", "done": false },
+            { "task": "반응형 디자인 (Desktop/Mobile)", "done": false }
+          ]
+        },
+        {
+          "id": "F-021",
+          "name": "Mobile Navigation",
+          "description": "모바일용 햄버거 메뉴 및 사이드바",
+          "phase": "phase-2",
+          "category": "layout",
+          "status": "pending",
+          "tasks": [
+            { "task": "햄버거 메뉴 버튼", "done": false },
+            { "task": "사이드바/드로어 메뉴", "done": false },
+            { "task": "Category 목록 표시", "done": false },
+            { "task": "언어 선택", "done": false },
+            { "task": "로그인/사용자 메뉴", "done": false }
+          ]
+        },
+        {
+          "id": "F-022",
+          "name": "Footer 컴포넌트",
+          "description": "링크, 연락처, 소셜 미디어가 포함된 푸터",
+          "phase": "phase-2",
+          "category": "layout",
+          "status": "pending",
+          "tasks": [
+            { "task": "사이트맵 링크 (Categories, About, Contact)", "done": false },
+            { "task": "연락처 정보", "done": false },
+            { "task": "소셜 미디어 링크", "done": false },
+            { "task": "Copyright 표시", "done": false }
+          ]
+        },
+        {
+          "id": "F-023",
+          "name": "Breadcrumb 컴포넌트",
+          "description": "페이지 탐색 경로를 표시하는 Breadcrumb",
+          "phase": "phase-2",
+          "category": "ui-component",
+          "status": "pending",
+          "tasks": [
+            { "task": "동적 경로 기반 Breadcrumb 생성", "done": false },
+            { "task": "다국어 지원", "done": false }
+          ]
+        },
+        {
+          "id": "F-024",
+          "name": "CTA Button 컴포넌트",
+          "description": "문의하기 Call-to-Action 버튼 (여러 페이지에서 재사용)",
+          "phase": "phase-2",
+          "category": "ui-component",
+          "status": "pending",
+          "tasks": [
+            { "task": "CTA 버튼 디자인 및 구현", "done": false },
+            { "task": "Inquiry 페이지로 링크 (context 전달: service, hospital 등)", "done": false }
+          ]
+        },
+        {
+          "id": "F-025",
+          "name": "i18n 기본 설정",
+          "description": "next-intl을 이용한 다국어 기본 구조 구축",
+          "phase": "phase-2",
+          "category": "i18n",
+          "status": "pending",
+          "tasks": [
+            { "task": "next-intl 설치 및 설정", "done": false },
+            { "task": "locale 라우팅 설정 ([locale] 경로)", "done": false },
+            { "task": "영어(en) 기본 번역 파일 작성 (messages/en.json)", "done": false },
+            { "task": "레이아웃 텍스트 다국어 적용", "done": false }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "Category & Service Pages",
+      "description": "핵심 탐색 페이지 구축 - 사용자가 서비스를 발견하는 경로",
+      "features": [
+        {
+          "id": "F-030",
+          "name": "Category List Page",
+          "description": "전체 카테고리를 그리드로 보여주는 페이지 (/categories)",
+          "phase": "phase-3",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "카테고리 목록 Supabase에서 fetch", "done": false },
+            { "task": "카테고리 카드 컴포넌트 (이미지, 이름, 서비스 수)", "done": false },
+            { "task": "Intent별 그룹핑 표시", "done": false },
+            { "task": "SSG 적용", "done": false }
+          ]
+        },
+        {
+          "id": "F-031",
+          "name": "Category Detail Page",
+          "description": "카테고리별 서비스 목록 페이지 (/categories/[slug])",
+          "phase": "phase-3",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "카테고리 정보 표시 (이름, 설명, 이미지)", "done": false },
+            { "task": "해당 카테고리의 서비스 목록", "done": false },
+            { "task": "인기 Procedure 표시", "done": false },
+            { "task": "Featured Provider 표시", "done": false },
+            { "task": "SSG 적용 (generateStaticParams)", "done": false }
+          ]
+        },
+        {
+          "id": "F-032",
+          "name": "Service Detail Page",
+          "description": "서비스 상세 페이지 (/services/[slug])",
+          "phase": "phase-3",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "Service Overview 섹션 (설명, 이미지)", "done": false },
+            { "task": "Procedure 목록 및 비교 섹션", "done": false },
+            { "task": "추천 Hospital 목록 (Hospital Card)", "done": false },
+            { "task": "가격 범위(Price Range) 표시", "done": false },
+            { "task": "FAQ 섹션", "done": false },
+            { "task": "문의하기 CTA", "done": false },
+            { "task": "SSG 적용 (generateStaticParams)", "done": false }
+          ]
+        },
+        {
+          "id": "F-033",
+          "name": "Hospital Card 컴포넌트",
+          "description": "Service Page 등에서 병원을 비교 표시하는 카드",
+          "phase": "phase-3",
+          "category": "ui-component",
+          "status": "pending",
+          "tasks": [
+            { "task": "병원 이름, 로고, 위치 표시", "done": false },
+            { "task": "해당 시술의 가격 범위 표시", "done": false },
+            { "task": "연간 시술 건수, 전문의 수 표시", "done": false },
+            { "task": "Evidence Score 표시", "done": false },
+            { "task": "지원 언어 표시", "done": false },
+            { "task": "Hospital Detail 페이지 링크", "done": false }
+          ]
+        },
+        {
+          "id": "F-034",
+          "name": "Price Range 컴포넌트",
+          "description": "가격 범위를 시각적으로 표시하는 컴포넌트",
+          "phase": "phase-3",
+          "category": "ui-component",
+          "status": "pending",
+          "tasks": [
+            { "task": "최소-최대 가격 표시", "done": false },
+            { "task": "통화 단위 표시 (USD, KRW 등)", "done": false }
+          ]
+        },
+        {
+          "id": "F-035",
+          "name": "FAQ Section 컴포넌트",
+          "description": "서비스별 자주 묻는 질문 아코디언",
+          "phase": "phase-3",
+          "category": "ui-component",
+          "status": "pending",
+          "tasks": [
+            { "task": "아코디언 UI (질문 클릭 시 답변 펼침)", "done": false },
+            { "task": "Supabase에서 FAQ 데이터 fetch", "done": false },
+            { "task": "다국어 지원", "done": false }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-4",
+      "name": "Hospital & Doctor Pages",
+      "description": "병원과 의사 상세 페이지 구축",
+      "features": [
+        {
+          "id": "F-040",
+          "name": "Hospital Detail Page",
+          "description": "병원 상세 페이지 (/hospitals/[slug])",
+          "phase": "phase-4",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "Hospital Overview 섹션 (이름, 설명, 히어로 이미지)", "done": false },
+            { "task": "Strength/특장점 섹션", "done": false },
+            { "task": "Supported Procedures 목록 (가격, 볼륨 포함)", "done": false },
+            { "task": "Doctor 목록 (Doctor Card)", "done": false },
+            { "task": "International Services (지원 언어, 국제 환자 서비스)", "done": false },
+            { "task": "Location/Contact 섹션", "done": false },
+            { "task": "문의하기 CTA", "done": false },
+            { "task": "SSG 적용", "done": false }
+          ]
+        },
+        {
+          "id": "F-041",
+          "name": "Doctor Detail Page",
+          "description": "의사 상세 페이지 (/doctors/[slug])",
+          "phase": "phase-4",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "Profile 섹션 (이름, 사진, 소속 병원)", "done": false },
+            { "task": "Experience & Career 섹션", "done": false },
+            { "task": "전문 Procedure 목록", "done": false },
+            { "task": "Publications 섹션", "done": false },
+            { "task": "지원 언어 표시", "done": false },
+            { "task": "문의하기 CTA", "done": false },
+            { "task": "SSG 적용", "done": false }
+          ]
+        },
+        {
+          "id": "F-042",
+          "name": "Doctor Card 컴포넌트",
+          "description": "Hospital Page 등에서 의사를 표시하는 카드",
+          "phase": "phase-4",
+          "category": "ui-component",
+          "status": "pending",
+          "tasks": [
+            { "task": "의사 이름, 사진, 전문 분야 표시", "done": false },
+            { "task": "경력 연수 표시", "done": false },
+            { "task": "지원 언어 표시", "done": false },
+            { "task": "Doctor Detail 페이지 링크", "done": false }
+          ]
+        },
+        {
+          "id": "F-043",
+          "name": "Evidence Badge 컴포넌트",
+          "description": "데이터의 근거(출처)를 표시하는 뱃지",
+          "phase": "phase-4",
+          "category": "ui-component",
+          "status": "pending",
+          "tasks": [
+            { "task": "Evidence Score 시각적 표시", "done": false },
+            { "task": "클릭 시 출처 목록 표시 (source_type, source_url)", "done": false }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-5",
+      "name": "Home Page & Search",
+      "description": "랜딩 페이지 + 검색 기능",
+      "features": [
+        {
+          "id": "F-050",
+          "name": "Home Page",
+          "description": "랜딩 페이지 (/)",
+          "phase": "phase-5",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "Hero Section (핵심 메시지 + Search Bar)", "done": false },
+            { "task": "Intent Section (4개 Intent 카드: Treat, Improve, Look Better, Live Longer)", "done": false },
+            { "task": "Category Grid (8개 카테고리)", "done": false },
+            { "task": "Featured Services 섹션", "done": false },
+            { "task": "Featured Hospitals 섹션", "done": false },
+            { "task": "CTA Section (문의하기 유도)", "done": false },
+            { "task": "반응형 디자인 (Desktop/Tablet/Mobile)", "done": false }
+          ]
+        },
+        {
+          "id": "F-051",
+          "name": "Search Bar 컴포넌트",
+          "description": "서비스/시술/병원을 검색하는 검색 바",
+          "phase": "phase-5",
+          "category": "ui-component",
+          "status": "pending",
+          "tasks": [
+            { "task": "검색 입력 UI", "done": false },
+            { "task": "Supabase Full-Text Search 또는 ILIKE 검색 구현", "done": false },
+            { "task": "자동완성 드롭다운 (선택)", "done": false }
+          ]
+        },
+        {
+          "id": "F-052",
+          "name": "Search Results Page",
+          "description": "검색 결과 표시 페이지",
+          "phase": "phase-5",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "검색 결과를 Service / Hospital / Doctor로 구분 표시", "done": false },
+            { "task": "결과 없을 때 안내 메시지", "done": false },
+            { "task": "검색어 하이라이트", "done": false }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-6",
+      "name": "User Authentication & Inquiry System",
+      "description": "고객 로그인 + 문의/상담 신청 시스템",
+      "features": [
+        {
+          "id": "F-060",
+          "name": "Email 회원가입/로그인",
+          "description": "이메일 + 비밀번호 기반 회원가입 및 로그인",
+          "phase": "phase-6",
+          "category": "auth",
+          "status": "pending",
+          "tasks": [
+            { "task": "Supabase Auth 설정", "done": false },
+            { "task": "회원가입 페이지 (/signup)", "done": false },
+            { "task": "로그인 페이지 (/login)", "done": false },
+            { "task": "비밀번호 재설정 (이메일 발송)", "done": false },
+            { "task": "이메일 인증 플로우", "done": false }
+          ]
+        },
+        {
+          "id": "F-061",
+          "name": "Google OAuth 로그인",
+          "description": "Google 계정으로 로그인",
+          "phase": "phase-6",
+          "category": "auth",
+          "status": "pending",
+          "tasks": [
+            { "task": "Supabase Google OAuth Provider 설정", "done": false },
+            { "task": "Google Cloud Console OAuth Client 설정", "done": false },
+            { "task": "로그인 페이지에 Google 버튼 추가", "done": false },
+            { "task": "콜백 처리", "done": false }
+          ]
+        },
+        {
+          "id": "F-062",
+          "name": "Facebook OAuth 로그인",
+          "description": "Facebook 계정으로 로그인",
+          "phase": "phase-6",
+          "category": "auth",
+          "status": "pending",
+          "tasks": [
+            { "task": "Supabase Facebook OAuth Provider 설정", "done": false },
+            { "task": "Facebook Developer App 설정", "done": false },
+            { "task": "로그인 페이지에 Facebook 버튼 추가", "done": false },
+            { "task": "콜백 처리", "done": false }
+          ]
+        },
+        {
+          "id": "F-063",
+          "name": "Profile 자동 생성 및 관리",
+          "description": "회원가입 시 profiles 테이블 자동 생성 + My Page",
+          "phase": "phase-6",
+          "category": "auth",
+          "status": "pending",
+          "tasks": [
+            { "task": "Supabase Trigger: auth.users 생성 시 profiles 자동 생성", "done": false },
+            { "task": "Header에 로그인 상태 표시 (사용자 이름/아바타)", "done": false },
+            { "task": "로그아웃 기능", "done": false }
+          ]
+        },
+        {
+          "id": "F-064",
+          "name": "My Page",
+          "description": "로그인 사용자의 개인 페이지 (/my)",
+          "phase": "phase-6",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "프로필 정보 표시 및 수정 (이름, 국적, 연락처)", "done": false },
+            { "task": "문의 내역 목록 (상태 표시: 접수/진행중/완료)", "done": false },
+            { "task": "비밀번호 변경 (Email 가입자)", "done": false }
+          ]
+        },
+        {
+          "id": "F-065",
+          "name": "Inquiry Form Page",
+          "description": "문의/상담 신청 폼 (/inquiry)",
+          "phase": "phase-6",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "이름 입력 (로그인 시 자동 채움)", "done": false },
+            { "task": "이메일 입력 (로그인 시 자동 채움)", "done": false },
+            { "task": "전화번호 입력", "done": false },
+            { "task": "국적 선택 드롭다운", "done": false },
+            { "task": "관심 Service/Procedure 선택 (context 전달 시 자동 채움)", "done": false },
+            { "task": "관심 Hospital 선택 (context 전달 시 자동 채움)", "done": false },
+            { "task": "메시지 텍스트 영역", "done": false },
+            { "task": "개인정보 수집/이용 동의 체크박스", "done": false },
+            { "task": "Form Validation (React Hook Form + Zod)", "done": false }
+          ]
+        },
+        {
+          "id": "F-066",
+          "name": "Inquiry 접수 처리",
+          "description": "문의 데이터 저장 및 알림 발송",
+          "phase": "phase-6",
+          "category": "backend",
+          "status": "pending",
+          "tasks": [
+            { "task": "API Route: POST /api/inquiry", "done": false },
+            { "task": "Supabase에 inquiry 데이터 저장 (user_id 연결)", "done": false },
+            { "task": "비로그인 사용자 문의 허용 (user_id nullable)", "done": false },
+            { "task": "관리자에게 이메일 알림 발송 (Resend)", "done": false },
+            { "task": "해당 병원 담당자에게 알림 발송", "done": false }
+          ]
+        },
+        {
+          "id": "F-067",
+          "name": "Inquiry Confirmation Page",
+          "description": "문의 접수 완료 페이지 (/inquiry/success)",
+          "phase": "phase-6",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "접수 완료 안내 메시지", "done": false },
+            { "task": "WhatsApp 연결 버튼", "done": false },
+            { "task": "예상 응답 시간 안내", "done": false },
+            { "task": "홈으로 돌아가기 버튼", "done": false }
+          ]
+        },
+        {
+          "id": "F-068",
+          "name": "후기 작성 페이지",
+          "description": "로그인 사용자가 후기를 작성하는 페이지 (/reviews/write)",
+          "phase": "phase-6",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "대상 Hospital 선택", "done": false },
+            { "task": "대상 Procedure 선택 (선택)", "done": false },
+            { "task": "별점 입력 (1-5)", "done": false },
+            { "task": "제목 입력", "done": false },
+            { "task": "본문 입력", "done": false },
+            { "task": "사진 업로드 (최대 5장, Supabase Storage)", "done": false },
+            { "task": "영상 업로드 (최대 1개, Supabase Storage)", "done": false },
+            { "task": "Form Validation", "done": false },
+            { "task": "API Route: POST /api/reviews", "done": false },
+            { "task": "비로그인 시 로그인 페이지로 리다이렉트", "done": false }
+          ]
+        },
+        {
+          "id": "F-069",
+          "name": "후기 목록/상세 페이지",
+          "description": "전체 후기 목록 및 상세 페이지",
+          "phase": "phase-6",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "후기 목록 페이지 (/reviews) - approved만 표시", "done": false },
+            { "task": "필터: 별점, 카테고리, 병원", "done": false },
+            { "task": "Verified 뱃지 표시", "done": false },
+            { "task": "후기 카드 컴포넌트 (별점, 제목, 미리보기, 미디어 썸네일)", "done": false },
+            { "task": "후기 상세 페이지 (/reviews/[id]) - 본문 + 미디어 갤러리", "done": false },
+            { "task": "Hospital Page에 후기 섹션 추가", "done": false },
+            { "task": "Service Page에 관련 후기 섹션 추가", "done": false }
+          ]
+        },
+        {
+          "id": "F-06A",
+          "name": "후기 댓글 및 My Page 후기 관리",
+          "description": "후기에 댓글 달기 + My Page에서 내 후기 관리",
+          "phase": "phase-6",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "댓글 목록 표시 (후기 상세 페이지 내)", "done": false },
+            { "task": "댓글 작성 폼 (로그인 사용자)", "done": false },
+            { "task": "병원 담당자 댓글에 공식 답변 뱃지 표시", "done": false },
+            { "task": "My Page에 '내 후기' 탭 추가", "done": false },
+            { "task": "내 후기 수정 기능", "done": false },
+            { "task": "내 후기 삭제 기능", "done": false }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-7",
+      "name": "Hospital Backoffice & Admin Dashboard",
+      "description": "병원 담당자 백오피스 + Curepick 관리자 페이지",
+      "features": [
+        {
+          "id": "F-070",
+          "name": "Hospital Backoffice 로그인",
+          "description": "병원 담당자 로그인 (/hospital)",
+          "phase": "phase-7",
+          "category": "auth",
+          "status": "pending",
+          "tasks": [
+            { "task": "병원 담당자 로그인 페이지 (이메일/비밀번호)", "done": false },
+            { "task": "role=hospital_staff 확인 후 접근 허용", "done": false },
+            { "task": "hospital_id 기반 데이터 범위 제한", "done": false },
+            { "task": "비인가 접근 시 리다이렉트", "done": false }
+          ]
+        },
+        {
+          "id": "F-071",
+          "name": "Hospital Dashboard",
+          "description": "병원 담당자 대시보드 (/hospital/dashboard)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "신규 문의 수 표시", "done": false },
+            { "task": "전체 문의 수 표시", "done": false },
+            { "task": "페이지 조회 수 표시 (가능 시)", "done": false },
+            { "task": "최근 문의 목록 미리보기", "done": false }
+          ]
+        },
+        {
+          "id": "F-072",
+          "name": "Hospital Profile 관리",
+          "description": "병원 프로필 확인 및 수정 요청 (/hospital/profile)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "병원 정보 표시 (이름, 설명, 주소, 연락처 등)", "done": false },
+            { "task": "수정 요청 폼 (Admin 승인 후 반영)", "done": false },
+            { "task": "로고/이미지 변경 요청", "done": false }
+          ]
+        },
+        {
+          "id": "F-073",
+          "name": "Hospital Doctors 관리",
+          "description": "소속 의사 정보 확인 및 수정 요청 (/hospital/doctors)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "소속 의사 목록 표시", "done": false },
+            { "task": "의사 정보 수정 요청", "done": false },
+            { "task": "신규 의사 등록 요청", "done": false }
+          ]
+        },
+        {
+          "id": "F-074",
+          "name": "Hospital Procedures 관리",
+          "description": "시술/패키지 정보 관리 (/hospital/procedures)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "연결된 시술 목록 표시 (hospital_procedures)", "done": false },
+            { "task": "가격, 대기시간 등 정보 수정 요청", "done": false },
+            { "task": "신규 시술 연결 요청", "done": false }
+          ]
+        },
+        {
+          "id": "F-075",
+          "name": "Hospital Inquiries 관리",
+          "description": "자기 병원으로 들어온 문의 확인 및 응대 (/hospital/inquiries)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "문의 목록 표시 (자기 병원 건만, RLS 적용)", "done": false },
+            { "task": "문의 상세 보기", "done": false },
+            { "task": "문의 상태 변경 (new → contacted → closed)", "done": false },
+            { "task": "메모 추가 기능", "done": false }
+          ]
+        },
+        {
+          "id": "F-083",
+          "name": "Hospital Backoffice 후기 관리",
+          "description": "자기 병원 후기 확인 및 답변 (/hospital/reviews)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "자기 병원 후기 목록 표시 (RLS 적용)", "done": false },
+            { "task": "후기 상세 보기", "done": false },
+            { "task": "공식 답변(댓글) 작성", "done": false },
+            { "task": "후기 통계 (평균 별점, 총 후기 수, Verified 수)", "done": false }
+          ]
+        },
+        {
+          "id": "F-076",
+          "name": "Admin 로그인",
+          "description": "Curepick 관리자 로그인 (/admin)",
+          "phase": "phase-7",
+          "category": "auth",
+          "status": "pending",
+          "tasks": [
+            { "task": "Admin 로그인 페이지 (이메일/비밀번호)", "done": false },
+            { "task": "role=admin 확인 후 접근 허용", "done": false },
+            { "task": "비인가 접근 시 리다이렉트", "done": false }
+          ]
+        },
+        {
+          "id": "F-077",
+          "name": "Admin Dashboard",
+          "description": "관리자 대시보드 홈 (/admin)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "전체 문의 수 (신규/진행중/완료)", "done": false },
+            { "task": "전체 Hospital 수", "done": false },
+            { "task": "전체 Service 수", "done": false },
+            { "task": "최근 문의 목록", "done": false }
+          ]
+        },
+        {
+          "id": "F-078",
+          "name": "Admin Service 관리",
+          "description": "Service CRUD (/admin/services)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "Intent 목록/생성/수정/삭제", "done": false },
+            { "task": "Category 목록/생성/수정/삭제", "done": false },
+            { "task": "Service 목록/생성/수정/삭제", "done": false },
+            { "task": "Procedure 목록/생성/수정/삭제", "done": false },
+            { "task": "FAQ 관리 (Service별)", "done": false },
+            { "task": "다국어 필드 입력 UI (en, ko, zh 탭)", "done": false }
+          ]
+        },
+        {
+          "id": "F-079",
+          "name": "Admin Hospital 관리",
+          "description": "Hospital CRUD (/admin/hospitals)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "Hospital 목록/생성/수정/삭제", "done": false },
+            { "task": "HospitalProcedure 연결 관리", "done": false },
+            { "task": "Evidence 데이터 관리", "done": false },
+            { "task": "이미지 업로드 (Supabase Storage)", "done": false }
+          ]
+        },
+        {
+          "id": "F-080",
+          "name": "Admin Doctor 관리",
+          "description": "Doctor CRUD (/admin/doctors)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "Doctor 목록/생성/수정/삭제", "done": false },
+            { "task": "소속 Hospital 연결", "done": false },
+            { "task": "사진 업로드 (Supabase Storage)", "done": false }
+          ]
+        },
+        {
+          "id": "F-081",
+          "name": "Admin Inquiry 관리",
+          "description": "전체 문의 관리 (/admin/inquiries)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "전체 문의 목록 (필터: 상태, 병원, 서비스)", "done": false },
+            { "task": "문의 상세 보기", "done": false },
+            { "task": "상태 변경 (new → contacted → closed)", "done": false },
+            { "task": "관리자 메모 추가", "done": false }
+          ]
+        },
+        {
+          "id": "F-082",
+          "name": "Admin Hospital Account 관리",
+          "description": "병원 담당자 계정 생성/관리 (/admin/hospital-accounts)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "병원 담당자 계정 목록", "done": false },
+            { "task": "신규 계정 생성 (이메일 + 임시 비밀번호)", "done": false },
+            { "task": "계정-병원 연결 (hospital_id 지정)", "done": false },
+            { "task": "계정 비활성화/삭제", "done": false }
+          ]
+        },
+        {
+          "id": "F-084",
+          "name": "Admin 후기 관리",
+          "description": "전체 후기 승인/거절/관리 (/admin/reviews)",
+          "phase": "phase-7",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "전체 후기 목록 (필터: 상태, 병원, 별점)", "done": false },
+            { "task": "후기 상세 보기 (미디어 포함)", "done": false },
+            { "task": "후기 승인 (status: pending → approved)", "done": false },
+            { "task": "후기 거절 (status: pending → rejected)", "done": false },
+            { "task": "Verified 뱃지 부여/해제 (is_verified)", "done": false },
+            { "task": "부적절한 후기 삭제", "done": false },
+            { "task": "부적절한 댓글 삭제", "done": false }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-8",
+      "name": "SEO & i18n & Launch Prep",
+      "description": "검색 최적화, 다국어 완성, 런칭 준비",
+      "features": [
+        {
+          "id": "F-090",
+          "name": "SEO 메타 태그",
+          "description": "모든 페이지에 적절한 메타 태그 적용",
+          "phase": "phase-8",
+          "category": "seo",
+          "status": "pending",
+          "tasks": [
+            { "task": "title, description 메타 태그 (페이지별 동적 생성)", "done": false },
+            { "task": "Open Graph 태그 (og:title, og:description, og:image)", "done": false },
+            { "task": "Twitter Card 태그", "done": false },
+            { "task": "canonical URL 설정", "done": false },
+            { "task": "hreflang 태그 (다국어 페이지 연결)", "done": false }
+          ]
+        },
+        {
+          "id": "F-091",
+          "name": "Structured Data (JSON-LD)",
+          "description": "검색엔진이 콘텐츠를 이해할 수 있는 구조화 데이터",
+          "phase": "phase-8",
+          "category": "seo",
+          "status": "pending",
+          "tasks": [
+            { "task": "MedicalOrganization (Hospital 페이지)", "done": false },
+            { "task": "Physician (Doctor 페이지)", "done": false },
+            { "task": "FAQPage (Service 페이지)", "done": false },
+            { "task": "BreadcrumbList (전체 페이지)", "done": false }
+          ]
+        },
+        {
+          "id": "F-092",
+          "name": "Sitemap & robots.txt",
+          "description": "검색엔진 크롤링을 위한 사이트맵 및 robots.txt",
+          "phase": "phase-8",
+          "category": "seo",
+          "status": "pending",
+          "tasks": [
+            { "task": "next-sitemap 설정 및 자동 생성", "done": false },
+            { "task": "robots.txt 설정 (admin, hospital 경로 차단)", "done": false }
+          ]
+        },
+        {
+          "id": "F-093",
+          "name": "다국어 번역 완성",
+          "description": "UI 텍스트 번역 파일 완성",
+          "phase": "phase-8",
+          "category": "i18n",
+          "status": "pending",
+          "tasks": [
+            { "task": "영어(en) 번역 파일 완성", "done": false },
+            { "task": "중국어 간체(zh) 번역 파일 (추후)", "done": false },
+            { "task": "아랍어(ar) 번역 파일 (추후)", "done": false },
+            { "task": "RTL(Right-to-Left) 레이아웃 지원 검토 (아랍어)", "done": false }
+          ]
+        },
+        {
+          "id": "F-094",
+          "name": "Analytics 연동",
+          "description": "Google Analytics 4 연동",
+          "phase": "phase-8",
+          "category": "analytics",
+          "status": "pending",
+          "tasks": [
+            { "task": "GA4 태그 설치", "done": false },
+            { "task": "페이지뷰 트래킹", "done": false },
+            { "task": "이벤트 트래킹 (CTA 클릭, Inquiry 제출, 검색)", "done": false },
+            { "task": "Google Search Console 등록 및 사이트맵 제출", "done": false }
+          ]
+        },
+        {
+          "id": "F-095",
+          "name": "성능 최적화",
+          "description": "Core Web Vitals 및 전반적 성능 최적화",
+          "phase": "phase-8",
+          "category": "performance",
+          "status": "pending",
+          "tasks": [
+            { "task": "이미지 최적화 (next/image, WebP)", "done": false },
+            { "task": "폰트 최적화 (next/font)", "done": false },
+            { "task": "번들 사이즈 점검", "done": false },
+            { "task": "Lighthouse 점수 점검 (90+ 목표)", "done": false }
+          ]
+        },
+        {
+          "id": "F-096",
+          "name": "Error Handling",
+          "description": "에러 페이지 및 에러 바운더리",
+          "phase": "phase-8",
+          "category": "page",
+          "status": "pending",
+          "tasks": [
+            { "task": "404 Not Found 페이지", "done": false },
+            { "task": "500 Error 페이지", "done": false },
+            { "task": "Error Boundary 컴포넌트", "done": false }
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 9,
+    "total_features": 55,
+    "total_tasks": 249,
+    "categories": {
+      "infrastructure": 4,
+      "database": 8,
+      "layout": 3,
+      "ui-component": 8,
+      "page": 24,
+      "auth": 4,
+      "backend": 1,
+      "i18n": 2,
+      "seo": 3,
+      "analytics": 1,
+      "performance": 1
+    }
+  }
+}
