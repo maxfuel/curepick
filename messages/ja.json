@@ -258,6 +258,10 @@
     "serviceReviews": "関連レビュー",
     "editTitle": "レビューを編集",
     "saveReview": "変更を保存",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "viewTranslation": "翻訳を見る",
+    "viewOriginal": "原文を見る",
+    "translating": "翻訳中...",
+    "translationError": "翻訳失敗"
   }
 }

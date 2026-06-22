@@ -258,6 +258,10 @@
     "serviceReviews": "관련 후기",
     "editTitle": "후기 수정",
     "saveReview": "변경 사항 저장",
-    "cancel": "취소"
+    "cancel": "취소",
+    "viewTranslation": "번역 보기",
+    "viewOriginal": "원문 보기",
+    "translating": "번역 중...",
+    "translationError": "번역 실패"
   }
 }

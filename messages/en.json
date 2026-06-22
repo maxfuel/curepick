@@ -258,6 +258,10 @@
     "serviceReviews": "Related Reviews",
     "editTitle": "Edit Review",
     "saveReview": "Save Changes",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "viewTranslation": "View Translation",
+    "viewOriginal": "View Original",
+    "translating": "Translating...",
+    "translationError": "Translation failed"
   }
 }

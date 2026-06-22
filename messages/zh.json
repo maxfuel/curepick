@@ -258,6 +258,10 @@
     "serviceReviews": "相关评价",
     "editTitle": "编辑评论",
     "saveReview": "保存更改",
-    "cancel": "取消"
+    "cancel": "取消",
+    "viewTranslation": "查看翻译",
+    "viewOriginal": "查看原文",
+    "translating": "翻译中...",
+    "translationError": "翻译失败"
   }
 }
