@@ -16,14 +16,6 @@ interface ReviewsPageProps {
   }>;
 }
 
-function getLocalizedName(name: unknown, locale: string): string {
-  if (typeof name === "object" && name !== null) {
-    const record = name as Record<string, string>;
-    return record[locale] || record["en"] || "";
-  }
-  return String(name ?? "");
-}
-
 export default async function ReviewsPage({
   params,
   searchParams,
@@ -81,7 +73,7 @@ export default async function ReviewsPage({
     .order("created_at", { ascending: false });
 
   if (sp.rating) {
-    query = query.eq("rating", parseInt(sp.rating));
+    query = query.eq("rating", parseInt(sp.rating, 10));
   }
   if (sp.hospital) {
     query = query.eq("hospital_id", sp.hospital);
@@ -170,7 +162,7 @@ function ReviewsPageContent({
         </Button>
       </div>
 
-      <Suspense>
+      <Suspense fallback={<div className="mb-6 h-8" />}>
         <ReviewFilters
           categories={categories}
           hospitals={hospitals}

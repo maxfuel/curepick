@@ -42,7 +42,8 @@ export function ReviewFilters({
       } else {
         params.delete(key);
       }
-      router.push(`${pathname}?${params.toString()}`);
+      const qs = params.toString();
+      router.push(qs ? `${pathname}?${qs}` : pathname);
     },
     [router, pathname, searchParams]
   );
