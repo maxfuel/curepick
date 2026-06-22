@@ -680,16 +680,16 @@
           ]
         },
         {
-          "id": "F-070",
+          "id": "F-06B",
           "title": "Auto Translation — User-Generated Content",
           "description": "On-demand translation of review titles, review bodies, and review comments via Google Cloud Translation API with DB caching",
           "status": "done",
           "tasks": [
-            { "id": "F-070-1", "title": "DB migration: review_translations + review_comment_translations tables", "done": true },
-            { "id": "F-070-2", "title": "Google Translate wrapper + /api/translations route", "done": true },
-            { "id": "F-070-3", "title": "TranslateButton client component + i18n strings", "done": true },
-            { "id": "F-070-4", "title": "ReviewCard client component + reviews list RSC JOIN query", "done": true },
-            { "id": "F-070-5", "title": "ReviewDetailClient + CommentSection + review detail RSC JOIN query", "done": true }
+            { "id": "F-06B-1", "title": "DB migration: review_translations + review_comment_translations tables", "done": true },
+            { "id": "F-06B-2", "title": "Google Translate wrapper + /api/translations route", "done": true },
+            { "id": "F-06B-3", "title": "TranslateButton client component + i18n strings", "done": true },
+            { "id": "F-06B-4", "title": "ReviewCard client component + reviews list RSC JOIN query", "done": true },
+            { "id": "F-06B-5", "title": "ReviewDetailClient + CommentSection + review detail RSC JOIN query", "done": true }
           ]
         }
       ]

@@ -123,8 +123,9 @@ export async function GET(request: Request) {
 
     const { data: comment } = await supabase
       .from("review_comments")
-      .select("content")
+      .select("content, reviews!inner(status)")
       .eq("id", id)
+      .eq("reviews.status", "approved")
       .single();
     if (!comment) {
       return NextResponse.json({ error: "Comment not found" }, { status: 404 });
