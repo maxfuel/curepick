@@ -34,7 +34,7 @@ function VerifyEmailContent() {
           </p>
         </div>
 
-        <Button variant="outline" render={<Link href="/login" />}>
+        <Button variant="outline" render={<Link href="/login" />} nativeButton={false}>
           {t("backToLogin")}
         </Button>
       </div>

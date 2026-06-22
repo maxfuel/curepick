@@ -34,6 +34,7 @@ export function CTAButton({
       size={variant === "large" ? "lg" : "default"}
       className={`bg-[#dc5000] text-white hover:bg-[#dc5000]/90 ${className ?? ""}`}
       render={<Link href={href} />}
+      nativeButton={false}
     >
       {t("getConsultation")}
     </Button>

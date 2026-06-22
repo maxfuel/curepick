@@ -30,7 +30,7 @@ export function MyReviewList({ reviews, locale }: MyReviewListProps) {
     return (
       <div className="space-y-4 py-8 text-center">
         <p className="text-muted-foreground">{t("noReviews")}</p>
-        <Button render={<Link href="/reviews/write" />}>
+        <Button render={<Link href="/reviews/write" />} nativeButton={false}>
           {t("writeReview")}
         </Button>
       </div>
@@ -45,7 +45,7 @@ export function MyReviewList({ reviews, locale }: MyReviewListProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button size="sm" render={<Link href="/reviews/write" />}>
+        <Button size="sm" render={<Link href="/reviews/write" />} nativeButton={false}>
           {t("writeReview")}
         </Button>
       </div>
@@ -93,6 +93,7 @@ export function MyReviewList({ reviews, locale }: MyReviewListProps) {
                 variant="ghost"
                 size="xs"
                 render={<Link href={`/reviews/${review.id}/edit`} />}
+                nativeButton={false}
               >
                 {t("editReview")}
               </Button>

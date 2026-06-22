@@ -60,10 +60,10 @@ export function MobileNav({ categories }: MobileNavProps) {
             <LanguageSwitcher />
           </div>
           <div className="flex flex-col gap-2">
-            <Button variant="outline" className="w-full" render={<Link href="/login" />}>
+            <Button variant="outline" className="w-full" render={<Link href="/login" />} nativeButton={false}>
               {t("common.login")}
             </Button>
-            <Button className="w-full" render={<Link href="/signup" />}>
+            <Button className="w-full" render={<Link href="/signup" />} nativeButton={false}>
               {t("common.signup")}
             </Button>
           </div>

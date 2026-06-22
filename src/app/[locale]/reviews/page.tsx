@@ -179,7 +179,7 @@ function ReviewsPageContent({
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="mt-1 text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <Button render={<Link href="/reviews/write" />}>
+        <Button render={<Link href="/reviews/write" />} nativeButton={false}>
           {t("writeReview")}
         </Button>
       </div>

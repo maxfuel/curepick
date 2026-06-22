@@ -51,7 +51,7 @@ export default function ResetPasswordPage() {
           <p className="text-sm text-muted-foreground">
             {t("resetEmailSentDescription")}
           </p>
-          <Button variant="outline" render={<Link href="/login" />}>
+          <Button variant="outline" render={<Link href="/login" />} nativeButton={false}>
             {t("backToLogin")}
           </Button>
         </div>
