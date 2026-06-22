@@ -922,13 +922,13 @@
           "description": "모든 페이지에 적절한 메타 태그 적용",
           "phase": "phase-8",
           "category": "seo",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "title, description 메타 태그 (페이지별 동적 생성)", "done": false },
-            { "task": "Open Graph 태그 (og:title, og:description, og:image)", "done": false },
-            { "task": "Twitter Card 태그", "done": false },
-            { "task": "canonical URL 설정", "done": false },
-            { "task": "hreflang 태그 (다국어 페이지 연결)", "done": false }
+            { "task": "title, description 메타 태그 (페이지별 동적 생성)", "done": true },
+            { "task": "Open Graph 태그 (og:title, og:description, og:image)", "done": true },
+            { "task": "Twitter Card 태그", "done": true },
+            { "task": "canonical URL 설정", "done": true },
+            { "task": "hreflang 태그 (다국어 페이지 연결)", "done": true }
           ]
         },
         {
@@ -937,12 +937,12 @@
           "description": "검색엔진이 콘텐츠를 이해할 수 있는 구조화 데이터",
           "phase": "phase-8",
           "category": "seo",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "MedicalOrganization (Hospital 페이지)", "done": false },
-            { "task": "Physician (Doctor 페이지)", "done": false },
-            { "task": "FAQPage (Service 페이지)", "done": false },
-            { "task": "BreadcrumbList (전체 페이지)", "done": false }
+            { "task": "MedicalOrganization (Hospital 페이지)", "done": true },
+            { "task": "Physician (Doctor 페이지)", "done": true },
+            { "task": "FAQPage (Service 페이지)", "done": true },
+            { "task": "BreadcrumbList (전체 페이지)", "done": true }
           ]
         },
         {
@@ -951,10 +951,10 @@
           "description": "검색엔진 크롤링을 위한 사이트맵 및 robots.txt",
           "phase": "phase-8",
           "category": "seo",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "next-sitemap 설정 및 자동 생성", "done": false },
-            { "task": "robots.txt 설정 (admin, hospital 경로 차단)", "done": false }
+            { "task": "next-sitemap 설정 및 자동 생성", "done": true },
+            { "task": "robots.txt 설정 (admin, hospital 경로 차단)", "done": true }
           ]
         },
         {
@@ -1005,10 +1005,10 @@
           "description": "에러 페이지 및 에러 바운더리",
           "phase": "phase-8",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "404 Not Found 페이지", "done": false },
-            { "task": "500 Error 페이지", "done": false },
+            { "task": "404 Not Found 페이지", "done": true },
+            { "task": "500 Error 페이지", "done": true },
             { "task": "Error Boundary 컴포넌트", "done": false }
           ]
         }
