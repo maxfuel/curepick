@@ -6,6 +6,7 @@ import { routing } from "@/i18n/routing";
 import { type Locale } from "@/config/i18n";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import type { Metadata } from "next";
 
 interface LocaleLayoutProps {
   children: ReactNode;
@@ -14,6 +15,15 @@ interface LocaleLayoutProps {
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
+}
+
+export function generateMetadata(): Metadata {
+  return {
+    title: {
+      template: "%s | Curepick",
+      default: "Curepick — Find the Right Care in Korea",
+    },
+  };
 }
 
 export default async function LocaleLayout({

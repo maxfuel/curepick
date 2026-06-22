@@ -11,6 +11,8 @@ import Image from "next/image";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/types/database";
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { buildBreadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -39,16 +41,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient();
   const { data: category } = await supabase
     .from("categories")
-    .select("name, description")
+    .select("name, description, image_url")
     .eq("slug", slug)
     .single();
 
   if (!category) return {};
 
-  return {
+  return buildMetadata({
     title: getLocalizedField(category.name, locale),
     description: getLocalizedField(category.description, locale),
-  };
+    locale,
+    path: `/categories/${slug}`,
+    image: category.image_url,
+  });
 }
 
 export default async function CategoryDetailPage({ params }: Props) {
@@ -67,6 +72,14 @@ export default async function CategoryDetailPage({ params }: Props) {
     .single();
 
   if (!category) notFound();
+
+  const tBreadcrumb = await getTranslations({ locale, namespace: "breadcrumb" });
+  const categoryName = getLocalizedField(category.name, locale);
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: tBreadcrumb("home"), url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/${locale}` },
+    { name: tBreadcrumb("categories"), url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/${locale}/categories` },
+    { name: categoryName },
+  ]);
 
   // Fetch services for this category
   const { data: services } = await supabase
@@ -144,11 +157,12 @@ export default async function CategoryDetailPage({ params }: Props) {
     }
   }
 
-  const categoryName = getLocalizedField(category.name, locale);
   const categoryDescription = getLocalizedField(category.description, locale);
 
   return (
-    <div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <div>
       {/* Hero Section */}
       <section className="relative bg-muted py-16">
         {category.image_url && (
@@ -264,5 +278,6 @@ export default async function CategoryDetailPage({ params }: Props) {
         )}
       </div>
     </div>
+    </>
   );
 }

@@ -3,9 +3,33 @@ import { setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth/get-user";
 import { ReviewDetailClient } from "@/components/reviews/ReviewDetailClient";
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo/metadata";
 
 interface ReviewDetailPageProps {
   params: Promise<{ locale: string; id: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ReviewDetailPageProps): Promise<Metadata> {
+  const { locale, id } = await params;
+  const supabase = await createClient();
+  const { data: review } = await supabase
+    .from("reviews")
+    .select("title, content")
+    .eq("id", id)
+    .eq("status", "approved")
+    .single();
+
+  if (!review) return {};
+
+  return buildMetadata({
+    title: review.title,
+    description: review.content.slice(0, 160),
+    locale,
+    path: `/reviews/${id}`,
+  });
 }
 
 export default async function ReviewDetailPage({
