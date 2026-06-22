@@ -295,6 +295,48 @@
       "colStatus": "Status",
       "colDate": "Date",
       "noInquiries": "No inquiries yet."
+    },
+    "profile": {
+      "title": "Hospital Profile",
+      "name": "Name",
+      "city": "City",
+      "description": "Description",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "website": "Website",
+      "accreditation": "Accreditation",
+      "internationalCenter": "International Center",
+      "languages": "Languages",
+      "yes": "Yes",
+      "no": "No",
+      "notFound": "Hospital information not found."
+    },
+    "doctors": {
+      "title": "Doctors",
+      "colName": "Name",
+      "colSpecialty": "Specialty",
+      "colExperience": "Experience",
+      "years": "{years} years",
+      "noDoctors": "No doctors registered yet."
+    },
+    "procedures": {
+      "title": "Procedures",
+      "colProcedure": "Procedure",
+      "colCost": "Cost Range",
+      "colVolume": "Annual Volume",
+      "colWaiting": "Waiting Time",
+      "cases": "{count} cases/yr",
+      "days": "{days} days",
+      "noProcedures": "No procedures linked yet."
+    },
+    "editRequest": {
+      "title": "Request an Edit",
+      "subtitle": "Describe the changes you'd like to make. Our admin team will review and update the information.",
+      "placeholder": "Describe the changes...",
+      "submit": "Send Request",
+      "sending": "Sending...",
+      "sent": "Your request has been submitted. Our team will review it shortly."
     }
   }
 }

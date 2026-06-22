@@ -295,6 +295,48 @@
       "colStatus": "ステータス",
       "colDate": "日付",
       "noInquiries": "お問い合わせはまだありません。"
+    },
+    "profile": {
+      "title": "病院情報",
+      "name": "病院名",
+      "city": "都市",
+      "description": "紹介",
+      "address": "住所",
+      "phone": "電話番号",
+      "email": "メール",
+      "website": "ウェブサイト",
+      "accreditation": "認定",
+      "internationalCenter": "国際患者センター",
+      "languages": "対応言語",
+      "yes": "あり",
+      "no": "なし",
+      "notFound": "病院情報が見つかりません。"
+    },
+    "doctors": {
+      "title": "医師",
+      "colName": "氏名",
+      "colSpecialty": "専門",
+      "colExperience": "経験",
+      "years": "{years}年",
+      "noDoctors": "登録された医師がいません。"
+    },
+    "procedures": {
+      "title": "施術情報",
+      "colProcedure": "施術名",
+      "colCost": "費用範囲",
+      "colVolume": "年間施術数",
+      "colWaiting": "待機時間",
+      "cases": "{count}件/年",
+      "days": "{days}日",
+      "noProcedures": "関連施術がありません。"
+    },
+    "editRequest": {
+      "title": "修正リクエスト",
+      "subtitle": "変更したい内容をご説明ください。管理者が確認後に更新します。",
+      "placeholder": "変更内容を説明してください...",
+      "submit": "リクエスト送信",
+      "sending": "送信中...",
+      "sent": "リクエストが送信されました。管理者が確認後に対応いたします。"
     }
   }
 }

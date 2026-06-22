@@ -295,6 +295,48 @@
       "colStatus": "상태",
       "colDate": "날짜",
       "noInquiries": "아직 문의가 없습니다."
+    },
+    "profile": {
+      "title": "병원 정보",
+      "name": "병원명",
+      "city": "도시",
+      "description": "소개",
+      "address": "주소",
+      "phone": "전화번호",
+      "email": "이메일",
+      "website": "웹사이트",
+      "accreditation": "인증",
+      "internationalCenter": "외국인 환자 센터",
+      "languages": "지원 언어",
+      "yes": "있음",
+      "no": "없음",
+      "notFound": "병원 정보를 찾을 수 없습니다."
+    },
+    "doctors": {
+      "title": "의료진",
+      "colName": "이름",
+      "colSpecialty": "전문 분야",
+      "colExperience": "경력",
+      "years": "{years}년",
+      "noDoctors": "등록된 의사가 없습니다."
+    },
+    "procedures": {
+      "title": "시술 정보",
+      "colProcedure": "시술명",
+      "colCost": "가격 범위",
+      "colVolume": "연간 시술 건수",
+      "colWaiting": "대기 시간",
+      "cases": "{count}건/년",
+      "days": "{days}일",
+      "noProcedures": "연결된 시술이 없습니다."
+    },
+    "editRequest": {
+      "title": "수정 요청",
+      "subtitle": "변경을 원하시는 내용을 설명해 주세요. 관리자가 검토 후 업데이트합니다.",
+      "placeholder": "변경 사항을 설명해 주세요...",
+      "submit": "요청 전송",
+      "sending": "전송 중...",
+      "sent": "요청이 제출되었습니다. 관리자가 검토 후 처리해 드립니다."
     }
   }
 }
