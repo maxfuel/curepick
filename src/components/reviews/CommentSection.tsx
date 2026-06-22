@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { createComment } from "@/lib/actions/reviews";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { TranslateButton } from "./TranslateButton";
 
 interface Comment {
   id: string;
@@ -16,13 +17,62 @@ interface Comment {
 interface CommentSectionProps {
   reviewId: string;
   comments: Comment[];
+  commentTranslations: Record<string, { content: string } | null>;
   isLoggedIn: boolean;
   locale: string;
+}
+
+interface CommentItemProps {
+  comment: Comment;
+  cachedTranslation: { content: string } | null;
+  locale: string;
+}
+
+function CommentItem({ comment, cachedTranslation, locale }: CommentItemProps) {
+  const t = useTranslations("reviews");
+  const [translation, setTranslation] = useState<{ content: string } | null>(
+    cachedTranslation
+  );
+  const [showTranslation, setShowTranslation] = useState(!!cachedTranslation);
+
+  const displayContent =
+    showTranslation && translation ? translation.content : comment.content;
+
+  return (
+    <div className="rounded-lg bg-muted/50 p-3">
+      <div className="mb-1 flex items-center gap-2">
+        <span className="text-sm font-medium">
+          {comment.profiles?.full_name ?? "Anonymous"}
+        </span>
+        {comment.profiles?.role === "hospital_staff" && (
+          <Badge variant="secondary" className="text-xs">
+            {t("officialResponse")}
+          </Badge>
+        )}
+        {comment.created_at && (
+          <span className="text-xs text-muted-foreground">
+            {new Date(comment.created_at).toLocaleDateString(locale)}
+          </span>
+        )}
+      </div>
+      <p className="text-sm">{displayContent}</p>
+      <TranslateButton
+        type="comment"
+        id={comment.id}
+        locale={locale}
+        translation={translation}
+        showTranslation={showTranslation}
+        onTranslated={(data) => setTranslation({ content: data.content })}
+        onToggle={setShowTranslation}
+      />
+    </div>
+  );
 }
 
 export function CommentSection({
   reviewId,
   comments,
+  commentTranslations,
   isLoggedIn,
   locale,
 }: CommentSectionProps) {
@@ -49,24 +99,12 @@ export function CommentSection({
       ) : (
         <div className="space-y-3">
           {comments.map((comment) => (
-            <div key={comment.id} className="rounded-lg bg-muted/50 p-3">
-              <div className="mb-1 flex items-center gap-2">
-                <span className="text-sm font-medium">
-                  {comment.profiles?.full_name ?? "Anonymous"}
-                </span>
-                {comment.profiles?.role === "hospital_staff" && (
-                  <Badge variant="secondary" className="text-xs">
-                    {t("officialResponse")}
-                  </Badge>
-                )}
-                {comment.created_at && (
-                  <span className="text-xs text-muted-foreground">
-                    {new Date(comment.created_at).toLocaleDateString(locale)}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm">{comment.content}</p>
-            </div>
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              cachedTranslation={commentTranslations[comment.id] ?? null}
+              locale={locale}
+            />
           ))}
         </div>
       )}
@@ -80,7 +118,11 @@ export function CommentSection({
             placeholder={t("writeComment")}
             className="h-8 flex-1 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           />
-          <Button type="submit" size="sm" disabled={isPending || !content.trim()}>
+          <Button
+            type="submit"
+            size="sm"
+            disabled={isPending || !content.trim()}
+          >
             {isPending ? t("posting") : t("postComment")}
           </Button>
         </form>
