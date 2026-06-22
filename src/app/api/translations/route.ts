@@ -46,12 +46,16 @@ export async function GET(request: Request) {
 
   if (type === "review") {
     // 1. Cache hit
-    const { data: cached } = await supabase
+    const { data: cached, error: cacheError } = await supabase
       .from("review_translations")
       .select("title, content")
       .eq("review_id", id)
       .eq("locale", locale)
       .single();
+    if (cacheError && cacheError.code !== "PGRST116") {
+      console.error("review_translations cache lookup failed:", cacheError);
+      return NextResponse.json({ error: "Database error" }, { status: 500 });
+    }
     if (cached) return NextResponse.json(cached);
 
     // 2. Fetch original
@@ -98,12 +102,16 @@ export async function GET(request: Request) {
     }
   } else {
     // type === "comment"
-    const { data: cached } = await supabase
+    const { data: cached, error: cacheError } = await supabase
       .from("review_comment_translations")
       .select("content")
       .eq("comment_id", id)
       .eq("locale", locale)
       .single();
+    if (cacheError && cacheError.code !== "PGRST116") {
+      console.error("review_comment_translations cache lookup failed:", cacheError);
+      return NextResponse.json({ error: "Database error" }, { status: 500 });
+    }
     if (cached) return NextResponse.json(cached);
 
     const { data: comment } = await supabase
