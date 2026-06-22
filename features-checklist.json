@@ -1,7 +1,7 @@
 {
   "project": "Curepick",
   "version": "MVP+",
-  "last_updated": "2026-06-21",
+  "last_updated": "2026-06-22",
   "phases": [
     {
       "id": "phase-0",
@@ -303,12 +303,12 @@
           "description": "전체 카테고리를 그리드로 보여주는 페이지 (/categories)",
           "phase": "phase-3",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "카테고리 목록 Supabase에서 fetch", "done": false },
-            { "task": "카테고리 카드 컴포넌트 (이미지, 이름, 서비스 수)", "done": false },
-            { "task": "Intent별 그룹핑 표시", "done": false },
-            { "task": "SSG 적용", "done": false }
+            { "task": "카테고리 목록 Supabase에서 fetch", "done": true },
+            { "task": "카테고리 카드 컴포넌트 (이미지, 이름, 서비스 수)", "done": true },
+            { "task": "Intent별 그룹핑 표시", "done": true },
+            { "task": "SSG 적용", "done": true }
           ]
         },
         {
@@ -317,13 +317,13 @@
           "description": "카테고리별 서비스 목록 페이지 (/categories/[slug])",
           "phase": "phase-3",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "카테고리 정보 표시 (이름, 설명, 이미지)", "done": false },
-            { "task": "해당 카테고리의 서비스 목록", "done": false },
-            { "task": "인기 Procedure 표시", "done": false },
-            { "task": "Featured Provider 표시", "done": false },
-            { "task": "SSG 적용 (generateStaticParams)", "done": false }
+            { "task": "카테고리 정보 표시 (이름, 설명, 이미지)", "done": true },
+            { "task": "해당 카테고리의 서비스 목록", "done": true },
+            { "task": "인기 Procedure 표시", "done": true },
+            { "task": "Featured Provider 표시", "done": true },
+            { "task": "SSG 적용 (generateStaticParams)", "done": true }
           ]
         },
         {
@@ -332,15 +332,15 @@
           "description": "서비스 상세 페이지 (/services/[slug])",
           "phase": "phase-3",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Service Overview 섹션 (설명, 이미지)", "done": false },
-            { "task": "Procedure 목록 및 비교 섹션", "done": false },
-            { "task": "추천 Hospital 목록 (Hospital Card)", "done": false },
-            { "task": "가격 범위(Price Range) 표시", "done": false },
-            { "task": "FAQ 섹션", "done": false },
-            { "task": "문의하기 CTA", "done": false },
-            { "task": "SSG 적용 (generateStaticParams)", "done": false }
+            { "task": "Service Overview 섹션 (설명, 이미지)", "done": true },
+            { "task": "Procedure 목록 및 비교 섹션", "done": true },
+            { "task": "추천 Hospital 목록 (Hospital Card)", "done": true },
+            { "task": "가격 범위(Price Range) 표시", "done": true },
+            { "task": "FAQ 섹션", "done": true },
+            { "task": "문의하기 CTA", "done": true },
+            { "task": "SSG 적용 (generateStaticParams)", "done": true }
           ]
         },
         {
@@ -349,14 +349,14 @@
           "description": "Service Page 등에서 병원을 비교 표시하는 카드",
           "phase": "phase-3",
           "category": "ui-component",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "병원 이름, 로고, 위치 표시", "done": false },
-            { "task": "해당 시술의 가격 범위 표시", "done": false },
-            { "task": "연간 시술 건수, 전문의 수 표시", "done": false },
-            { "task": "Evidence Score 표시", "done": false },
-            { "task": "지원 언어 표시", "done": false },
-            { "task": "Hospital Detail 페이지 링크", "done": false }
+            { "task": "병원 이름, 로고, 위치 표시", "done": true },
+            { "task": "해당 시술의 가격 범위 표시", "done": true },
+            { "task": "연간 시술 건수, 전문의 수 표시", "done": true },
+            { "task": "Evidence Score 표시", "done": true },
+            { "task": "지원 언어 표시", "done": true },
+            { "task": "Hospital Detail 페이지 링크", "done": true }
           ]
         },
         {
@@ -365,10 +365,10 @@
           "description": "가격 범위를 시각적으로 표시하는 컴포넌트",
           "phase": "phase-3",
           "category": "ui-component",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "최소-최대 가격 표시", "done": false },
-            { "task": "통화 단위 표시 (USD, KRW 등)", "done": false }
+            { "task": "최소-최대 가격 표시", "done": true },
+            { "task": "통화 단위 표시 (USD, KRW 등)", "done": true }
           ]
         },
         {
@@ -377,11 +377,11 @@
           "description": "서비스별 자주 묻는 질문 아코디언",
           "phase": "phase-3",
           "category": "ui-component",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "아코디언 UI (질문 클릭 시 답변 펼침)", "done": false },
-            { "task": "Supabase에서 FAQ 데이터 fetch", "done": false },
-            { "task": "다국어 지원", "done": false }
+            { "task": "아코디언 UI (질문 클릭 시 답변 펼침)", "done": true },
+            { "task": "Supabase에서 FAQ 데이터 fetch", "done": true },
+            { "task": "다국어 지원", "done": true }
           ]
         }
       ]
@@ -397,16 +397,16 @@
           "description": "병원 상세 페이지 (/hospitals/[slug])",
           "phase": "phase-4",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Hospital Overview 섹션 (이름, 설명, 히어로 이미지)", "done": false },
-            { "task": "Strength/특장점 섹션", "done": false },
-            { "task": "Supported Procedures 목록 (가격, 볼륨 포함)", "done": false },
-            { "task": "Doctor 목록 (Doctor Card)", "done": false },
-            { "task": "International Services (지원 언어, 국제 환자 서비스)", "done": false },
-            { "task": "Location/Contact 섹션", "done": false },
-            { "task": "문의하기 CTA", "done": false },
-            { "task": "SSG 적용", "done": false }
+            { "task": "Hospital Overview 섹션 (이름, 설명, 히어로 이미지)", "done": true },
+            { "task": "Strength/특장점 섹션", "done": true },
+            { "task": "Supported Procedures 목록 (가격, 볼륨 포함)", "done": true },
+            { "task": "Doctor 목록 (Doctor Card)", "done": true },
+            { "task": "International Services (지원 언어, 국제 환자 서비스)", "done": true },
+            { "task": "Location/Contact 섹션", "done": true },
+            { "task": "문의하기 CTA", "done": true },
+            { "task": "SSG 적용", "done": true }
           ]
         },
         {
@@ -415,15 +415,15 @@
           "description": "의사 상세 페이지 (/doctors/[slug])",
           "phase": "phase-4",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Profile 섹션 (이름, 사진, 소속 병원)", "done": false },
-            { "task": "Experience & Career 섹션", "done": false },
-            { "task": "전문 Procedure 목록", "done": false },
-            { "task": "Publications 섹션", "done": false },
-            { "task": "지원 언어 표시", "done": false },
-            { "task": "문의하기 CTA", "done": false },
-            { "task": "SSG 적용", "done": false }
+            { "task": "Profile 섹션 (이름, 사진, 소속 병원)", "done": true },
+            { "task": "Experience & Career 섹션", "done": true },
+            { "task": "전문 Procedure 목록", "done": true },
+            { "task": "Publications 섹션", "done": true },
+            { "task": "지원 언어 표시", "done": true },
+            { "task": "문의하기 CTA", "done": true },
+            { "task": "SSG 적용", "done": true }
           ]
         },
         {
@@ -432,12 +432,12 @@
           "description": "Hospital Page 등에서 의사를 표시하는 카드",
           "phase": "phase-4",
           "category": "ui-component",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "의사 이름, 사진, 전문 분야 표시", "done": false },
-            { "task": "경력 연수 표시", "done": false },
-            { "task": "지원 언어 표시", "done": false },
-            { "task": "Doctor Detail 페이지 링크", "done": false }
+            { "task": "의사 이름, 사진, 전문 분야 표시", "done": true },
+            { "task": "경력 연수 표시", "done": true },
+            { "task": "지원 언어 표시", "done": true },
+            { "task": "Doctor Detail 페이지 링크", "done": true }
           ]
         },
         {
@@ -446,10 +446,10 @@
           "description": "데이터의 근거(출처)를 표시하는 뱃지",
           "phase": "phase-4",
           "category": "ui-component",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Evidence Score 시각적 표시", "done": false },
-            { "task": "클릭 시 출처 목록 표시 (source_type, source_url)", "done": false }
+            { "task": "Evidence Score 시각적 표시", "done": true },
+            { "task": "클릭 시 출처 목록 표시 (source_type, source_url)", "done": true }
           ]
         }
       ]
@@ -465,15 +465,15 @@
           "description": "랜딩 페이지 (/)",
           "phase": "phase-5",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Hero Section (핵심 메시지 + Search Bar)", "done": false },
-            { "task": "Intent Section (4개 Intent 카드: Treat, Improve, Look Better, Live Longer)", "done": false },
-            { "task": "Category Grid (8개 카테고리)", "done": false },
-            { "task": "Featured Services 섹션", "done": false },
-            { "task": "Featured Hospitals 섹션", "done": false },
-            { "task": "CTA Section (문의하기 유도)", "done": false },
-            { "task": "반응형 디자인 (Desktop/Tablet/Mobile)", "done": false }
+            { "task": "Hero Section (핵심 메시지 + Search Bar)", "done": true },
+            { "task": "Intent Section (4개 Intent 카드: Treat, Improve, Look Better, Live Longer)", "done": true },
+            { "task": "Category Grid (8개 카테고리)", "done": true },
+            { "task": "Featured Services 섹션", "done": true },
+            { "task": "Featured Hospitals 섹션", "done": true },
+            { "task": "CTA Section (문의하기 유도)", "done": true },
+            { "task": "반응형 디자인 (Desktop/Tablet/Mobile)", "done": true }
           ]
         },
         {
@@ -482,11 +482,11 @@
           "description": "서비스/시술/병원을 검색하는 검색 바",
           "phase": "phase-5",
           "category": "ui-component",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "검색 입력 UI", "done": false },
-            { "task": "Supabase Full-Text Search 또는 ILIKE 검색 구현", "done": false },
-            { "task": "자동완성 드롭다운 (선택)", "done": false }
+            { "task": "검색 입력 UI", "done": true },
+            { "task": "Supabase Full-Text Search 또는 ILIKE 검색 구현", "done": true },
+            { "task": "자동완성 드롭다운 (선택)", "done": true }
           ]
         },
         {
@@ -495,11 +495,11 @@
           "description": "검색 결과 표시 페이지",
           "phase": "phase-5",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "검색 결과를 Service / Hospital / Doctor로 구분 표시", "done": false },
-            { "task": "결과 없을 때 안내 메시지", "done": false },
-            { "task": "검색어 하이라이트", "done": false }
+            { "task": "검색 결과를 Service / Hospital / Doctor로 구분 표시", "done": true },
+            { "task": "결과 없을 때 안내 메시지", "done": true },
+            { "task": "검색어 하이라이트", "done": true }
           ]
         }
       ]
@@ -515,13 +515,13 @@
           "description": "이메일 + 비밀번호 기반 회원가입 및 로그인",
           "phase": "phase-6",
           "category": "auth",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Supabase Auth 설정", "done": false },
-            { "task": "회원가입 페이지 (/signup)", "done": false },
-            { "task": "로그인 페이지 (/login)", "done": false },
-            { "task": "비밀번호 재설정 (이메일 발송)", "done": false },
-            { "task": "이메일 인증 플로우", "done": false }
+            { "task": "Supabase Auth 설정", "done": true },
+            { "task": "회원가입 페이지 (/signup)", "done": true },
+            { "task": "로그인 페이지 (/login)", "done": true },
+            { "task": "비밀번호 재설정 (이메일 발송)", "done": true },
+            { "task": "이메일 인증 플로우", "done": true }
           ]
         },
         {
@@ -530,12 +530,12 @@
           "description": "Google 계정으로 로그인",
           "phase": "phase-6",
           "category": "auth",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Supabase Google OAuth Provider 설정", "done": false },
-            { "task": "Google Cloud Console OAuth Client 설정", "done": false },
-            { "task": "로그인 페이지에 Google 버튼 추가", "done": false },
-            { "task": "콜백 처리", "done": false }
+            { "task": "Supabase Google OAuth Provider 설정", "done": true },
+            { "task": "Google Cloud Console OAuth Client 설정", "done": true },
+            { "task": "로그인 페이지에 Google 버튼 추가", "done": true },
+            { "task": "콜백 처리", "done": true }
           ]
         },
         {
@@ -544,12 +544,12 @@
           "description": "Facebook 계정으로 로그인",
           "phase": "phase-6",
           "category": "auth",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Supabase Facebook OAuth Provider 설정", "done": false },
-            { "task": "Facebook Developer App 설정", "done": false },
-            { "task": "로그인 페이지에 Facebook 버튼 추가", "done": false },
-            { "task": "콜백 처리", "done": false }
+            { "task": "Supabase Facebook OAuth Provider 설정", "done": true },
+            { "task": "Facebook Developer App 설정", "done": true },
+            { "task": "로그인 페이지에 Facebook 버튼 추가", "done": true },
+            { "task": "콜백 처리", "done": true }
           ]
         },
         {
@@ -558,11 +558,11 @@
           "description": "회원가입 시 profiles 테이블 자동 생성 + My Page",
           "phase": "phase-6",
           "category": "auth",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Supabase Trigger: auth.users 생성 시 profiles 자동 생성", "done": false },
-            { "task": "Header에 로그인 상태 표시 (사용자 이름/아바타)", "done": false },
-            { "task": "로그아웃 기능", "done": false }
+            { "task": "Supabase Trigger: auth.users 생성 시 profiles 자동 생성", "done": true },
+            { "task": "Header에 로그인 상태 표시 (사용자 이름/아바타)", "done": true },
+            { "task": "로그아웃 기능", "done": true }
           ]
         },
         {
@@ -571,11 +571,11 @@
           "description": "로그인 사용자의 개인 페이지 (/my)",
           "phase": "phase-6",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "프로필 정보 표시 및 수정 (이름, 국적, 연락처)", "done": false },
-            { "task": "문의 내역 목록 (상태 표시: 접수/진행중/완료)", "done": false },
-            { "task": "비밀번호 변경 (Email 가입자)", "done": false }
+            { "task": "프로필 정보 표시 및 수정 (이름, 국적, 연락처)", "done": true },
+            { "task": "문의 내역 목록 (상태 표시: 접수/진행중/완료)", "done": true },
+            { "task": "비밀번호 변경 (Email 가입자)", "done": true }
           ]
         },
         {
@@ -584,17 +584,17 @@
           "description": "문의/상담 신청 폼 (/inquiry)",
           "phase": "phase-6",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "이름 입력 (로그인 시 자동 채움)", "done": false },
-            { "task": "이메일 입력 (로그인 시 자동 채움)", "done": false },
-            { "task": "전화번호 입력", "done": false },
-            { "task": "국적 선택 드롭다운", "done": false },
-            { "task": "관심 Service/Procedure 선택 (context 전달 시 자동 채움)", "done": false },
-            { "task": "관심 Hospital 선택 (context 전달 시 자동 채움)", "done": false },
-            { "task": "메시지 텍스트 영역", "done": false },
-            { "task": "개인정보 수집/이용 동의 체크박스", "done": false },
-            { "task": "Form Validation (React Hook Form + Zod)", "done": false }
+            { "task": "이름 입력 (로그인 시 자동 채움)", "done": true },
+            { "task": "이메일 입력 (로그인 시 자동 채움)", "done": true },
+            { "task": "전화번호 입력", "done": true },
+            { "task": "국적 선택 드롭다운", "done": true },
+            { "task": "관심 Service/Procedure 선택 (context 전달 시 자동 채움)", "done": true },
+            { "task": "관심 Hospital 선택 (context 전달 시 자동 채움)", "done": true },
+            { "task": "메시지 텍스트 영역", "done": true },
+            { "task": "개인정보 수집/이용 동의 체크박스", "done": true },
+            { "task": "Form Validation (React Hook Form + Zod)", "done": true }
           ]
         },
         {
@@ -603,13 +603,13 @@
           "description": "문의 데이터 저장 및 알림 발송",
           "phase": "phase-6",
           "category": "backend",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "API Route: POST /api/inquiry", "done": false },
-            { "task": "Supabase에 inquiry 데이터 저장 (user_id 연결)", "done": false },
-            { "task": "비로그인 사용자 문의 허용 (user_id nullable)", "done": false },
-            { "task": "관리자에게 이메일 알림 발송 (Resend)", "done": false },
-            { "task": "해당 병원 담당자에게 알림 발송", "done": false }
+            { "task": "API Route: POST /api/inquiry", "done": true },
+            { "task": "Supabase에 inquiry 데이터 저장 (user_id 연결)", "done": true },
+            { "task": "비로그인 사용자 문의 허용 (user_id nullable)", "done": true },
+            { "task": "관리자에게 이메일 알림 발송 (Resend)", "done": true },
+            { "task": "해당 병원 담당자에게 알림 발송", "done": true }
           ]
         },
         {
@@ -618,12 +618,12 @@
           "description": "문의 접수 완료 페이지 (/inquiry/success)",
           "phase": "phase-6",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "접수 완료 안내 메시지", "done": false },
-            { "task": "WhatsApp 연결 버튼", "done": false },
-            { "task": "예상 응답 시간 안내", "done": false },
-            { "task": "홈으로 돌아가기 버튼", "done": false }
+            { "task": "접수 완료 안내 메시지", "done": true },
+            { "task": "WhatsApp 연결 버튼", "done": true },
+            { "task": "예상 응답 시간 안내", "done": true },
+            { "task": "홈으로 돌아가기 버튼", "done": true }
           ]
         },
         {
@@ -632,18 +632,18 @@
           "description": "로그인 사용자가 후기를 작성하는 페이지 (/reviews/write)",
           "phase": "phase-6",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "대상 Hospital 선택", "done": false },
-            { "task": "대상 Procedure 선택 (선택)", "done": false },
-            { "task": "별점 입력 (1-5)", "done": false },
-            { "task": "제목 입력", "done": false },
-            { "task": "본문 입력", "done": false },
-            { "task": "사진 업로드 (최대 5장, Supabase Storage)", "done": false },
-            { "task": "영상 업로드 (최대 1개, Supabase Storage)", "done": false },
-            { "task": "Form Validation", "done": false },
-            { "task": "API Route: POST /api/reviews", "done": false },
-            { "task": "비로그인 시 로그인 페이지로 리다이렉트", "done": false }
+            { "task": "대상 Hospital 선택", "done": true },
+            { "task": "대상 Procedure 선택 (선택)", "done": true },
+            { "task": "별점 입력 (1-5)", "done": true },
+            { "task": "제목 입력", "done": true },
+            { "task": "본문 입력", "done": true },
+            { "task": "사진 업로드 (최대 5장, Supabase Storage)", "done": true },
+            { "task": "영상 업로드 (최대 1개, Supabase Storage)", "done": true },
+            { "task": "Form Validation", "done": true },
+            { "task": "API Route: POST /api/reviews", "done": true },
+            { "task": "비로그인 시 로그인 페이지로 리다이렉트", "done": true }
           ]
         },
         {
@@ -652,15 +652,15 @@
           "description": "전체 후기 목록 및 상세 페이지",
           "phase": "phase-6",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "후기 목록 페이지 (/reviews) - approved만 표시", "done": false },
-            { "task": "필터: 별점, 카테고리, 병원", "done": false },
-            { "task": "Verified 뱃지 표시", "done": false },
-            { "task": "후기 카드 컴포넌트 (별점, 제목, 미리보기, 미디어 썸네일)", "done": false },
-            { "task": "후기 상세 페이지 (/reviews/[id]) - 본문 + 미디어 갤러리", "done": false },
-            { "task": "Hospital Page에 후기 섹션 추가", "done": false },
-            { "task": "Service Page에 관련 후기 섹션 추가", "done": false }
+            { "task": "후기 목록 페이지 (/reviews) - approved만 표시", "done": true },
+            { "task": "필터: 별점, 카테고리, 병원", "done": true },
+            { "task": "Verified 뱃지 표시", "done": true },
+            { "task": "후기 카드 컴포넌트 (별점, 제목, 미리보기, 미디어 썸네일)", "done": true },
+            { "task": "후기 상세 페이지 (/reviews/[id]) - 본문 + 미디어 갤러리", "done": true },
+            { "task": "Hospital Page에 후기 섹션 추가", "done": true },
+            { "task": "Service Page에 관련 후기 섹션 추가", "done": true }
           ]
         },
         {
@@ -669,14 +669,14 @@
           "description": "후기에 댓글 달기 + My Page에서 내 후기 관리",
           "phase": "phase-6",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "댓글 목록 표시 (후기 상세 페이지 내)", "done": false },
-            { "task": "댓글 작성 폼 (로그인 사용자)", "done": false },
-            { "task": "병원 담당자 댓글에 공식 답변 뱃지 표시", "done": false },
-            { "task": "My Page에 '내 후기' 탭 추가", "done": false },
-            { "task": "내 후기 수정 기능", "done": false },
-            { "task": "내 후기 삭제 기능", "done": false }
+            { "task": "댓글 목록 표시 (후기 상세 페이지 내)", "done": true },
+            { "task": "댓글 작성 폼 (로그인 사용자)", "done": true },
+            { "task": "병원 담당자 댓글에 공식 답변 뱃지 표시", "done": true },
+            { "task": "My Page에 '내 후기' 탭 추가", "done": true },
+            { "task": "내 후기 수정 기능", "done": true },
+            { "task": "내 후기 삭제 기능", "done": true }
           ]
         }
       ]
