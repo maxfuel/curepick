@@ -34,7 +34,7 @@ export default async function ReviewDetailPage({
     .eq("id", id)
     .single();
 
-  if (!review) {
+  if (!review || (review.status !== "approved" && review.user_id !== user?.id)) {
     notFound();
   }
 

@@ -56,15 +56,18 @@ export function ReviewForm({ hospitals, procedures, locale }: ReviewFormProps) {
     setIsPending(true);
     setServerError(null);
 
+    if (!user) {
+      setServerError("Please wait while verifying your session.");
+      setIsPending(false);
+      return;
+    }
+
     try {
-      let mediaUrls: string[] = [];
-      if (user) {
-        const uploads: Promise<string>[] = [
-          ...photos.map((file) => uploadReviewMedia(file, user.id)),
-          ...(video ? [uploadReviewMedia(video, user.id)] : []),
-        ];
-        mediaUrls = await Promise.all(uploads);
-      }
+      const uploads: Promise<string>[] = [
+        ...photos.map((file) => uploadReviewMedia(file, user.id)),
+        ...(video ? [uploadReviewMedia(video, user.id)] : []),
+      ];
+      const mediaUrls = await Promise.all(uploads);
 
       const result = await createReview({
         hospitalId: data.hospitalId,

@@ -63,6 +63,7 @@ export async function deleteReview(reviewId: string) {
   }
 
   revalidatePath("/reviews");
+  revalidatePath(`/reviews/${reviewId}`);
   revalidatePath("/my");
   return { success: true };
 }

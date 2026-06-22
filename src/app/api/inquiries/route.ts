@@ -53,7 +53,8 @@ export async function POST(request: Request) {
   });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Inquiry insert failed:", error);
+    return NextResponse.json({ error: "Failed to save inquiry" }, { status: 500 });
   }
 
   // Fetch hospital contact info for notification (non-blocking)

@@ -66,6 +66,21 @@ export default async function ReviewsPage({
     }
   }
 
+  // No procedures match this category → short-circuit with empty results
+  if (categoryProcedureIds !== null && categoryProcedureIds.length === 0) {
+    return (
+      <ReviewsPageContent
+        reviews={[]}
+        categories={categories ?? []}
+        hospitals={hospitals ?? []}
+        locale={locale}
+        selectedRating={sp.rating}
+        selectedHospital={sp.hospital}
+        selectedCategory={sp.category}
+      />
+    );
+  }
+
   let query = supabase
     .from("reviews")
     .select("*, hospitals(name)")
@@ -79,12 +94,7 @@ export default async function ReviewsPage({
     query = query.eq("hospital_id", sp.hospital);
   }
   if (categoryProcedureIds !== null) {
-    if (categoryProcedureIds.length === 0) {
-      // No procedures in category → no results
-      query = query.eq("id", "00000000-0000-0000-0000-000000000000");
-    } else {
-      query = query.in("procedure_id", categoryProcedureIds);
-    }
+    query = query.in("procedure_id", categoryProcedureIds);
   }
 
   const { data: reviews } = await query;
