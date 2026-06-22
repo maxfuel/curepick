@@ -1009,7 +1009,7 @@
           "tasks": [
             { "task": "404 Not Found 페이지", "done": true },
             { "task": "500 Error 페이지", "done": true },
-            { "task": "Error Boundary 컴포넌트", "done": false }
+            { "task": "Error Boundary 컴포넌트", "done": true }
           ]
         }
       ]
