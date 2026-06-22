@@ -898,15 +898,15 @@
           "description": "전체 후기 승인/거절/관리 (/admin/reviews)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "전체 후기 목록 (필터: 상태, 병원, 별점)", "done": false },
-            { "task": "후기 상세 보기 (미디어 포함)", "done": false },
-            { "task": "후기 승인 (status: pending → approved)", "done": false },
-            { "task": "후기 거절 (status: pending → rejected)", "done": false },
-            { "task": "Verified 뱃지 부여/해제 (is_verified)", "done": false },
-            { "task": "부적절한 후기 삭제", "done": false },
-            { "task": "부적절한 댓글 삭제", "done": false }
+            { "task": "전체 후기 목록 (필터: 상태, 병원, 별점)", "done": true },
+            { "task": "후기 상세 보기 (미디어 포함)", "done": true },
+            { "task": "후기 승인 (status: pending → approved)", "done": true },
+            { "task": "후기 거절 (status: pending → rejected)", "done": true },
+            { "task": "Verified 뱃지 부여/해제 (is_verified)", "done": true },
+            { "task": "부적절한 후기 삭제", "done": true },
+            { "task": "부적절한 댓글 삭제", "done": true }
           ]
         }
       ]
