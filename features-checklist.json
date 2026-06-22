@@ -870,12 +870,12 @@
           "description": "전체 문의 관리 (/admin/inquiries)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "전체 문의 목록 (필터: 상태, 병원, 서비스)", "done": false },
-            { "task": "문의 상세 보기", "done": false },
-            { "task": "상태 변경 (new → contacted → closed)", "done": false },
-            { "task": "관리자 메모 추가", "done": false }
+            { "task": "전체 문의 목록 (필터: 상태, 병원, 서비스)", "done": true },
+            { "task": "문의 상세 보기", "done": true },
+            { "task": "상태 변경 (new → contacted → closed)", "done": true },
+            { "task": "관리자 메모 추가", "done": true }
           ]
         },
         {
