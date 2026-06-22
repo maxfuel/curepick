@@ -72,7 +72,7 @@ export async function POST(request: Request) {
         : undefined;
   }
 
-  sendInquiryNotification({ name, email, message, hospitalId, hospitalEmail, hospitalName }).catch(
+  sendInquiryNotification({ name, email, message, hospitalEmail, hospitalName }).catch(
     console.error
   );
 

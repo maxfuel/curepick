@@ -2,9 +2,17 @@ interface InquiryNotificationData {
   name: string;
   email: string;
   message: string;
-  hospitalId?: string;
   hospitalEmail?: string;
   hospitalName?: string;
+}
+
+function esc(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 export async function sendInquiryNotification(
@@ -23,11 +31,11 @@ export async function sendInquiryNotification(
 
   const bodyHtml = `
     <h2>New Inquiry Received</h2>
-    <p><strong>Name:</strong> ${data.name}</p>
-    <p><strong>Email:</strong> ${data.email}</p>
+    <p><strong>Name:</strong> ${esc(data.name)}</p>
+    <p><strong>Email:</strong> ${esc(data.email)}</p>
     <p><strong>Message:</strong></p>
-    <p>${data.message}</p>
-    ${data.hospitalName ? `<p><strong>Hospital:</strong> ${data.hospitalName}</p>` : ""}
+    <p>${esc(data.message)}</p>
+    ${data.hospitalName ? `<p><strong>Hospital:</strong> ${esc(data.hospitalName)}</p>` : ""}
   `;
 
   const sends = [
