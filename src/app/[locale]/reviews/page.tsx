@@ -83,7 +83,7 @@ export default async function ReviewsPage({
 
   let query = supabase
     .from("reviews")
-    .select("*, hospitals(name)")
+    .select("*, hospitals(name), review_translations(locale, title, content)")
     .eq("status", "approved")
     .order("created_at", { ascending: false });
 
@@ -113,10 +113,21 @@ export default async function ReviewsPage({
     (profiles ?? []).map((p) => [p.id, p.full_name])
   );
 
-  const reviewsWithAuthors = (reviews ?? []).map((r) => ({
-    ...r,
-    authorName: profileMap.get(r.user_id) ?? null,
-  }));
+  const reviewsWithAuthors = (reviews ?? []).map((r) => {
+    const translations = r.review_translations as unknown as
+      | Array<{ locale: string; title: string; content: string }>
+      | null
+      | undefined;
+    const cachedTranslation =
+      translations?.find((t) => t.locale === locale) ?? null;
+    return {
+      ...r,
+      authorName: profileMap.get(r.user_id) ?? null,
+      cachedTranslation: cachedTranslation
+        ? { title: cachedTranslation.title, content: cachedTranslation.content }
+        : null,
+    };
+  });
 
   return (
     <ReviewsPageContent
@@ -150,6 +161,7 @@ function ReviewsPageContent({
     created_at: string | null;
     hospitals: { name: unknown } | null;
     authorName: string | null;
+    cachedTranslation: { title: string; content: string } | null;
   }[];
   categories: { id: string; name: unknown; slug: string }[];
   hospitals: { id: string; name: unknown }[];
@@ -190,7 +202,12 @@ function ReviewsPageContent({
       ) : (
         <div className="space-y-4">
           {reviews.map((review) => (
-            <ReviewCard key={review.id} review={review} locale={locale} />
+            <ReviewCard
+                key={review.id}
+                review={review}
+                locale={locale}
+                cachedTranslation={review.cachedTranslation}
+              />
           ))}
         </div>
       )}

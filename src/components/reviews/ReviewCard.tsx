@@ -1,6 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import { Star } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
+import { TranslateButton } from "./TranslateButton";
 
 interface ReviewCardProps {
   review: {
@@ -15,6 +19,7 @@ interface ReviewCardProps {
     authorName: string | null;
   };
   locale: string;
+  cachedTranslation: { title: string; content: string } | null;
 }
 
 function getLocalizedName(name: unknown, locale: string): string {
@@ -25,17 +30,25 @@ function getLocalizedName(name: unknown, locale: string): string {
   return String(name ?? "");
 }
 
-export function ReviewCard({ review, locale }: ReviewCardProps) {
+export function ReviewCard({ review, locale, cachedTranslation }: ReviewCardProps) {
+  const [translation, setTranslation] = useState<{
+    title: string;
+    content: string;
+  } | null>(cachedTranslation);
+  const [showTranslation, setShowTranslation] = useState(!!cachedTranslation);
+
+  const displayTitle =
+    showTranslation && translation ? translation.title : review.title;
+  const displayContent =
+    showTranslation && translation ? translation.content : review.content;
+
   const mediaUrls = Array.isArray(review.media)
     ? (review.media as string[])
     : [];
 
   return (
-    <Link
-      href={`/reviews/${review.id}`}
-      className="block rounded-xl border p-4 transition-colors hover:bg-muted/50"
-    >
-      <div className="space-y-2">
+    <div className="rounded-xl border transition-colors hover:bg-muted/50">
+      <Link href={`/reviews/${review.id}`} className="block space-y-2 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex">
@@ -63,10 +76,10 @@ export function ReviewCard({ review, locale }: ReviewCardProps) {
           </span>
         </div>
 
-        <h3 className="font-medium">{review.title}</h3>
+        <h3 className="font-medium">{displayTitle}</h3>
 
         <p className="line-clamp-2 text-sm text-muted-foreground">
-          {review.content}
+          {displayContent}
         </p>
 
         {mediaUrls.length > 0 && (
@@ -97,7 +110,21 @@ export function ReviewCard({ review, locale }: ReviewCardProps) {
             </>
           )}
         </div>
+      </Link>
+
+      <div className="px-4 pb-3">
+        <TranslateButton
+          type="review"
+          id={review.id}
+          locale={locale}
+          translation={translation}
+          showTranslation={showTranslation}
+          onTranslated={(data) =>
+            setTranslation(data as { title: string; content: string })
+          }
+          onToggle={setShowTranslation}
+        />
       </div>
-    </Link>
+    </div>
   );
 }
