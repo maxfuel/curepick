@@ -13,6 +13,8 @@ import Image from "next/image";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/types/database";
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { buildHospitalJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/json-ld";
 import {
   MapPin,
   Phone,
@@ -53,16 +55,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient();
   const { data: hospital } = await supabase
     .from("hospitals")
-    .select("name, description")
+    .select("name, description, hero_image_url")
     .eq("slug", slug)
     .single();
 
   if (!hospital) return {};
 
-  return {
+  return buildMetadata({
     title: getLocalizedField(hospital.name, locale),
     description: getLocalizedField(hospital.description, locale),
-  };
+    locale,
+    path: `/hospitals/${slug}`,
+    image: hospital.hero_image_url,
+  });
 }
 
 export default async function HospitalDetailPage({ params }: Props) {
@@ -71,6 +76,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 
   const supabase = await createClient();
   const t = await getTranslations({ locale, namespace: "hospitals" });
+  const tBreadcrumb = await getTranslations({ locale, namespace: "breadcrumb" });
 
   // Fetch hospital
   const { data: hospital } = await supabase
@@ -103,8 +109,18 @@ export default async function HospitalDetailPage({ params }: Props) {
   const hospitalDescription = getLocalizedField(hospital.description, locale);
   const hospitalAddress = getLocalizedField(hospital.address, locale);
 
+  const hospitalJsonLd = buildHospitalJsonLd(hospital, locale);
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: tBreadcrumb("home"), url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/${locale}` },
+    { name: tBreadcrumb("hospitals"), url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/${locale}/hospitals` },
+    { name: hospitalName },
+  ]);
+
   return (
-    <div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(hospitalJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <div>
       {/* Hero Section */}
       <section className="relative bg-muted py-16">
         {hospital.hero_image_url && (
@@ -402,6 +418,7 @@ export default async function HospitalDetailPage({ params }: Props) {
         </section>
       </div>
     </div>
+    </>
   );
 }
 
