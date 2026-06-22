@@ -426,6 +426,26 @@
       "fieldDate": "日期",
       "fieldMessage": "留言",
       "changeStatus": "更改状态"
+    },
+    "accounts": {
+      "title": "医院员工账号",
+      "createTitle": "创建新账号",
+      "colEmail": "邮箱",
+      "colName": "姓名",
+      "colHospital": "医院",
+      "colDate": "创建时间",
+      "deactivate": "删除",
+      "confirmDeactivate": "确定要删除此账号吗？此操作无法撤销。",
+      "noAccounts": "暂无医院员工账号。",
+      "fieldEmail": "邮箱",
+      "fieldPassword": "密码",
+      "fieldFullName": "姓名",
+      "fieldHospital": "分配医院",
+      "noHospital": "无医院",
+      "create": "创建账号",
+      "createSuccess": "账号创建成功。",
+      "createError": "账号创建失败。",
+      "loading": "加载中..."
     }
   },
   "hospital": {

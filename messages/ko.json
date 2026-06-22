@@ -426,6 +426,26 @@
       "fieldDate": "날짜",
       "fieldMessage": "메시지",
       "changeStatus": "상태 변경"
+    },
+    "accounts": {
+      "title": "병원 담당자 계정",
+      "createTitle": "신규 계정 생성",
+      "colEmail": "이메일",
+      "colName": "이름",
+      "colHospital": "병원",
+      "colDate": "생성일",
+      "deactivate": "삭제",
+      "confirmDeactivate": "이 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      "noAccounts": "병원 담당자 계정이 없습니다.",
+      "fieldEmail": "이메일",
+      "fieldPassword": "비밀번호",
+      "fieldFullName": "이름",
+      "fieldHospital": "병원 지정",
+      "noHospital": "병원 없음",
+      "create": "계정 생성",
+      "createSuccess": "계정이 생성되었습니다.",
+      "createError": "계정 생성에 실패했습니다.",
+      "loading": "로딩 중..."
     }
   },
   "hospital": {

@@ -426,6 +426,26 @@
       "fieldDate": "日付",
       "fieldMessage": "メッセージ",
       "changeStatus": "ステータス変更"
+    },
+    "accounts": {
+      "title": "病院スタッフアカウント",
+      "createTitle": "新規アカウント作成",
+      "colEmail": "メール",
+      "colName": "氏名",
+      "colHospital": "病院",
+      "colDate": "作成日",
+      "deactivate": "削除",
+      "confirmDeactivate": "このアカウントを削除しますか？この操作は元に戻せません。",
+      "noAccounts": "病院スタッフアカウントがありません。",
+      "fieldEmail": "メール",
+      "fieldPassword": "パスワード",
+      "fieldFullName": "氏名",
+      "fieldHospital": "病院を割り当て",
+      "noHospital": "病院なし",
+      "create": "アカウント作成",
+      "createSuccess": "アカウントが作成されました。",
+      "createError": "アカウント作成に失敗しました。",
+      "loading": "読み込み中..."
     }
   },
   "hospital": {

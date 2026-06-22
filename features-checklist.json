@@ -884,12 +884,12 @@
           "description": "병원 담당자 계정 생성/관리 (/admin/hospital-accounts)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "병원 담당자 계정 목록", "done": false },
-            { "task": "신규 계정 생성 (이메일 + 임시 비밀번호)", "done": false },
-            { "task": "계정-병원 연결 (hospital_id 지정)", "done": false },
-            { "task": "계정 비활성화/삭제", "done": false }
+            { "task": "병원 담당자 계정 목록", "done": true },
+            { "task": "신규 계정 생성 (이메일 + 임시 비밀번호)", "done": true },
+            { "task": "계정-병원 연결 (hospital_id 지정)", "done": true },
+            { "task": "계정 비활성화/삭제", "done": true }
           ]
         },
         {
