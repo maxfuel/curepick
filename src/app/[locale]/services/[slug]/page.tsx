@@ -14,6 +14,8 @@ import { Link } from "@/i18n/navigation";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/types/database";
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { buildFaqJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -40,16 +42,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient();
   const { data: service } = await supabase
     .from("services")
-    .select("name, description")
+    .select("name, description, image_url")
     .eq("slug", slug)
     .single();
 
   if (!service) return {};
 
-  return {
+  return buildMetadata({
     title: getLocalizedField(service.name, locale),
     description: getLocalizedField(service.description, locale),
-  };
+    locale,
+    path: `/services/${slug}`,
+    image: service.image_url,
+  });
 }
 
 export default async function ServiceDetailPage({ params }: Props) {
@@ -151,8 +156,21 @@ export default async function ServiceDetailPage({ params }: Props) {
     answer: getLocalizedField(faq.answer, locale),
   }));
 
+  const tBreadcrumb = await getTranslations({ locale, namespace: "breadcrumb" });
+  const faqJsonLd = buildFaqJsonLd(faqs ?? [], locale);
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: tBreadcrumb("home"), url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/${locale}` },
+    { name: tBreadcrumb("services"), url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/${locale}/services` },
+    { name: serviceName },
+  ]);
+
   return (
-    <div>
+    <>
+      {faqJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <div>
       {/* Hero Section */}
       <section className="relative bg-muted py-16">
         {service.image_url && (
@@ -280,6 +298,7 @@ export default async function ServiceDetailPage({ params }: Props) {
         </section>
       </div>
     </div>
+    </>
   );
 }
 

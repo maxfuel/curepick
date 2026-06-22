@@ -12,6 +12,8 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/types/database";
 import type { Metadata } from "next";
 import { Building2, Users, BookOpen } from "lucide-react";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { buildPhysicianJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -38,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient();
   const { data: doctor } = await supabase
     .from("doctors")
-    .select("name, specialty")
+    .select("name, specialty, photo_url")
     .eq("slug", slug)
     .single();
 
@@ -47,10 +49,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = getLocalizedField(doctor.name, locale);
   const specialty = getLocalizedField(doctor.specialty, locale);
 
-  return {
+  return buildMetadata({
     title: name,
-    description: specialty ? `${name} - ${specialty}` : name,
-  };
+    description: specialty ? `${name} — ${specialty}` : name,
+    locale,
+    path: `/doctors/${slug}`,
+    image: doctor.photo_url,
+  });
 }
 
 export default async function DoctorDetailPage({ params }: Props) {
@@ -95,6 +100,14 @@ export default async function DoctorDetailPage({ params }: Props) {
     ? getLocalizedField(hospital.name, locale)
     : "";
 
+  const tBreadcrumb = await getTranslations({ locale, namespace: "breadcrumb" });
+  const physicianJsonLd = buildPhysicianJsonLd(doctor, hospitalName ?? "", locale);
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: tBreadcrumb("home"), url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/${locale}` },
+    { name: tBreadcrumb("doctors"), url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/${locale}/doctors` },
+    { name: doctorName },
+  ]);
+
   // Parse publications (Json field — expected to be an array of objects with title, journal, year, url)
   const publications = Array.isArray(doctor.publications)
     ? (doctor.publications as Array<{
@@ -127,7 +140,10 @@ export default async function DoctorDetailPage({ params }: Props) {
   const procedures = Array.from(procedureMap.values());
 
   return (
-    <div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(physicianJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <div>
       {/* Profile Hero */}
       <section className="bg-muted py-16">
         <div className="container mx-auto px-4">
@@ -283,5 +299,6 @@ export default async function DoctorDetailPage({ params }: Props) {
         </section>
       </div>
     </div>
+    </>
   );
 }
