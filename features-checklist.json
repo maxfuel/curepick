@@ -913,8 +913,8 @@
     },
     {
       "id": "phase-8",
-      "name": "SEO & i18n & Launch Prep",
-      "description": "검색 최적화, 다국어 완성, 런칭 준비",
+      "name": "SEO & Error Handling",
+      "description": "검색 최적화 및 에러 핸들링",
       "features": [
         {
           "id": "F-090",
@@ -958,48 +958,6 @@
           ]
         },
         {
-          "id": "F-093",
-          "name": "다국어 번역 완성",
-          "description": "UI 텍스트 번역 파일 완성",
-          "phase": "phase-8",
-          "category": "i18n",
-          "status": "pending",
-          "tasks": [
-            { "task": "영어(en) 번역 파일 완성", "done": false },
-            { "task": "중국어 간체(zh) 번역 파일 (추후)", "done": false },
-            { "task": "아랍어(ar) 번역 파일 (추후)", "done": false },
-            { "task": "RTL(Right-to-Left) 레이아웃 지원 검토 (아랍어)", "done": false }
-          ]
-        },
-        {
-          "id": "F-094",
-          "name": "Analytics 연동",
-          "description": "Google Analytics 4 연동",
-          "phase": "phase-8",
-          "category": "analytics",
-          "status": "pending",
-          "tasks": [
-            { "task": "GA4 태그 설치", "done": false },
-            { "task": "페이지뷰 트래킹", "done": false },
-            { "task": "이벤트 트래킹 (CTA 클릭, Inquiry 제출, 검색)", "done": false },
-            { "task": "Google Search Console 등록 및 사이트맵 제출", "done": false }
-          ]
-        },
-        {
-          "id": "F-095",
-          "name": "성능 최적화",
-          "description": "Core Web Vitals 및 전반적 성능 최적화",
-          "phase": "phase-8",
-          "category": "performance",
-          "status": "pending",
-          "tasks": [
-            { "task": "이미지 최적화 (next/image, WebP)", "done": false },
-            { "task": "폰트 최적화 (next/font)", "done": false },
-            { "task": "번들 사이즈 점검", "done": false },
-            { "task": "Lighthouse 점수 점검 (90+ 목표)", "done": false }
-          ]
-        },
-        {
           "id": "F-096",
           "name": "Error Handling",
           "description": "에러 페이지 및 에러 바운더리",
@@ -1014,9 +972,59 @@
         }
       ]
     }
+  ,
+    {
+      "id": "phase-99",
+      "name": "Post-Launch: i18n Completion, Analytics & Performance",
+      "description": "모든 웹사이트 개발 완료 후 진행 — 번역 완성, 애널리틱스 연동, 성능 최적화",
+      "features": [
+        {
+          "id": "F-093",
+          "name": "다국어 번역 완성",
+          "description": "UI 텍스트 번역 파일 완성 (전체 페이지 개발 완료 후 누락 키 일괄 정리)",
+          "phase": "phase-99",
+          "category": "i18n",
+          "status": "pending",
+          "tasks": [
+            { "task": "영어(en) 번역 파일 완성", "done": false },
+            { "task": "중국어 간체(zh) 번역 파일 (추후)", "done": false },
+            { "task": "아랍어(ar) 번역 파일 (추후)", "done": false },
+            { "task": "RTL(Right-to-Left) 레이아웃 지원 검토 (아랍어)", "done": false }
+          ]
+        },
+        {
+          "id": "F-094",
+          "name": "Analytics 연동",
+          "description": "Google Analytics 4 연동 (배포 후 라이브 사이트에서 진행)",
+          "phase": "phase-99",
+          "category": "analytics",
+          "status": "pending",
+          "tasks": [
+            { "task": "GA4 태그 설치", "done": false },
+            { "task": "페이지뷰 트래킹", "done": false },
+            { "task": "이벤트 트래킹 (CTA 클릭, Inquiry 제출, 검색)", "done": false },
+            { "task": "Google Search Console 등록 및 사이트맵 제출", "done": false }
+          ]
+        },
+        {
+          "id": "F-095",
+          "name": "성능 최적화",
+          "description": "Core Web Vitals 및 전반적 성능 최적화 (전체 페이지 완성 후 Lighthouse 측정)",
+          "phase": "phase-99",
+          "category": "performance",
+          "status": "pending",
+          "tasks": [
+            { "task": "이미지 최적화 (next/image, WebP)", "done": false },
+            { "task": "폰트 최적화 (next/font)", "done": false },
+            { "task": "번들 사이즈 점검", "done": false },
+            { "task": "Lighthouse 점수 점검 (90+ 목표)", "done": false }
+          ]
+        }
+      ]
+    }
   ],
   "summary": {
-    "total_phases": 9,
+    "total_phases": 10,
     "total_features": 55,
     "total_tasks": 249,
     "categories": {

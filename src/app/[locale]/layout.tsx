@@ -4,8 +4,6 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { type Locale } from "@/config/i18n";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import type { Metadata } from "next";
 
 interface LocaleLayoutProps {
@@ -41,9 +39,7 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
+      {children}
     </NextIntlClientProvider>
   );
 }

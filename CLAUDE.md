@@ -1,3 +1,12 @@
+
+# Global AI OS Inheritance
+
+Before applying project-specific rules, load:
+
+1. ../_global/GLOBAL_HOME.md
+2. ../_global/GLOBAL_AGENTS.md
+3. ../_global/GLOBAL_DECISION_LOG.md
+
 @AGENTS.md
 
 ## Feature Checklist Rule

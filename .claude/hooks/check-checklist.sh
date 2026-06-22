@@ -5,6 +5,9 @@
 
 cd "$CLAUDE_PROJECT_DIR" 2>/dev/null || exit 0
 
+# Skip if not a git repo
+git rev-parse --git-dir >/dev/null 2>&1 || exit 0
+
 # Get list of changed files (staged + unstaged)
 changed_files=$(git diff --name-only 2>/dev/null; git diff --cached --name-only 2>/dev/null)
 
@@ -23,5 +26,8 @@ while IFS= read -r file; do
 done <<< "$changed_files"
 
 if [ "$src_changed" = true ] && [ "$checklist_changed" = false ]; then
-  echo "src/ 파일이 수정되었습니다. features-checklist.json에서 해당 기능의 status와 tasks.done을 업데이트해 주세요."
+  echo "src/ files were modified. Please update the corresponding status and tasks.done in features-checklist.json." >&2
+  exit 1
 fi
+
+exit 0
