@@ -277,6 +277,30 @@
       "backHome": "홈으로 가기"
     }
   },
+  "admin": {
+    "nav": {
+      "dashboard": "대시보드",
+      "services": "서비스",
+      "hospitals": "병원",
+      "doctors": "의사",
+      "inquiries": "문의",
+      "accounts": "계정 관리",
+      "reviews": "후기 관리"
+    },
+    "dashboard": {
+      "title": "관리자 대시보드",
+      "newInquiries": "신규 문의",
+      "totalInquiries": "전체 문의",
+      "totalHospitals": "병원 수",
+      "totalServices": "서비스 수",
+      "recentInquiries": "최근 문의",
+      "colName": "이름",
+      "colEmail": "이메일",
+      "colStatus": "상태",
+      "colDate": "날짜",
+      "noInquiries": "아직 문의가 없습니다."
+    }
+  },
   "hospital": {
     "nav": {
       "dashboard": "대시보드",

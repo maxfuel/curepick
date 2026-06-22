@@ -277,6 +277,30 @@
       "backHome": "ホームへ"
     }
   },
+  "admin": {
+    "nav": {
+      "dashboard": "ダッシュボード",
+      "services": "サービス",
+      "hospitals": "病院",
+      "doctors": "医師",
+      "inquiries": "お問い合わせ",
+      "accounts": "アカウント管理",
+      "reviews": "レビュー管理"
+    },
+    "dashboard": {
+      "title": "管理者ダッシュボード",
+      "newInquiries": "新規お問い合わせ",
+      "totalInquiries": "総お問い合わせ",
+      "totalHospitals": "病院数",
+      "totalServices": "サービス数",
+      "recentInquiries": "最近のお問い合わせ",
+      "colName": "氏名",
+      "colEmail": "メール",
+      "colStatus": "ステータス",
+      "colDate": "日付",
+      "noInquiries": "お問い合わせはまだありません。"
+    }
+  },
   "hospital": {
     "nav": {
       "dashboard": "ダッシュボード",

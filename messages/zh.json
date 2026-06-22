@@ -277,6 +277,30 @@
       "backHome": "返回首页"
     }
   },
+  "admin": {
+    "nav": {
+      "dashboard": "仪表板",
+      "services": "服务",
+      "hospitals": "医院",
+      "doctors": "医生",
+      "inquiries": "咨询",
+      "accounts": "账户管理",
+      "reviews": "评价管理"
+    },
+    "dashboard": {
+      "title": "管理员仪表板",
+      "newInquiries": "新咨询",
+      "totalInquiries": "总咨询",
+      "totalHospitals": "医院数",
+      "totalServices": "服务数",
+      "recentInquiries": "最近咨询",
+      "colName": "姓名",
+      "colEmail": "邮箱",
+      "colStatus": "状态",
+      "colDate": "日期",
+      "noInquiries": "暂无咨询。"
+    }
+  },
   "hospital": {
     "nav": {
       "dashboard": "仪表板",

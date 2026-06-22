@@ -800,11 +800,11 @@
           "description": "Curepick 관리자 로그인 (/admin)",
           "phase": "phase-7",
           "category": "auth",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Admin 로그인 페이지 (이메일/비밀번호)", "done": false },
-            { "task": "role=admin 확인 후 접근 허용", "done": false },
-            { "task": "비인가 접근 시 리다이렉트", "done": false }
+            { "task": "Admin 로그인 페이지 (이메일/비밀번호)", "done": true },
+            { "task": "role=admin 확인 후 접근 허용", "done": true },
+            { "task": "비인가 접근 시 리다이렉트", "done": true }
           ]
         },
         {
@@ -813,12 +813,12 @@
           "description": "관리자 대시보드 홈 (/admin)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "전체 문의 수 (신규/진행중/완료)", "done": false },
-            { "task": "전체 Hospital 수", "done": false },
-            { "task": "전체 Service 수", "done": false },
-            { "task": "최근 문의 목록", "done": false }
+            { "task": "전체 문의 수 (신규/진행중/완료)", "done": true },
+            { "task": "전체 Hospital 수", "done": true },
+            { "task": "전체 Service 수", "done": true },
+            { "task": "최근 문의 목록", "done": true }
           ]
         },
         {

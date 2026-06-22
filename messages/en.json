@@ -277,6 +277,30 @@
       "backHome": "Go home"
     }
   },
+  "admin": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "services": "Services",
+      "hospitals": "Hospitals",
+      "doctors": "Doctors",
+      "inquiries": "Inquiries",
+      "accounts": "Accounts",
+      "reviews": "Reviews"
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "newInquiries": "New Inquiries",
+      "totalInquiries": "Total Inquiries",
+      "totalHospitals": "Hospitals",
+      "totalServices": "Services",
+      "recentInquiries": "Recent Inquiries",
+      "colName": "Name",
+      "colEmail": "Email",
+      "colStatus": "Status",
+      "colDate": "Date",
+      "noInquiries": "No inquiries yet."
+    }
+  },
   "hospital": {
     "nav": {
       "dashboard": "Dashboard",
