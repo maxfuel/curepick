@@ -87,7 +87,7 @@ export default async function CategoryDetailPage({ params }: Props) {
 
   // Fetch featured hospitals via hospital_procedures
   const procedureIds = (procedures ?? []).map((p) => p.id);
-  let featuredHospitals: Array<{
+  const featuredHospitals: Array<{
     hospital: {
       slug: string;
       name: unknown;

@@ -87,7 +87,7 @@ export default async function ServiceDetailPage({ params }: Props) {
 
   // Fetch hospitals via hospital_procedures for procedures in this service
   const procedureIds = (procedures ?? []).map((p) => p.id);
-  let hospitalEntries: Array<{
+  const hospitalEntries: Array<{
     hospital: {
       slug: string;
       name: unknown;
