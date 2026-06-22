@@ -255,6 +255,9 @@
     "loginToComment": "댓글을 작성하려면 로그인해주세요.",
     "postedOn": "{date} 작성",
     "hospitalReviews": "환자 후기",
-    "serviceReviews": "관련 후기"
+    "serviceReviews": "관련 후기",
+    "editTitle": "후기 수정",
+    "saveReview": "변경 사항 저장",
+    "cancel": "취소"
   }
 }

@@ -255,6 +255,9 @@
     "loginToComment": "Please log in to comment.",
     "postedOn": "Posted on {date}",
     "hospitalReviews": "Patient Reviews",
-    "serviceReviews": "Related Reviews"
+    "serviceReviews": "Related Reviews",
+    "editTitle": "Edit Review",
+    "saveReview": "Save Changes",
+    "cancel": "Cancel"
   }
 }

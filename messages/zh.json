@@ -255,6 +255,9 @@
     "loginToComment": "请登录后评论。",
     "postedOn": "发布于 {date}",
     "hospitalReviews": "患者评价",
-    "serviceReviews": "相关评价"
+    "serviceReviews": "相关评价",
+    "editTitle": "编辑评论",
+    "saveReview": "保存更改",
+    "cancel": "取消"
   }
 }

@@ -255,6 +255,9 @@
     "loginToComment": "コメントするにはログインしてください。",
     "postedOn": "{date}に投稿",
     "hospitalReviews": "患者レビュー",
-    "serviceReviews": "関連レビュー"
+    "serviceReviews": "関連レビュー",
+    "editTitle": "レビューを編集",
+    "saveReview": "変更を保存",
+    "cancel": "キャンセル"
   }
 }
