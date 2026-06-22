@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { TranslateButton } from "./TranslateButton";
@@ -31,6 +32,7 @@ function getLocalizedName(name: unknown, locale: string): string {
 }
 
 export function ReviewCard({ review, locale, cachedTranslation }: ReviewCardProps) {
+  const t = useTranslations("reviews");
   const [translation, setTranslation] = useState<{
     title: string;
     content: string;
@@ -65,7 +67,7 @@ export function ReviewCard({ review, locale, cachedTranslation }: ReviewCardProp
             </div>
             {review.is_verified && (
               <Badge variant="secondary" className="text-xs">
-                Verified
+                {t("verified")}
               </Badge>
             )}
           </div>

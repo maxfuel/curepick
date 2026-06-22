@@ -3,6 +3,8 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { translateText } from "@/lib/translation/google";
 
+export const dynamic = "force-dynamic";
+
 const VALID_LOCALES = ["en", "ko", "zh", "ja"] as const;
 type ValidLocale = (typeof VALID_LOCALES)[number];
 
@@ -21,6 +23,10 @@ export async function GET(request: Request) {
   }
   if (!id) {
     return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  }
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_RE.test(id)) {
+    return NextResponse.json({ error: "Invalid id format" }, { status: 400 });
   }
   if (!isValidLocale(locale)) {
     return NextResponse.json({ error: "Invalid locale" }, { status: 400 });
@@ -63,6 +69,7 @@ export async function GET(request: Request) {
       .from("reviews")
       .select("title, content")
       .eq("id", id)
+      .eq("status", "approved")
       .single();
     if (!review) {
       return NextResponse.json({ error: "Review not found" }, { status: 404 });
