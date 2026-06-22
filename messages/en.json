@@ -330,6 +330,24 @@
       "days": "{days} days",
       "noProcedures": "No procedures linked yet."
     },
+    "inquiries": {
+      "title": "Inquiries",
+      "detailTitle": "Inquiry Detail",
+      "all": "All",
+      "new": "New",
+      "contacted": "Contacted",
+      "closed": "Closed",
+      "colName": "Name",
+      "colEmail": "Email",
+      "colStatus": "Status",
+      "colDate": "Date",
+      "phone": "Phone",
+      "nationality": "Nationality",
+      "message": "Message",
+      "view": "View",
+      "noInquiries": "No inquiries found.",
+      "changeStatus": "Change Status"
+    },
     "editRequest": {
       "title": "Request an Edit",
       "subtitle": "Describe the changes you'd like to make. Our admin team will review and update the information.",

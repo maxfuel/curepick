@@ -330,6 +330,24 @@
       "days": "{days}日",
       "noProcedures": "関連施術がありません。"
     },
+    "inquiries": {
+      "title": "お問い合わせ管理",
+      "detailTitle": "お問い合わせ詳細",
+      "all": "すべて",
+      "new": "新規",
+      "contacted": "連絡済",
+      "closed": "完了",
+      "colName": "氏名",
+      "colEmail": "メール",
+      "colStatus": "ステータス",
+      "colDate": "日付",
+      "phone": "電話番号",
+      "nationality": "国籍",
+      "message": "メッセージ",
+      "view": "表示",
+      "noInquiries": "お問い合わせはありません。",
+      "changeStatus": "ステータス変更"
+    },
     "editRequest": {
       "title": "修正リクエスト",
       "subtitle": "変更したい内容をご説明ください。管理者が確認後に更新します。",

@@ -330,6 +330,24 @@
       "days": "{days}天",
       "noProcedures": "暂无关联项目。"
     },
+    "inquiries": {
+      "title": "咨询管理",
+      "detailTitle": "咨询详情",
+      "all": "全部",
+      "new": "新咨询",
+      "contacted": "已联系",
+      "closed": "已关闭",
+      "colName": "姓名",
+      "colEmail": "邮箱",
+      "colStatus": "状态",
+      "colDate": "日期",
+      "phone": "电话",
+      "nationality": "国籍",
+      "message": "留言",
+      "view": "查看",
+      "noInquiries": "暂无咨询。",
+      "changeStatus": "更改状态"
+    },
     "editRequest": {
       "title": "申请修改",
       "subtitle": "请描述您希望更改的内容，管理员将审核并更新信息。",

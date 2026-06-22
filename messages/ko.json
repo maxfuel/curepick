@@ -330,6 +330,24 @@
       "days": "{days}일",
       "noProcedures": "연결된 시술이 없습니다."
     },
+    "inquiries": {
+      "title": "문의 관리",
+      "detailTitle": "문의 상세",
+      "all": "전체",
+      "new": "신규",
+      "contacted": "연락완료",
+      "closed": "종료",
+      "colName": "이름",
+      "colEmail": "이메일",
+      "colStatus": "상태",
+      "colDate": "날짜",
+      "phone": "전화번호",
+      "nationality": "국적",
+      "message": "메시지",
+      "view": "보기",
+      "noInquiries": "문의가 없습니다.",
+      "changeStatus": "상태 변경"
+    },
     "editRequest": {
       "title": "수정 요청",
       "subtitle": "변경을 원하시는 내용을 설명해 주세요. 관리자가 검토 후 업데이트합니다.",

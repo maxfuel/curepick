@@ -772,12 +772,12 @@
           "description": "자기 병원으로 들어온 문의 확인 및 응대 (/hospital/inquiries)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "문의 목록 표시 (자기 병원 건만, RLS 적용)", "done": false },
-            { "task": "문의 상세 보기", "done": false },
-            { "task": "문의 상태 변경 (new → contacted → closed)", "done": false },
-            { "task": "메모 추가 기능", "done": false }
+            { "task": "문의 목록 표시 (자기 병원 건만, RLS 적용)", "done": true },
+            { "task": "문의 상세 보기", "done": true },
+            { "task": "문의 상태 변경 (new → contacted → closed)", "done": true },
+            { "task": "메모 추가 기능", "done": true }
           ]
         },
         {
