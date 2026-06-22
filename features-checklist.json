@@ -843,12 +843,12 @@
           "description": "Hospital CRUD (/admin/hospitals)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Hospital 목록/생성/수정/삭제", "done": false },
-            { "task": "HospitalProcedure 연결 관리", "done": false },
-            { "task": "Evidence 데이터 관리", "done": false },
-            { "task": "이미지 업로드 (Supabase Storage)", "done": false }
+            { "task": "Hospital 목록/생성/수정/삭제", "done": true },
+            { "task": "HospitalProcedure 연결 관리", "done": true },
+            { "task": "Evidence 데이터 관리", "done": true },
+            { "task": "이미지 업로드 (Supabase Storage)", "done": true }
           ]
         },
         {
@@ -857,11 +857,11 @@
           "description": "Doctor CRUD (/admin/doctors)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Doctor 목록/생성/수정/삭제", "done": false },
-            { "task": "소속 Hospital 연결", "done": false },
-            { "task": "사진 업로드 (Supabase Storage)", "done": false }
+            { "task": "Doctor 목록/생성/수정/삭제", "done": true },
+            { "task": "소속 Hospital 연결", "done": true },
+            { "task": "사진 업로드 (Supabase Storage)", "done": true }
           ]
         },
         {
