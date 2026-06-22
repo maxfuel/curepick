@@ -276,5 +276,25 @@
       "retry": "Try again",
       "backHome": "Go home"
     }
+  },
+  "hospital": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "inquiries": "Inquiries",
+      "profile": "Hospital Profile",
+      "doctors": "Doctors",
+      "procedures": "Procedures",
+      "reviews": "Reviews"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "newInquiries": "New Inquiries",
+      "totalInquiries": "Total Inquiries",
+      "recentInquiries": "Recent Inquiries",
+      "colName": "Name",
+      "colStatus": "Status",
+      "colDate": "Date",
+      "noInquiries": "No inquiries yet."
+    }
   }
 }

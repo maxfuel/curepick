@@ -276,5 +276,25 @@
       "retry": "再試行",
       "backHome": "ホームへ"
     }
+  },
+  "hospital": {
+    "nav": {
+      "dashboard": "ダッシュボード",
+      "inquiries": "お問い合わせ管理",
+      "profile": "病院情報",
+      "doctors": "医師",
+      "procedures": "施術情報",
+      "reviews": "レビュー管理"
+    },
+    "dashboard": {
+      "title": "ダッシュボード",
+      "newInquiries": "新規お問い合わせ",
+      "totalInquiries": "総お問い合わせ",
+      "recentInquiries": "最近のお問い合わせ",
+      "colName": "氏名",
+      "colStatus": "ステータス",
+      "colDate": "日付",
+      "noInquiries": "お問い合わせはまだありません。"
+    }
   }
 }

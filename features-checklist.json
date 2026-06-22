@@ -705,12 +705,12 @@
           "description": "병원 담당자 로그인 (/hospital)",
           "phase": "phase-7",
           "category": "auth",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "병원 담당자 로그인 페이지 (이메일/비밀번호)", "done": false },
-            { "task": "role=hospital_staff 확인 후 접근 허용", "done": false },
-            { "task": "hospital_id 기반 데이터 범위 제한", "done": false },
-            { "task": "비인가 접근 시 리다이렉트", "done": false }
+            { "task": "병원 담당자 로그인 페이지 (이메일/비밀번호)", "done": true },
+            { "task": "role=hospital_staff 확인 후 접근 허용", "done": true },
+            { "task": "hospital_id 기반 데이터 범위 제한", "done": true },
+            { "task": "비인가 접근 시 리다이렉트", "done": true }
           ]
         },
         {
@@ -719,12 +719,12 @@
           "description": "병원 담당자 대시보드 (/hospital/dashboard)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "신규 문의 수 표시", "done": false },
-            { "task": "전체 문의 수 표시", "done": false },
-            { "task": "페이지 조회 수 표시 (가능 시)", "done": false },
-            { "task": "최근 문의 목록 미리보기", "done": false }
+            { "task": "신규 문의 수 표시", "done": true },
+            { "task": "전체 문의 수 표시", "done": true },
+            { "task": "페이지 조회 수 표시 (가능 시)", "done": true },
+            { "task": "최근 문의 목록 미리보기", "done": true }
           ]
         },
         {

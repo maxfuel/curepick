@@ -276,5 +276,25 @@
       "retry": "重试",
       "backHome": "返回首页"
     }
+  },
+  "hospital": {
+    "nav": {
+      "dashboard": "仪表板",
+      "inquiries": "咨询管理",
+      "profile": "医院信息",
+      "doctors": "医生",
+      "procedures": "手术项目",
+      "reviews": "评价管理"
+    },
+    "dashboard": {
+      "title": "仪表板",
+      "newInquiries": "新咨询",
+      "totalInquiries": "总咨询",
+      "recentInquiries": "最近咨询",
+      "colName": "姓名",
+      "colStatus": "状态",
+      "colDate": "日期",
+      "noInquiries": "暂无咨询。"
+    }
   }
 }
