@@ -38,7 +38,7 @@ export function buildMetadata({
   }
 
   return {
-    title: fullTitle,
+    title: { absolute: fullTitle },
     description,
     alternates: {
       canonical: pageUrl,
