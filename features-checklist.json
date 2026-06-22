@@ -827,14 +827,14 @@
           "description": "Service CRUD (/admin/services)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "Intent 목록/생성/수정/삭제", "done": false },
-            { "task": "Category 목록/생성/수정/삭제", "done": false },
-            { "task": "Service 목록/생성/수정/삭제", "done": false },
-            { "task": "Procedure 목록/생성/수정/삭제", "done": false },
-            { "task": "FAQ 관리 (Service별)", "done": false },
-            { "task": "다국어 필드 입력 UI (en, ko, zh 탭)", "done": false }
+            { "task": "Intent 목록/생성/수정/삭제", "done": true },
+            { "task": "Category 목록/생성/수정/삭제", "done": true },
+            { "task": "Service 목록/생성/수정/삭제", "done": true },
+            { "task": "Procedure 목록/생성/수정/삭제", "done": true },
+            { "task": "FAQ 관리 (Service별)", "done": true },
+            { "task": "다국어 필드 입력 UI (en, ko, zh 탭)", "done": true }
           ]
         },
         {
