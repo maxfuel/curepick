@@ -263,5 +263,18 @@
     "viewOriginal": "原文を見る",
     "translating": "翻訳中...",
     "translationError": "翻訳失敗"
+  },
+  "errors": {
+    "notFound": {
+      "title": "ページが見つかりません",
+      "message": "お探しのページは存在しないか、移動されました。",
+      "backHome": "ホームへ"
+    },
+    "serverError": {
+      "title": "エラーが発生しました",
+      "message": "予期しないエラーが発生しました。もう一度お試しください。",
+      "retry": "再試行",
+      "backHome": "ホームへ"
+    }
   }
 }
