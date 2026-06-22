@@ -330,6 +330,26 @@
       "days": "{days} days",
       "noProcedures": "No procedures linked yet."
     },
+    "reviews": {
+      "title": "Reviews",
+      "avgRating": "Avg. Rating",
+      "totalReviews": "Total Reviews",
+      "verifiedReviews": "Verified",
+      "colTitle": "Title",
+      "colAuthor": "Author",
+      "colRating": "Rating",
+      "colDate": "Date",
+      "verified": "Verified",
+      "view": "View",
+      "noReviews": "No approved reviews yet.",
+      "comments": "Comments",
+      "officialReply": "Official Reply",
+      "officialReplyHint": "Your reply will be marked as an official hospital response.",
+      "replyPlaceholder": "Write your official response...",
+      "submitReply": "Submit Reply",
+      "sending": "Sending...",
+      "replySent": "Your reply has been posted."
+    },
     "inquiries": {
       "title": "Inquiries",
       "detailTitle": "Inquiry Detail",

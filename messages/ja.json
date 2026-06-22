@@ -330,6 +330,26 @@
       "days": "{days}日",
       "noProcedures": "関連施術がありません。"
     },
+    "reviews": {
+      "title": "レビュー管理",
+      "avgRating": "平均評価",
+      "totalReviews": "総レビュー",
+      "verifiedReviews": "認証済",
+      "colTitle": "タイトル",
+      "colAuthor": "投稿者",
+      "colRating": "評価",
+      "colDate": "日付",
+      "verified": "認証済",
+      "view": "表示",
+      "noReviews": "承認済みレビューはありません。",
+      "comments": "コメント",
+      "officialReply": "公式返信",
+      "officialReplyHint": "返信は病院の公式返信として表示されます。",
+      "replyPlaceholder": "公式返信を入力してください...",
+      "submitReply": "返信を送信",
+      "sending": "送信中...",
+      "replySent": "返信が投稿されました。"
+    },
     "inquiries": {
       "title": "お問い合わせ管理",
       "detailTitle": "お問い合わせ詳細",

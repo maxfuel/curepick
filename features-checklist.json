@@ -786,12 +786,12 @@
           "description": "자기 병원 후기 확인 및 답변 (/hospital/reviews)",
           "phase": "phase-7",
           "category": "page",
-          "status": "pending",
+          "status": "done",
           "tasks": [
-            { "task": "자기 병원 후기 목록 표시 (RLS 적용)", "done": false },
-            { "task": "후기 상세 보기", "done": false },
-            { "task": "공식 답변(댓글) 작성", "done": false },
-            { "task": "후기 통계 (평균 별점, 총 후기 수, Verified 수)", "done": false }
+            { "task": "자기 병원 후기 목록 표시 (RLS 적용)", "done": true },
+            { "task": "후기 상세 보기", "done": true },
+            { "task": "공식 답변(댓글) 작성", "done": true },
+            { "task": "후기 통계 (평균 별점, 총 후기 수, Verified 수)", "done": true }
           ]
         },
         {

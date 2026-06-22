@@ -330,6 +330,26 @@
       "days": "{days}天",
       "noProcedures": "暂无关联项目。"
     },
+    "reviews": {
+      "title": "评价管理",
+      "avgRating": "平均评分",
+      "totalReviews": "总评价",
+      "verifiedReviews": "已验证",
+      "colTitle": "标题",
+      "colAuthor": "作者",
+      "colRating": "评分",
+      "colDate": "日期",
+      "verified": "已验证",
+      "view": "查看",
+      "noReviews": "暂无已批准评价。",
+      "comments": "评论",
+      "officialReply": "官方回复",
+      "officialReplyHint": "您的回复将标记为医院官方回复。",
+      "replyPlaceholder": "撰写官方回复...",
+      "submitReply": "提交回复",
+      "sending": "发送中...",
+      "replySent": "回复已发布。"
+    },
     "inquiries": {
       "title": "咨询管理",
       "detailTitle": "咨询详情",

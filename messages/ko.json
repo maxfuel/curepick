@@ -330,6 +330,26 @@
       "days": "{days}일",
       "noProcedures": "연결된 시술이 없습니다."
     },
+    "reviews": {
+      "title": "리뷰 관리",
+      "avgRating": "평균 평점",
+      "totalReviews": "전체 리뷰",
+      "verifiedReviews": "인증 리뷰",
+      "colTitle": "제목",
+      "colAuthor": "작성자",
+      "colRating": "평점",
+      "colDate": "날짜",
+      "verified": "인증",
+      "view": "보기",
+      "noReviews": "승인된 리뷰가 없습니다.",
+      "comments": "댓글",
+      "officialReply": "공식 답변",
+      "officialReplyHint": "답변은 병원 공식 답변으로 표시됩니다.",
+      "replyPlaceholder": "공식 답변을 작성해 주세요...",
+      "submitReply": "답변 등록",
+      "sending": "전송 중...",
+      "replySent": "답변이 등록되었습니다."
+    },
     "inquiries": {
       "title": "문의 관리",
       "detailTitle": "문의 상세",
