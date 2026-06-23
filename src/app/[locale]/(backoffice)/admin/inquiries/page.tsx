@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import type { Json } from "@/lib/types/database";
+import InquiryFilters from "./InquiryFilters";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -86,35 +87,14 @@ export default async function AdminInquiriesPage({ params, searchParams }: Props
           ))}
         </div>
 
-        {/* Hospital filter */}
-        <form method="GET" action={`/${locale}/admin/inquiries`} className="flex gap-2">
-          {statusFilter && <input type="hidden" name="status" value={statusFilter} />}
-          {serviceFilter && <input type="hidden" name="service" value={serviceFilter} />}
-          <select
-            name="hospital"
-            defaultValue={hospitalFilter ?? ""}
-            onChange={(e) => e.currentTarget.form?.submit()}
-            className="rounded-md border bg-background px-3 py-1.5 text-sm"
-          >
-            <option value="">{t("allHospitals")}</option>
-            {hospitals?.map((h) => (
-              <option key={h.id} value={h.id}>{getEn(h.name)}</option>
-            ))}
-          </select>
-
-          {/* Service filter */}
-          <select
-            name="service"
-            defaultValue={serviceFilter ?? ""}
-            onChange={(e) => e.currentTarget.form?.submit()}
-            className="rounded-md border bg-background px-3 py-1.5 text-sm"
-          >
-            <option value="">{t("allServices")}</option>
-            {services?.map((s) => (
-              <option key={s.id} value={s.id}>{getEn(s.name)}</option>
-            ))}
-          </select>
-        </form>
+        <InquiryFilters
+          hospitals={hospitals?.map((h) => ({ id: h.id, name: getEn(h.name) })) ?? []}
+          services={services?.map((s) => ({ id: s.id, name: getEn(s.name) })) ?? []}
+          currentHospital={hospitalFilter ?? ""}
+          currentService={serviceFilter ?? ""}
+          labelAllHospitals={t("allHospitals")}
+          labelAllServices={t("allServices")}
+        />
       </div>
 
       <div className="rounded-lg border overflow-hidden">

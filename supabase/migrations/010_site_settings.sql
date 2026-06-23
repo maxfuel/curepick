@@ -1,0 +1,4 @@
+-- Migration 010: Site Settings (deprecated)
+-- Hero image URL is now stored in data/site-settings.json (file-based, no DB required)
+-- If this table was previously created, remove it:
+-- DROP TABLE IF EXISTS site_settings;

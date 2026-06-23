@@ -36,7 +36,7 @@ export default async function EditDoctorPage({ params }: Props) {
   return (
     <div className="p-6 max-w-2xl">
       <h1 className="text-2xl font-semibold mb-6">{t("editDoctor")}: {getEn(doctor.name)}</h1>
-      <form action={handleUpdate} className="space-y-4" encType="multipart/form-data">
+      <form action={handleUpdate} className="space-y-4">
         <MultilingualInput name="name" label={t("fieldName")} value={getMultilingual(doctor.name)} />
         <MultilingualInput name="specialty" label={t("fieldSpecialty")} value={getMultilingual(doctor.specialty)} />
         <MultilingualInput name="bio" label={t("fieldBio")} multiline value={getMultilingual(doctor.bio)} />

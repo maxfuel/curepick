@@ -18,7 +18,7 @@ export default async function NewHospitalPage({ params }: Props) {
   return (
     <div className="p-6 max-w-2xl">
       <h1 className="text-2xl font-semibold mb-6">{t("newHospital")}</h1>
-      <form action={handleCreate} className="space-y-4" encType="multipart/form-data">
+      <form action={handleCreate} className="space-y-4">
         <MultilingualInput name="name" label={t("fieldName")} />
         <MultilingualInput name="description" label={t("fieldDescription")} multiline />
         <MultilingualInput name="address" label={t("fieldAddress")} />

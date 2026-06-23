@@ -49,7 +49,7 @@ export default async function EditHospitalPage({ params }: Props) {
       <h1 className="text-2xl font-semibold">{t("editHospital")}: {getEn(hospital.name)}</h1>
 
       {/* Edit form */}
-      <form action={handleUpdate} className="space-y-4" encType="multipart/form-data">
+      <form action={handleUpdate} className="space-y-4">
         <MultilingualInput name="name" label={t("fieldName")} value={getMultilingual(hospital.name)} />
         <MultilingualInput name="description" label={t("fieldDescription")} multiline value={getMultilingual(hospital.description)} />
         <MultilingualInput name="address" label={t("fieldAddress")} value={getMultilingual(hospital.address)} />

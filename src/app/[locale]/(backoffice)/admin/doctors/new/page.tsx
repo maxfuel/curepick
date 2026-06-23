@@ -31,7 +31,7 @@ export default async function NewDoctorPage({ params }: Props) {
   return (
     <div className="p-6 max-w-2xl">
       <h1 className="text-2xl font-semibold mb-6">{t("newDoctor")}</h1>
-      <form action={handleCreate} className="space-y-4" encType="multipart/form-data">
+      <form action={handleCreate} className="space-y-4">
         <MultilingualInput name="name" label={t("fieldName")} />
         <MultilingualInput name="specialty" label={t("fieldSpecialty")} />
         <MultilingualInput name="bio" label={t("fieldBio")} multiline />

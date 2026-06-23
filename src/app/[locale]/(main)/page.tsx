@@ -1,9 +1,10 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getLocalizedField } from "@/lib/utils/i18n-field";
-import { CategoryCard } from "@/components/cards/CategoryCard";
+import { CategoryCarousel } from "@/components/cards/CategoryCarousel";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { CTAButton } from "@/components/ui/CTAButton";
+import { WhatsAppButton, WeChatButton } from "@/components/ui/ContactButtons";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
@@ -11,6 +12,7 @@ import { MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo/metadata";
+import { readSiteSettings } from "@/lib/site-settings";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -36,22 +38,16 @@ export default async function HomePage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: "home" });
   const tCat = await getTranslations({ locale, namespace: "categories" });
 
-  // Fetch intents, categories, featured services, and featured hospitals in parallel
+  // Fetch all data in parallel
   const [
-    { data: intents },
     { data: categories },
     { data: featuredServices },
     { data: featuredHospitals },
   ] = await Promise.all([
     supabase
-      .from("intents")
-      .select("id, name, slug, sort_order")
-      .order("sort_order"),
-    supabase
       .from("categories")
       .select("id, slug, name, image_url, services(count)")
-      .order("sort_order")
-      .limit(8),
+      .order("sort_order"),
     supabase
       .from("services")
       .select("id, slug, name, description, image_url")
@@ -65,16 +61,30 @@ export default async function HomePage({ params }: Props) {
       .limit(6),
   ]);
 
+  const { hero_image_url: heroImageUrl } = readSiteSettings();
+
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-muted py-20 sm:py-28">
-        <div className="container mx-auto px-4">
+      <section className={`relative overflow-hidden py-20 sm:py-28 ${heroImageUrl ? "" : "bg-muted"}`}>
+        {heroImageUrl && (
+          <>
+            <Image
+              src={heroImageUrl}
+              alt="Hero background"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-black/55" />
+          </>
+        )}
+        <div className="container relative mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className={`text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight whitespace-nowrap ${heroImageUrl ? "text-white" : ""}`}>
               {t("title")}
             </h1>
-            <p className="text-lg text-muted-foreground sm:text-xl">
+            <p className={`text-lg sm:text-xl ${heroImageUrl ? "text-white/80" : "text-muted-foreground"}`}>
               {t("subtitle")}
             </p>
             <div className="max-w-xl mx-auto">
@@ -85,63 +95,26 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       <div className="container mx-auto px-4 py-16 space-y-16">
-        {/* Intent Section */}
-        {intents && intents.length > 0 && (
-          <section>
-            <h2 className="text-2xl font-bold text-center mb-8">
-              {t("intentSection")}
-            </h2>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {intents.map((intent) => (
-                <Link
-                  key={intent.id}
-                  href={`/categories`}
-                  className="flex flex-col items-center gap-3 rounded-xl border p-6 text-center transition-colors hover:bg-muted/50"
-                >
-                  <span className="text-3xl">
-                    {intentEmoji(intent.slug)}
-                  </span>
-                  <span className="font-semibold text-sm">
-                    {getLocalizedField(intent.name, locale)}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* Category Grid */}
         {categories && categories.length > 0 && (
           <>
             <Separator />
             <section>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">{t("browseCategories")}</h2>
-                <Link
-                  href="/categories"
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  {t("viewAllCategories")} &rarr;
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {categories.map((category) => {
+              <h2 className="text-2xl font-bold mb-6 text-center">{t("browseCategories")}</h2>
+              <CategoryCarousel
+                categories={(categories ?? []).map((category) => {
                   const serviceCount =
                     (category.services as unknown as { count: number }[])?.[0]
                       ?.count ?? 0;
-                  return (
-                    <CategoryCard
-                      key={category.id}
-                      slug={category.slug}
-                      name={getLocalizedField(category.name, locale)}
-                      imageUrl={category.image_url}
-                      servicesLabel={tCat("servicesCount", {
-                        count: serviceCount,
-                      })}
-                    />
-                  );
+                  return {
+                    id: category.id,
+                    slug: category.slug,
+                    name: getLocalizedField(category.name, locale),
+                    imageUrl: category.image_url,
+                    servicesLabel: tCat("servicesCount", { count: serviceCount }),
+                  };
                 })}
-              </div>
+              />
             </section>
           </>
         )}
@@ -273,8 +246,10 @@ export default async function HomePage({ params }: Props) {
           <p className="mt-3 text-lg text-muted-foreground max-w-xl mx-auto">
             {t("ctaSubtitle")}
           </p>
-          <div className="mt-6">
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
             <CTAButton variant="large" />
+            <WhatsAppButton />
+            <WeChatButton />
           </div>
         </section>
       </div>

@@ -98,6 +98,8 @@ export default async function CategoryDetailPage({ params }: Props) {
         .order("sort_order")
     : { data: [] };
 
+  const serviceSlugMap = new Map((services ?? []).map((s) => [s.id, s.slug]));
+
   // Fetch featured hospitals via hospital_procedures
   const procedureIds = (procedures ?? []).map((p) => p.id);
   const featuredHospitals: Array<{
@@ -164,24 +166,24 @@ export default async function CategoryDetailPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <div>
       {/* Hero Section */}
-      <section className="relative bg-muted py-16">
+      <section className="relative overflow-hidden bg-gradient-to-br from-sky-700 to-indigo-900 py-16">
         {category.image_url && (
-          <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0">
             <Image
               src={category.image_url}
               alt={categoryName}
               fill
-              className="object-cover opacity-20"
+              className="object-cover opacity-10 mix-blend-overlay"
               priority
             />
           </div>
         )}
         <div className="container relative mx-auto px-4 text-center">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             {categoryName}
           </h1>
           {categoryDescription && (
-            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="mt-4 text-lg text-white/75 max-w-2xl mx-auto">
               {categoryDescription}
             </p>
           )}
@@ -223,11 +225,22 @@ export default async function CategoryDetailPage({ params }: Props) {
                 {t("popularProcedures")}
               </h2>
               <div className="flex flex-wrap gap-2">
-                {procedures.map((procedure) => (
-                  <Badge key={procedure.id} variant="secondary">
-                    {getLocalizedField(procedure.name, locale)}
-                  </Badge>
-                ))}
+                {procedures.map((procedure) => {
+                  const serviceSlug = serviceSlugMap.get(procedure.service_id ?? "");
+                  return serviceSlug ? (
+                    <Link
+                      key={procedure.id}
+                      href={`/services/${serviceSlug}`}
+                      className="inline-flex items-center rounded-full border bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground transition-colors hover:bg-secondary/80 hover:underline"
+                    >
+                      {getLocalizedField(procedure.name, locale)}
+                    </Link>
+                  ) : (
+                    <Badge key={procedure.id} variant="secondary">
+                      {getLocalizedField(procedure.name, locale)}
+                    </Badge>
+                  );
+                })}
               </div>
             </section>
           </>

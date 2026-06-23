@@ -10,7 +10,7 @@
     "language": "Language"
   },
   "home": {
-    "title": "Find the Right Care in Korea",
+    "title": "Experience Korea's Best Care",
     "subtitle": "Discover, compare, and inquire about medical services in Korea.",
     "intentSection": "What Are You Looking For?",
     "browseCategories": "Browse Categories",
@@ -285,7 +285,8 @@
       "doctors": "Doctors",
       "inquiries": "Inquiries",
       "accounts": "Accounts",
-      "reviews": "Reviews"
+      "reviews": "Reviews",
+      "settings": "Settings"
     },
     "services": {
       "title": "Service Taxonomy",

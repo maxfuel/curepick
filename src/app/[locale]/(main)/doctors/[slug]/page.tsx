@@ -88,7 +88,7 @@ export default async function DoctorDetailPage({ params }: Props) {
     doctor.hospital_id
       ? supabase
           .from("hospital_procedures")
-          .select("id, procedures(id, slug, name)")
+          .select("id, procedures(id, slug, name, service_id)")
           .eq("hospital_id", doctor.hospital_id)
       : Promise.resolve({ data: null }),
   ]);
@@ -121,23 +121,32 @@ export default async function DoctorDetailPage({ params }: Props) {
   // Deduplicate procedures
   const procedureMap = new Map<
     string,
-    { id: string; slug: string; name: string }
+    { id: string; slug: string; name: string; service_id: string | null }
   >();
   for (const hp of hospitalProcedures ?? []) {
     const proc = hp.procedures as unknown as {
       id: string;
       slug: string;
       name: unknown;
+      service_id: string | null;
     } | null;
     if (proc && !procedureMap.has(proc.id)) {
       procedureMap.set(proc.id, {
         id: proc.id,
         slug: proc.slug,
         name: getLocalizedField(proc.name, locale),
+        service_id: proc.service_id ?? null,
       });
     }
   }
   const procedures = Array.from(procedureMap.values());
+
+  // Fetch service slugs for procedure links
+  const serviceIds = [...new Set(procedures.map((p) => p.service_id).filter(Boolean))] as string[];
+  const { data: procServices } = serviceIds.length
+    ? await supabase.from("services").select("id, slug").in("id", serviceIds)
+    : { data: [] };
+  const procServiceSlugMap = new Map((procServices ?? []).map((s) => [s.id, s.slug]));
 
   return (
     <>
@@ -219,11 +228,22 @@ export default async function DoctorDetailPage({ params }: Props) {
                 {t("specialtyProcedures")}
               </h2>
               <div className="flex flex-wrap gap-2">
-                {procedures.map((proc) => (
-                  <Badge key={proc.id} variant="secondary" className="text-sm">
-                    {proc.name}
-                  </Badge>
-                ))}
+                {procedures.map((proc) => {
+                  const serviceSlug = proc.service_id ? procServiceSlugMap.get(proc.service_id) : null;
+                  return serviceSlug ? (
+                    <Link
+                      key={proc.id}
+                      href={`/services/${serviceSlug}`}
+                      className="inline-flex items-center rounded-full border bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground transition-colors hover:bg-secondary/80 hover:underline"
+                    >
+                      {proc.name}
+                    </Link>
+                  ) : (
+                    <Badge key={proc.id} variant="secondary" className="text-sm">
+                      {proc.name}
+                    </Badge>
+                  );
+                })}
               </div>
             </section>
           </>

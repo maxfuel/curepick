@@ -59,6 +59,8 @@ export default async function SearchPage({ params, searchParams }: Props) {
     const supabase = await createClient();
     const pattern = `%${query}%`;
 
+    const orPattern = `name->>en.ilike.${pattern},name->>ko.ilike.${pattern},name->>zh.ilike.${pattern},name->>ja.ilike.${pattern}`;
+
     const [
       { data: svcData },
       { data: hospData },
@@ -67,17 +69,17 @@ export default async function SearchPage({ params, searchParams }: Props) {
       supabase
         .from("services")
         .select("slug, name, description, image_url")
-        .ilike("name->>en", pattern)
+        .or(orPattern)
         .limit(10),
       supabase
         .from("hospitals")
         .select("slug, name, city, logo_url, languages")
-        .ilike("name->>en", pattern)
+        .or(orPattern)
         .limit(10),
       supabase
         .from("doctors")
         .select("slug, name, specialty, photo_url, experience_years")
-        .ilike("name->>en", pattern)
+        .or(orPattern)
         .limit(10),
     ]);
 

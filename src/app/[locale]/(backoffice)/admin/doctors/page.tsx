@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { deleteDoctor } from "@/lib/actions/admin-doctors";
 import type { Json } from "@/lib/types/database";
+import HospitalFilter from "./HospitalFilter";
 
 interface Props {
   params: Promise<{ locale: string; }>
@@ -45,16 +46,11 @@ export default async function AdminDoctorsPage({ params, searchParams }: Props) 
       </div>
 
       <div className="mb-4">
-        <select
-          onChange={() => {}}
-          defaultValue={hospitalFilter ?? ""}
-          className="rounded-md border bg-background px-3 py-2 text-sm"
-        >
-          <option value="">{t("allHospitals")}</option>
-          {hospitals?.map((h) => (
-            <option key={h.id} value={h.id}>{getEn(h.name)}</option>
-          ))}
-        </select>
+        <HospitalFilter
+          hospitals={hospitals?.map((h) => ({ id: h.id, name: getEn(h.name) })) ?? []}
+          current={hospitalFilter ?? ""}
+          label={t("allHospitals")}
+        />
       </div>
 
       <div className="rounded-lg border overflow-hidden">

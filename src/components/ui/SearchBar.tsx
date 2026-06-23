@@ -41,22 +41,24 @@ export function SearchBar({ locale, variant = "compact" }: SearchBarProps) {
       const supabase = createClient();
       const pattern = `%${q}%`;
 
+      const orPattern = `name->>en.ilike.${pattern},name->>ko.ilike.${pattern},name->>zh.ilike.${pattern},name->>ja.ilike.${pattern}`;
+
       const [{ data: services }, { data: hospitals }, { data: doctors }] =
         await Promise.all([
           supabase
             .from("services")
             .select("slug, name")
-            .ilike("name->>en", pattern)
+            .or(orPattern)
             .limit(3),
           supabase
             .from("hospitals")
             .select("slug, name")
-            .ilike("name->>en", pattern)
+            .or(orPattern)
             .limit(3),
           supabase
             .from("doctors")
             .select("slug, name")
-            .ilike("name->>en", pattern)
+            .or(orPattern)
             .limit(3),
         ]);
 
@@ -145,14 +147,14 @@ export function SearchBar({ locale, variant = "compact" }: SearchBarProps) {
     <div ref={wrapperRef} className="relative w-full">
       <form onSubmit={handleSubmit} className="flex gap-2">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className={`absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${isHero ? "text-white/70" : "text-muted-foreground"}`} />
           <Input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => suggestions.length > 0 && setOpen(true)}
             placeholder={t("placeholder")}
-            className={`pl-10 ${isHero ? "h-12 text-base" : "h-10"}`}
+            className={`pl-10 ${isHero ? "h-12 text-base bg-white/15 border-white/30 text-white placeholder:text-white/60 focus-visible:border-white/60 focus-visible:ring-white/20" : "h-10"}`}
           />
         </div>
         <Button

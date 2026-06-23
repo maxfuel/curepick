@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { approveReview, rejectReview } from "@/lib/actions/admin-reviews";
 import type { Json } from "@/lib/types/database";
+import ReviewFilters from "./ReviewFilters";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -72,17 +73,13 @@ export default async function AdminReviewsPage({ params, searchParams }: Props) 
             </Link>
           ))}
         </div>
-        <form method="GET" action={`/${locale}/admin/reviews`} className="flex gap-2">
-          {statusFilter && <input type="hidden" name="status" value={statusFilter} />}
-          <select name="hospital" defaultValue={hospitalFilter ?? ""} onChange={(e) => e.currentTarget.form?.submit()} className="rounded-md border bg-background px-3 py-1.5 text-sm">
-            <option value="">{t("allHospitals")}</option>
-            {hospitals?.map((h) => <option key={h.id} value={h.id}>{getEn(h.name)}</option>)}
-          </select>
-          <select name="rating" defaultValue={ratingFilter ?? ""} onChange={(e) => e.currentTarget.form?.submit()} className="rounded-md border bg-background px-3 py-1.5 text-sm">
-            <option value="">{t("allRatings")}</option>
-            {[5, 4, 3, 2, 1].map((r) => <option key={r} value={String(r)}>★ {r}</option>)}
-          </select>
-        </form>
+        <ReviewFilters
+          hospitals={hospitals?.map((h) => ({ id: h.id, name: getEn(h.name) })) ?? []}
+          currentHospital={hospitalFilter ?? ""}
+          currentRating={ratingFilter ?? ""}
+          labelAllHospitals={t("allHospitals")}
+          labelAllRatings={t("allRatings")}
+        />
       </div>
 
       <div className="rounded-lg border overflow-hidden">

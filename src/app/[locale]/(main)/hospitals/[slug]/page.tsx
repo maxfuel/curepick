@@ -94,7 +94,7 @@ export default async function HospitalDetailPage({ params }: Props) {
     supabase
       .from("hospital_procedures")
       .select(
-        "id, procedure_id, annual_volume, specialist_count, waiting_time_days, cost_min, cost_max, cost_currency, evidence_score, languages, intl_patient_support, procedures(id, slug, name, description)"
+        "id, procedure_id, annual_volume, specialist_count, waiting_time_days, cost_min, cost_max, cost_currency, evidence_score, languages, intl_patient_support, procedures(id, slug, name, description, service_id)"
       )
       .eq("hospital_id", hospital.id),
     supabase
@@ -104,6 +104,17 @@ export default async function HospitalDetailPage({ params }: Props) {
       )
       .eq("hospital_id", hospital.id),
   ]);
+
+  // Build service slug map for procedure links
+  const procServiceIds = [...new Set(
+    (hospitalProcedures ?? [])
+      .map((hp) => (hp.procedures as unknown as { service_id?: string } | null)?.service_id)
+      .filter(Boolean) as string[]
+  )];
+  const { data: procServices } = procServiceIds.length
+    ? await supabase.from("services").select("id, slug").in("id", procServiceIds)
+    : { data: [] };
+  const serviceSlugMap = new Map((procServices ?? []).map((s) => [s.id, s.slug]));
 
   const hospitalName = getLocalizedField(hospital.name, locale);
   const hospitalDescription = getLocalizedField(hospital.description, locale);
@@ -220,17 +231,18 @@ export default async function HospitalDetailPage({ params }: Props) {
                     slug: string;
                     name: unknown;
                     description: unknown;
+                    service_id: string | null;
                   } | null;
                   const procedureDesc = procedure
                     ? getLocalizedField(procedure.description, locale)
                     : "";
                   if (!procedure) return null;
 
-                  return (
-                    <div
-                      key={hp.id}
-                      className="rounded-xl border p-6"
-                    >
+                  const serviceSlug = procedure.service_id
+                    ? serviceSlugMap.get(procedure.service_id)
+                    : null;
+                  const cardContent = (
+                    <>
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div className="min-w-0">
                           <h3 className="font-semibold">
@@ -250,7 +262,6 @@ export default async function HospitalDetailPage({ params }: Props) {
                           />
                         </div>
                       </div>
-
                       <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                         {hp.annual_volume != null && (
                           <span className="flex items-center gap-1">
@@ -276,6 +287,20 @@ export default async function HospitalDetailPage({ params }: Props) {
                           </Badge>
                         )}
                       </div>
+                    </>
+                  );
+
+                  return serviceSlug ? (
+                    <Link
+                      key={hp.id}
+                      href={`/services/${serviceSlug}`}
+                      className="block rounded-xl border p-6 transition-colors hover:bg-muted/40"
+                    >
+                      {cardContent}
+                    </Link>
+                  ) : (
+                    <div key={hp.id} className="rounded-xl border p-6">
+                      {cardContent}
                     </div>
                   );
                 })}

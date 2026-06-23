@@ -12,6 +12,7 @@ const navItems = [
   { key: "inquiries", href: "/admin/inquiries" },
   { key: "accounts", href: "/admin/accounts" },
   { key: "reviews", href: "/admin/reviews" },
+  { key: "settings", href: "/admin/settings" },
 ] as const;
 
 export function AdminSidebar({ locale }: { locale: string }) {
