@@ -65,20 +65,155 @@ export async function updateHospital(id: string, formData: FormData) {
   const is_featured = formData.get("is_featured") === "on";
   const langRaw = formData.get("languages") as string;
   const languages = langRaw ? langRaw.split(",").map((s) => s.trim()).filter(Boolean) : null;
+  const founded_year = formData.get("founded_year") ? Number(formData.get("founded_year")) : null;
+  const annual_patients = formData.get("annual_patients") ? Number(formData.get("annual_patients")) : null;
 
   const logoFile = formData.get("logo_file") as File | null;
+  const heroFile = formData.get("hero_file") as File | null;
   const updates: Record<string, unknown> = {
     name, slug, description, address, city, accreditation,
     international_center, phone, email, website, is_featured, languages,
+    founded_year, annual_patients,
   };
 
   if (logoFile && logoFile.size > 0) {
     const logo_url = await uploadImage(logoFile, "hospital-images", `logos/${slug}-${Date.now()}.${logoFile.name.split(".").pop()}`);
     if (logo_url) updates.logo_url = logo_url;
   }
+  if (heroFile && heroFile.size > 0) {
+    const hero_url = await uploadImage(heroFile, "hospital-images", `heroes/${slug}-${Date.now()}.${heroFile.name.split(".").pop()}`);
+    if (hero_url) updates.hero_image_url = hero_url;
+  }
 
   await (supabase.from("hospitals") as any).update(updates).eq("id", id);
   revalidatePath("/admin/hospitals");
+  revalidatePath(`/hospitals/${slug}`);
+}
+
+// ── Video management ──────────────────────────────────────────────────────────
+
+export async function addHospitalVideo(hospitalId: string, formData: FormData) {
+  const supabase = await createClient();
+  const title = (formData.get("title") as string) || "";
+  const url = (formData.get("url") as string) || "";
+  const type = (formData.get("type") as string) || "youtube";
+  if (!url) return;
+
+  const { data: hospital } = await (supabase.from("hospitals") as any)
+    .select("videos, slug")
+    .eq("id", hospitalId)
+    .single();
+
+  const current = (hospital?.videos as unknown[]) ?? [];
+  await (supabase.from("hospitals") as any)
+    .update({ videos: [...current, { title, url, type }] })
+    .eq("id", hospitalId);
+
+  revalidatePath("/admin/hospitals");
+  if (hospital?.slug) revalidatePath(`/hospitals/${hospital.slug}`);
+}
+
+export async function removeHospitalVideo(hospitalId: string, index: number) {
+  const supabase = await createClient();
+  const { data: hospital } = await (supabase.from("hospitals") as any)
+    .select("videos, slug")
+    .eq("id", hospitalId)
+    .single();
+
+  const current = ((hospital?.videos as unknown[]) ?? []).filter((_, i) => i !== index);
+  await (supabase.from("hospitals") as any)
+    .update({ videos: current })
+    .eq("id", hospitalId);
+
+  revalidatePath("/admin/hospitals");
+  if (hospital?.slug) revalidatePath(`/hospitals/${hospital.slug}`);
+}
+
+// ── Gallery management ────────────────────────────────────────────────────────
+
+export async function addHospitalGalleryImage(hospitalId: string, formData: FormData) {
+  const supabase = await createClient();
+  const file = formData.get("image_file") as File | null;
+  if (!file || file.size === 0) return;
+
+  const { data: hospital } = await (supabase.from("hospitals") as any)
+    .select("gallery_images, slug")
+    .eq("id", hospitalId)
+    .single();
+
+  const ext = file.name.split(".").pop();
+  const url = await uploadImage(file, "hospital-images", `gallery/${hospitalId}-${Date.now()}.${ext}`);
+  if (!url) return;
+
+  const current = (hospital?.gallery_images as string[]) ?? [];
+  await (supabase.from("hospitals") as any)
+    .update({ gallery_images: [...current, url] })
+    .eq("id", hospitalId);
+
+  revalidatePath("/admin/hospitals");
+  if (hospital?.slug) revalidatePath(`/hospitals/${hospital.slug}`);
+}
+
+export async function removeHospitalGalleryImage(hospitalId: string, url: string) {
+  const supabase = await createClient();
+  const { data: hospital } = await (supabase.from("hospitals") as any)
+    .select("gallery_images, slug")
+    .eq("id", hospitalId)
+    .single();
+
+  const current = ((hospital?.gallery_images as string[]) ?? []).filter((u) => u !== url);
+  await (supabase.from("hospitals") as any)
+    .update({ gallery_images: current })
+    .eq("id", hospitalId);
+
+  revalidatePath("/admin/hospitals");
+  if (hospital?.slug) revalidatePath(`/hospitals/${hospital.slug}`);
+}
+
+// ── Awards management ─────────────────────────────────────────────────────────
+
+export async function addHospitalAward(hospitalId: string, formData: FormData) {
+  const supabase = await createClient();
+  const title = (formData.get("title") as string) || "";
+  const year = formData.get("year") ? Number(formData.get("year")) : undefined;
+  const description = (formData.get("description") as string) || undefined;
+  if (!title) return;
+
+  const imageFile = formData.get("image_file") as File | null;
+  let image_url: string | undefined;
+  if (imageFile && imageFile.size > 0) {
+    const ext = imageFile.name.split(".").pop();
+    image_url = await uploadImage(imageFile, "hospital-images", `awards/${hospitalId}-${Date.now()}.${ext}`) ?? undefined;
+  }
+
+  const { data: hospital } = await (supabase.from("hospitals") as any)
+    .select("awards, slug")
+    .eq("id", hospitalId)
+    .single();
+
+  const current = (hospital?.awards as unknown[]) ?? [];
+  await (supabase.from("hospitals") as any)
+    .update({ awards: [...current, { title, year, description, image_url }] })
+    .eq("id", hospitalId);
+
+  revalidatePath("/admin/hospitals");
+  if (hospital?.slug) revalidatePath(`/hospitals/${hospital.slug}`);
+}
+
+export async function removeHospitalAward(hospitalId: string, index: number) {
+  const supabase = await createClient();
+  const { data: hospital } = await (supabase.from("hospitals") as any)
+    .select("awards, slug")
+    .eq("id", hospitalId)
+    .single();
+
+  const current = ((hospital?.awards as unknown[]) ?? []).filter((_, i) => i !== index);
+  await (supabase.from("hospitals") as any)
+    .update({ awards: current })
+    .eq("id", hospitalId);
+
+  revalidatePath("/admin/hospitals");
+  if (hospital?.slug) revalidatePath(`/hospitals/${hospital.slug}`);
 }
 
 export async function deleteHospital(id: string) {

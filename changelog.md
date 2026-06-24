@@ -36,6 +36,10 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
   - WhatsApp: `https://wa.me/{number}` 링크
   - WeChat: 클릭 시 WeChat ID 표시 (alert, 추후 QR 모달로 업그레이드 예정)
   - 연락처 정보: `WHATSAPP_NUMBER`, `WECHAT_ID` 상수로 파일 상단에 정의 (실제 값으로 교체 필요)
+- **`supabase/migrations/011_hospital_media.sql`** — `hospitals` 테이블에 5개 컬럼 추가 (`founded_year`, `annual_patients`, `videos`, `gallery_images`, `awards`) · Supabase Dashboard SQL Editor에서 적용 완료
+- **병원 영상 갤러리** (`src/components/hospitals/VideoGallery.tsx`): YouTube 영상 썸네일 3열 그리드 + 클릭 시 인라인 iframe autoplay, 타입 뱃지(facility/testimonial/doctor/youtube)
+- **병원 사진 갤러리** (`src/components/hospitals/PhotoGallery.tsx`): 8칸 그리드 + "+N more" 오버레이, 풀스크린 라이트박스 (← → Esc 키보드 네비게이션)
+- **텍스트 더보기** (`src/components/hospitals/ReadMoreText.tsx`): 기본 500자 truncate + "Read more / Read less" 토글
 - **Hero 이미지 파일 기반 저장** (`src/lib/site-settings.ts`, `data/site-settings.json`):
   - 매 요청마다 DB 조회하는 대신 `data/site-settings.json`에 hero_image_url 저장
   - Admin이 이미지를 올릴 때만 파일 업데이트 + `revalidatePath` 호출
@@ -52,6 +56,18 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
   - zh: "体验韩国顶级医疗服务"
   - ja: "韓国最高の医療を体験する"
 - **Browse Categories 타이틀**: 가운데 정렬 (`text-center`)
+- **병원 상세 페이지** (`/hospitals/[slug]`): Bookimed 벤치마크 기반 전면 리뉴얼
+  - Hero: 풀블리드 480px, 그라디언트 오버레이, 로고·스탯 pill·CTA 카드
+  - Sticky 섹션 네비게이션 (About / Videos / Photos / Services / Doctors / Awards / Reviews / Contact)
+  - Stats Bar 5열 (설립연도·연간환자·의사수·시술수·언어)
+  - 서비스·가격: 카테고리 → 서비스 → 시술 3단계 그룹핑, 볼륨·전문의·가격 표시
+  - VideoGallery, PhotoGallery, Awards 섹션 (새 컴포넌트 사용)
+  - 국제서비스(인증·국제센터·언어), 최하단 CTA 배너
+- **Admin 병원 관리** (`/admin/hospitals/[id]`): 기본정보에 설립연도·연간환자·히어로이미지 필드 추가, 영상 관리·사진 갤러리 관리·수상내역 관리 섹션 신설
+- **`src/lib/actions/admin-hospitals.ts`**: 영상·사진·수상내역 Server Actions 추가 (`addHospitalVideo`, `removeHospitalVideo`, `addHospitalGalleryImage`, `removeHospitalGalleryImage`, `addHospitalAward`, `removeHospitalAward`)
+- **`src/lib/types/database.ts`**: `hospitals` Row/Insert/Update에 `founded_year`, `annual_patients`, `videos`, `gallery_images`, `awards` 타입 추가
+- **`features-checklist.json`**: Cure Partner 역할 전반 반영 — `case_manager` → `cure_partner`, F-101-B(Admin Cure Partner 계정 관리), F-109~F-113(Cure Partner 포털 `/cure-partner`), phase-9 명칭 수정, 66→72 features / 302→327 tasks
+- **`Curepick_goal.md`**: Section 3 Partner Ecosystem(Local Agent/Cure Partner/Hospital 협업), Section 14-B Cure Partner 포털 스펙, Section 17 Admin 역할 명시("플랫폼 관리만"), Section 18 개발원칙 #9 "Admin ≠ Executor" 추가
 
 ### Removed
 - **홈 > Intent Section** ("무엇을 찾고 계신가요?"): 불필요한 섹션 제거

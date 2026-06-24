@@ -273,10 +273,14 @@ export type Database = {
         Row: {
           accreditation: string | null
           address: Json | null
+          annual_patients: number | null
+          awards: Json | null
           city: string | null
           created_at: string | null
           description: Json | null
           email: string | null
+          founded_year: number | null
+          gallery_images: Json | null
           hero_image_url: string | null
           id: string
           international_center: boolean | null
@@ -286,15 +290,20 @@ export type Database = {
           name: Json
           phone: string | null
           slug: string
+          videos: Json | null
           website: string | null
         }
         Insert: {
           accreditation?: string | null
           address?: Json | null
+          annual_patients?: number | null
+          awards?: Json | null
           city?: string | null
           created_at?: string | null
           description?: Json | null
           email?: string | null
+          founded_year?: number | null
+          gallery_images?: Json | null
           hero_image_url?: string | null
           id?: string
           international_center?: boolean | null
@@ -304,15 +313,20 @@ export type Database = {
           name: Json
           phone?: string | null
           slug: string
+          videos?: Json | null
           website?: string | null
         }
         Update: {
           accreditation?: string | null
           address?: Json | null
+          annual_patients?: number | null
+          awards?: Json | null
           city?: string | null
           created_at?: string | null
           description?: Json | null
           email?: string | null
+          founded_year?: number | null
+          gallery_images?: Json | null
           hero_image_url?: string | null
           id?: string
           international_center?: boolean | null
@@ -322,6 +336,7 @@ export type Database = {
           name?: Json
           phone?: string | null
           slug?: string
+          videos?: Json | null
           website?: string | null
         }
         Relationships: []
