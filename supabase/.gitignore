@@ -6,3 +6,6 @@
 .env.keys
 .env.local
 .env.*.local
+
+# AI 참조용 무거운 문서 (Vercel 배포 제외)
+/references/

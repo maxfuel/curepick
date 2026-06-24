@@ -34,7 +34,7 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
   - 스크롤바 숨김 처리 (`scrollbarWidth: none` + `[&::-webkit-scrollbar]:hidden`)
 - **홈 > CTA 버튼**: WhatsApp 상담 / WeChat 상담 버튼 추가 (`src/components/ui/ContactButtons.tsx`)
   - WhatsApp: `https://wa.me/{number}` 링크
-  - WeChat: 클릭 시 WeChat ID 표시 (alert, 추후 QR 모달로 업그레이드 예정)
+  - WeChat: 클릭 시 WeChat ID 표시 → **2026-06-25 개선: `weixin://` 딥링크로 앱 직접 실행, 미설치 시 팝오버(ID 복사) fallback**
   - 연락처 정보: `WHATSAPP_NUMBER`, `WECHAT_ID` 상수로 파일 상단에 정의 (실제 값으로 교체 필요)
 - **`supabase/migrations/011_hospital_media.sql`** — `hospitals` 테이블에 5개 컬럼 추가 (`founded_year`, `annual_patients`, `videos`, `gallery_images`, `awards`) · Supabase Dashboard SQL Editor에서 적용 완료
 - **병원 영상 갤러리** (`src/components/hospitals/VideoGallery.tsx`): YouTube 영상 썸네일 3열 그리드 + 클릭 시 인라인 iframe autoplay, 타입 뱃지(facility/testimonial/doctor/youtube)
@@ -85,13 +85,35 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
 - **문의 알림 이메일 신뢰성**: `src/app/api/inquiries/route.ts`의 알림 발송을 `await` 없는 fire-and-forget → Next 16 `after()`로 변경. 서버리스 Lambda가 응답 후 freeze되어 이메일이 누락되던 위험 제거.
 - **빌드 검증**: 로컬 `next build`로 컴파일·TypeScript 통과 확인(실패는 로컬 env 부재만). Next 16 Turbopack 빌드는 ESLint를 실행하지 않아 기존 lint 경고가 배포를 막지 않음을 확인.
 
-### 배포 진행 상태 (F-004 — 진행 중)
+### 배포 완료 (F-004 — ✅ done)
 - ✅ 위 런칭 준비 변경분 전체를 커밋 후 `main`에 푸시 완료 (commit `2ca5044`, 12개 파일).
-- ⏳ **남은 작업 (대시보드, 수동)** — 아래 완료 시 F-004 done 처리 예정:
-  1. **Supabase**: SQL Editor에서 `supabase/migrations/011_site_settings_table.sql` 실행 (현재 개발 프로젝트 `fxoiltwmqomvnzirdcho` 재사용).
-  2. **Vercel**: `maxfuel/curepick` Import → 환경변수 등록. 🔴 빌드 필수: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (없으면 `supabaseUrl is required`로 빌드 실패). 🟠 런타임: `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `ADMIN_EMAIL`, `GOOGLE_TRANSLATE_API_KEY`. 선택: `NEXT_PUBLIC_SITE_URL`(SEO), `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_WECHAT_ID`.
-  3. **도메인**: Vercel 기본 `*.vercel.app` 사용. 실제 도메인 확정 후 `NEXT_PUBLIC_SITE_URL` 교정 → Redeploy.
-  4. **Supabase Auth**: URL Configuration의 Site URL + Redirect URLs(`https://<도메인>/**`)에 vercel.app 도메인 추가 (OAuth/이메일 콜백용).
-  5. 배포 후 스모크 테스트(홈/상세/검색/문의/로그인/Admin 히어로 교체) → 통과 시 `features-checklist.json` F-004 `pending → done` 처리.
+- ✅ **Vercel 프로덕션 배포 완료 (2026-06-25)**: `curepick.vercel.app` LIVE. 343개 페이지 정상 생성.
+  - 환경변수 등록 완료: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_WECHAT_ID`, `NEXT_PUBLIC_WHATSAPP_NUMBER`
+
+**남은 수동 작업 (도메인 연결 전 완료 권장):**
+- **curepick.com 도메인 연결**: Vercel Dashboard → Settings → Domains → `curepick.com` 추가 후 DNS 설정
+- **Supabase DB 마이그레이션**: `012_site_settings.sql`, `013_partner_ecosystem.sql` → Supabase Dashboard SQL Editor 실행
+- **Supabase Storage**: `partner-resources` 버킷 생성 (Public read)
+- **OAuth 콜백 URL**: Supabase → Authentication → Site URL: `https://curepick.com`, Redirect: `https://curepick.com/**`
+- **RESEND_API_KEY**: 이메일 알림 활성화 시 Vercel 환경변수 추가
+
+---
+
+## [2026-06-25]
+
+### Added
+- **CurepickLogo 전면 개편** (`src/components/ui/CurepickLogo.tsx`):
+  - 하트·십자 아이콘 제거 → "Curepick" 워드마크 + VIP 원형 뱃지(superscript) 조합으로 교체
+  - VIP 뱃지: 회색 원형 테두리(`border-radius: 50%`) 내 "VIP" 텍스트, 오른쪽 상단에 superscript 배치
+  - 태그라인: "The best S.Korea VIP Medical Tourism Platform" (파란색 `#2563eb`)
+  - sm 사이즈: 태그라인 2줄 레이아웃 (`whitespace-nowrap` div × 2, "Curepick" 폭 맞춤)
+- **`.gitignore` 추가**: `.vercel`, `scripts/test-accounts.json` (비밀번호 포함 파일 제외)
+
+### Improved
+- **Header 태그라인 표시** (`src/components/layout/Header.tsx`): `showTagline={false}` → `showTagline={true}`. 로고 하단에 2줄 태그라인 표시.
+- **WeChat 버튼 UX** (`src/components/ui/ContactButtons.tsx`):
+  - `alert()` 제거 → `weixin://` URL scheme으로 WeChat 앱 직접 실행
+  - 앱 미설치 감지(1.5초 timeout + `visibilitychange`): 팝오버 fallback 표시
+  - 팝오버: WeChat ID + "Copy ID" 버튼(클립보드 복사), ✕ 닫기 버튼
 
 ---
