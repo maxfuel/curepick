@@ -10,6 +10,8 @@ export default function robots(): MetadataRoute.Robots {
       disallow: [
         "/admin/",
         "/hospital/",
+        "/partner/",
+        "/cure-partner/",
         "/my",
         "/inquiry",
         "/login",

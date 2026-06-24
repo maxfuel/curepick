@@ -13,11 +13,11 @@ export function WhatsAppButton() {
     <Button
       size="lg"
       className="bg-[#25D366] text-white hover:bg-[#1ebe5d]"
-      render={<a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" />}
+      render={<a href={`https://wa.me/${+821062435073}`} target="_blank" rel="noopener noreferrer" />}
       nativeButton={false}
     >
       <WhatsAppIcon />
-      WhatsApp 상담
+      WhatsApp
     </Button>
   );
 }
@@ -28,10 +28,10 @@ export function WeChatButton() {
     <Button
       size="lg"
       className="bg-[#07C160] text-white hover:bg-[#06a952]"
-      onClick={() => alert(`WeChat ID: ${WECHAT_ID}`)}
+      onClick={() => alert(`WeChat ID: ${jackey686}`)}
     >
       <WeChatIcon />
-      WeChat 상담
+      WeChat
     </Button>
   );
 }

@@ -606,6 +606,283 @@ export type Database = {
           },
         ]
       }
+      agents: {
+        Row: {
+          id: string
+          profile_id: string
+          company_name: string | null
+          country: string | null
+          commission_rate: number | null
+          status: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          profile_id: string
+          company_name?: string | null
+          country?: string | null
+          commission_rate?: number | null
+          status?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          profile_id?: string
+          company_name?: string | null
+          country?: string | null
+          commission_rate?: number | null
+          status?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agents_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      case_notes: {
+        Row: {
+          id: string
+          case_id: string
+          author_id: string
+          content: string
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          case_id: string
+          author_id: string
+          content: string
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          case_id?: string
+          author_id?: string
+          content?: string
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_notes_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_notes_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cases: {
+        Row: {
+          id: string
+          agent_id: string
+          cure_partner_id: string | null
+          hospital_id: string
+          patient_name: string
+          patient_email: string
+          patient_phone: string | null
+          patient_nationality: string | null
+          service_id: string | null
+          procedure_id: string | null
+          source: string | null
+          status: string | null
+          checklist: Json | null
+          arrived_at: string | null
+          in_treatment_at: string | null
+          completed_at: string | null
+          notes: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          agent_id: string
+          cure_partner_id?: string | null
+          hospital_id: string
+          patient_name: string
+          patient_email: string
+          patient_phone?: string | null
+          patient_nationality?: string | null
+          service_id?: string | null
+          procedure_id?: string | null
+          source?: string | null
+          status?: string | null
+          checklist?: Json | null
+          arrived_at?: string | null
+          in_treatment_at?: string | null
+          completed_at?: string | null
+          notes?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          agent_id?: string
+          cure_partner_id?: string | null
+          hospital_id?: string
+          patient_name?: string
+          patient_email?: string
+          patient_phone?: string | null
+          patient_nationality?: string | null
+          service_id?: string | null
+          procedure_id?: string | null
+          source?: string | null
+          status?: string | null
+          checklist?: Json | null
+          arrived_at?: string | null
+          in_treatment_at?: string | null
+          completed_at?: string | null
+          notes?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cases_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_cure_partner_id_fkey"
+            columns: ["cure_partner_id"]
+            isOneToOne: false
+            referencedRelation: "cure_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_procedure_id_fkey"
+            columns: ["procedure_id"]
+            isOneToOne: false
+            referencedRelation: "procedures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commissions: {
+        Row: {
+          id: string
+          case_id: string
+          agent_id: string
+          amount: number
+          currency: string | null
+          status: string | null
+          paid_at: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          case_id: string
+          agent_id: string
+          amount: number
+          currency?: string | null
+          status?: string | null
+          paid_at?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          case_id?: string
+          agent_id?: string
+          amount?: number
+          currency?: string | null
+          status?: string | null
+          paid_at?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cure_partners: {
+        Row: {
+          id: string
+          profile_id: string
+          full_name: string | null
+          languages: string[] | null
+          specialty_areas: string[] | null
+          status: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          profile_id: string
+          full_name?: string | null
+          languages?: string[] | null
+          specialty_areas?: string[] | null
+          status?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          profile_id?: string
+          full_name?: string | null
+          languages?: string[] | null
+          specialty_areas?: string[] | null
+          status?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cure_partners_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_settings: {
+        Row: {
+          key: string
+          value: string | null
+        }
+        Insert: {
+          key: string
+          value?: string | null
+        }
+        Update: {
+          key?: string
+          value?: string | null
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           category_id: string | null
@@ -658,6 +935,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      user_agent_id: { Args: never; Returns: string }
+      user_cure_partner_id: { Args: never; Returns: string }
       user_hospital_id: { Args: never; Returns: string }
       user_role: { Args: never; Returns: string }
     }

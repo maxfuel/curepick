@@ -285,7 +285,11 @@
       "doctors": "医師",
       "inquiries": "お問い合わせ",
       "accounts": "アカウント管理",
-      "reviews": "レビュー管理"
+      "reviews": "レビュー管理",
+      "cases": "ケース",
+      "agents": "エージェント",
+      "curePartners": "キュアパートナー",
+      "commissions": "コミッション"
     },
     "services": {
       "title": "サービス分類管理",
@@ -583,5 +587,21 @@
       "sending": "送信中...",
       "sent": "リクエストが送信されました。管理者が確認後に対応いたします。"
     }
+  },
+  "partner": {
+    "nav": {
+      "dashboard": "ダッシュボード",
+      "cases": "ケース",
+      "commissions": "コミッション",
+      "resources": "リソース"
+    },
+    "title": "パートナーポータル"
+  },
+  "curePartner": {
+    "nav": {
+      "dashboard": "ダッシュボード",
+      "cases": "担当ケース"
+    },
+    "title": "キュアパートナーポータル"
   }
 }

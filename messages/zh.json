@@ -121,8 +121,8 @@
     "placeholder": "搜索服务、项目、医院...",
     "button": "搜索",
     "results": "搜索结果",
-    "resultsFor": "\u201c{query}\u201d的搜索结果",
-    "noResults": "未找到\u201c{query}\u201d的结果",
+    "resultsFor": "“{query}”的搜索结果",
+    "noResults": "未找到“{query}”的结果",
     "noResultsHint": "请尝试其他关键词或浏览分类。",
     "servicesSection": "服务",
     "hospitalsSection": "医院",
@@ -285,7 +285,11 @@
       "doctors": "医生",
       "inquiries": "咨询",
       "accounts": "账户管理",
-      "reviews": "评价管理"
+      "reviews": "评价管理",
+      "cases": "案例",
+      "agents": "代理商",
+      "curePartners": "治疗伙伴",
+      "commissions": "佣金"
     },
     "services": {
       "title": "服务分类管理",
@@ -583,5 +587,21 @@
       "sending": "发送中...",
       "sent": "您的申请已提交，我们的团队将尽快处理。"
     }
+  },
+  "partner": {
+    "nav": {
+      "dashboard": "仪表板",
+      "cases": "案例",
+      "commissions": "佣金",
+      "resources": "资料"
+    },
+    "title": "合作伙伴门户"
+  },
+  "curePartner": {
+    "nav": {
+      "dashboard": "仪表板",
+      "cases": "我的案例"
+    },
+    "title": "治疗伙伴门户"
   }
 }

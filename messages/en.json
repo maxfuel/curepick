@@ -286,7 +286,11 @@
       "inquiries": "Inquiries",
       "accounts": "Accounts",
       "reviews": "Reviews",
-      "settings": "Settings"
+      "settings": "Settings",
+      "cases": "Cases",
+      "agents": "Agents",
+      "curePartners": "Cure Partners",
+      "commissions": "Commissions"
     },
     "services": {
       "title": "Service Taxonomy",
@@ -584,5 +588,21 @@
       "sending": "Sending...",
       "sent": "Your request has been submitted. Our team will review it shortly."
     }
+  },
+  "partner": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "cases": "Cases",
+      "commissions": "Commissions",
+      "resources": "Resources"
+    },
+    "title": "Partner Portal"
+  },
+  "curePartner": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "cases": "My Cases"
+    },
+    "title": "Cure Partner Portal"
   }
 }

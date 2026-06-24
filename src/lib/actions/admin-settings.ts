@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient as createAdminClient } from "@supabase/supabase-js";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getProfile } from "@/lib/auth/get-user";
 import { writeSiteSettings } from "@/lib/site-settings";
 
@@ -43,12 +43,14 @@ export async function updateHeroImage(formData: FormData) {
 
   if (error || !data) throw new Error(error?.message ?? "Upload failed");
 
-  const { data: { publicUrl } } = admin.storage.from(BUCKET).getPublicUrl(data.path);
+  const {
+    data: { publicUrl },
+  } = admin.storage.from(BUCKET).getPublicUrl(data.path);
 
   await writeSiteSettings({ hero_image_url: publicUrl });
 
-  revalidatePath("/");
-  revalidatePath("/en");
+  revalidateTag("site-settings", "default");
+  revalidatePath("/", "layout");
 }
 
 export async function removeHeroImage() {
@@ -57,6 +59,6 @@ export async function removeHeroImage() {
 
   await writeSiteSettings({ hero_image_url: null });
 
-  revalidatePath("/");
-  revalidatePath("/en");
+  revalidateTag("site-settings", "default");
+  revalidatePath("/", "layout");
 }

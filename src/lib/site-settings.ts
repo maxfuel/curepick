@@ -1,49 +1,39 @@
+import { unstable_cache } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
 
 interface SiteSettings {
   hero_image_url: string | null;
 }
 
-const DEFAULTS: SiteSettings = {
-  hero_image_url: null,
-};
+const DEFAULTS: SiteSettings = { hero_image_url: null };
 
-// Singleton row — the table is constrained to a single row with id = 1.
-const SETTINGS_ID = 1;
-
-// Public read uses the anon key (RLS allows SELECT). Reads happen in server
-// components, so no cookie/session scope is required.
-function anonClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-}
-
-// Writes use the service role key (bypasses RLS) — only called from admin server actions.
-function serviceClient() {
+function getAdminClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 }
 
-export async function readSiteSettings(): Promise<SiteSettings> {
-  try {
-    const { data, error } = await anonClient()
-      .from("site_settings")
-      .select("hero_image_url")
-      .eq("id", SETTINGS_ID)
-      .maybeSingle();
-    if (error || !data) return DEFAULTS;
-    return { ...DEFAULTS, ...data };
-  } catch {
-    return DEFAULTS;
-  }
-}
+export const readSiteSettings = unstable_cache(
+  async (): Promise<SiteSettings> => {
+    const admin = getAdminClient();
+    const { data } = await admin.from("site_settings").select("key, value");
+    if (!data) return DEFAULTS;
+    const map = Object.fromEntries(data.map((r) => [r.key, r.value]));
+    return { hero_image_url: map.hero_image_url ?? null };
+  },
+  ["site-settings"],
+  { tags: ["site-settings"] }
+);
 
-export async function writeSiteSettings(patch: Partial<SiteSettings>): Promise<void> {
-  await serviceClient()
-    .from("site_settings")
-    .upsert({ id: SETTINGS_ID, ...patch, updated_at: new Date().toISOString() });
+export async function writeSiteSettings(
+  patch: Partial<SiteSettings>
+): Promise<void> {
+  const admin = getAdminClient();
+  const entries = Object.entries(patch) as [string, string | null][];
+  for (const [key, value] of entries) {
+    await admin
+      .from("site_settings")
+      .upsert({ key, value: value ?? null }, { onConflict: "key" });
+  }
 }

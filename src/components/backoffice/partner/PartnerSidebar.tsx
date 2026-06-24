@@ -5,29 +5,21 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 const navItems = [
-  { key: "dashboard", href: "/admin/dashboard" },
-  { key: "services", href: "/admin/services" },
-  { key: "hospitals", href: "/admin/hospitals" },
-  { key: "doctors", href: "/admin/doctors" },
-  { key: "inquiries", href: "/admin/inquiries" },
-  { key: "accounts", href: "/admin/accounts" },
-  { key: "reviews", href: "/admin/reviews" },
-  { key: "cases", href: "/admin/cases" },
-  { key: "agents", href: "/admin/agents" },
-  { key: "curePartners", href: "/admin/cure-partners" },
-  { key: "commissions", href: "/admin/commissions" },
-  { key: "settings", href: "/admin/settings" },
+  { key: "dashboard", href: "/partner/dashboard" },
+  { key: "cases", href: "/partner/cases" },
+  { key: "commissions", href: "/partner/commissions" },
+  { key: "resources", href: "/partner/resources" },
 ] as const;
 
-export function AdminSidebar({ locale }: { locale: string }) {
+export function PartnerSidebar({ locale }: { locale: string }) {
   const pathname = usePathname();
-  const t = useTranslations("admin.nav");
+  const t = useTranslations("partner.nav");
 
   return (
     <nav className="flex flex-col gap-1 p-3">
       <div className="px-3 py-3 mb-1">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Admin
+          Partner Portal
         </p>
       </div>
       {navItems.map((item) => {
