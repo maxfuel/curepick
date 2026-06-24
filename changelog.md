@@ -99,6 +99,39 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
 
 ---
 
+## [2026-06-25 — Session 2]
+
+### Added
+- **`supabase/migrations/014_cure_partner_profile.sql`**: `cure_partners` 테이블에 15개 필드 추가 — `photo_url`, `title`(JSONB), `bio`(JSONB), `nationality`, `base_country`, `service_regions[]`, `certifications[]`, `years_experience`, `patient_count`, `contact_whatsapp`, `contact_wechat`, `vip_level`(standard/vip/vvip), `protocol_features[]`, `partner_hospitals[]`, `intro_video_url`. Supabase SQL Editor에서 실행 필요.
+- **`/cure-partners` 공개 페이지** (`src/app/[locale]/(main)/cure-partners/page.tsx`): Jairos 제안서 마케팅 내용 기반 Cure Partner 쇼케이스 페이지 신규 생성
+  - Hero — "Your Dedicated Medical Journey Companion"
+  - What is a Cure Partner? (JMM 개념 설명 + 3자 역할 비교)
+  - 4-Step Premium Journey (Pre-Check → Medical Care → Premium Recovery → Continuative Care)
+  - JMM Protocol (공항 의전·병원 동행·통역·명상 연계·사후관리 등 7개 특징 카드)
+  - Our Cure Partners (DB에서 active CP 카드 그리드, 사진·VIP배지·언어·서비스지역 표시)
+  - CTA — 문의 연결
+- **`/about` 페이지** (`src/app/[locale]/(main)/about/page.tsx`): Footer 링크만 존재하던 About 페이지 신규 구현
+  - Mission ("Service First" 철학 시각화)
+  - How It Works (Local Agent → Cure Partner → Hospital 3단계 협업)
+  - Our Principles (4대 개발 원칙)
+  - Partner Network (보건복지부·청담Cell·오대산·경희대 한의과)
+  - Contact CTA
+
+### Improved
+- **Admin Cure Partner 관리** (`/admin/cure-partners`): 등록 폼 대폭 강화
+  - 섹션 구분: Account / Identity / Title & Bio / Languages & Specialties / Protocol Features / Contact & Media / Partner Info
+  - 신규 필드: VIP 등급(Standard/VIP/VVIP), 국적·거주국, 다국어 직함·소개글(EN/KO), 서비스 지역, 프로토콜 특징 체크박스 7개, WhatsApp/WeChat, 사진·영상 URL, 협력병원, 자격증
+  - 목록 테이블에 VIP Level, Service Regions, WhatsApp 열 추가
+- **`src/lib/types/database.ts`**: `cure_partners` Row/Insert/Update 타입에 15개 신규 필드 추가
+- **Footer**: Services 열에 "Cure Partners" 링크 (`/cure-partners`) 추가
+
+### Jairos 역할 분리 정의
+- **Local Partner** (`/partner`): 중국(항저우 화상초진센터·양란EMBA·왕천1500만·징즈5000명) + 유럽에서 VVIP 환자 유치·케이스 등록
+- **Cure Partner (JMM)** (`/cure-partner`): Alex Park이 공항 픽업부터 귀국까지 1:1 동행, 병원 예약·통역·오대산 명상 연계·사후관리
+- **Admin 콘텐츠 기여** → `/about` 및 `/cure-partners` 공개 페이지에 반영 (팀 6인, 4단계 여정, 파트너십 정보)
+
+---
+
 ## [2026-06-25]
 
 ### Added

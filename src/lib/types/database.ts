@@ -839,6 +839,21 @@ export type Database = {
           specialty_areas: string[] | null
           status: string | null
           created_at: string | null
+          photo_url: string | null
+          title: Json | null
+          bio: Json | null
+          nationality: string | null
+          base_country: string | null
+          service_regions: string[] | null
+          certifications: string[] | null
+          years_experience: number | null
+          patient_count: number | null
+          contact_whatsapp: string | null
+          contact_wechat: string | null
+          vip_level: string | null
+          protocol_features: string[] | null
+          partner_hospitals: string[] | null
+          intro_video_url: string | null
         }
         Insert: {
           id?: string
@@ -848,6 +863,21 @@ export type Database = {
           specialty_areas?: string[] | null
           status?: string | null
           created_at?: string | null
+          photo_url?: string | null
+          title?: Json | null
+          bio?: Json | null
+          nationality?: string | null
+          base_country?: string | null
+          service_regions?: string[] | null
+          certifications?: string[] | null
+          years_experience?: number | null
+          patient_count?: number | null
+          contact_whatsapp?: string | null
+          contact_wechat?: string | null
+          vip_level?: string | null
+          protocol_features?: string[] | null
+          partner_hospitals?: string[] | null
+          intro_video_url?: string | null
         }
         Update: {
           id?: string
@@ -857,6 +887,21 @@ export type Database = {
           specialty_areas?: string[] | null
           status?: string | null
           created_at?: string | null
+          photo_url?: string | null
+          title?: Json | null
+          bio?: Json | null
+          nationality?: string | null
+          base_country?: string | null
+          service_regions?: string[] | null
+          certifications?: string[] | null
+          years_experience?: number | null
+          patient_count?: number | null
+          contact_whatsapp?: string | null
+          contact_wechat?: string | null
+          vip_level?: string | null
+          protocol_features?: string[] | null
+          partner_hospitals?: string[] | null
+          intro_video_url?: string | null
         }
         Relationships: [
           {

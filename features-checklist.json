@@ -2375,16 +2375,16 @@
                ],
     "summary":  {
                     "total_phases":  11,
-                    "total_features":  72,
-                    "total_tasks":  327,
-                    "done_features":  56,
+                    "total_features":  75,
+                    "total_tasks":  342,
+                    "done_features":  59,
                     "pending_features":  16,
                     "categories":  {
                                        "infrastructure":  4,
-                                       "database":  10,
+                                       "database":  11,
                                        "layout":  3,
                                        "ui-component":  8,
-                                       "page":  36,
+                                       "page":  38,
                                        "auth":  6,
                                        "backend":  1,
                                        "i18n":  2,
@@ -2404,7 +2404,13 @@
                                          "phase-8":  "done",
                                          "phase-9":  "done — Partner Ecosystem implemented locally (2026-06-24)",
                                          "phase-99":  "pending — Post-Launch"
-                                     }
+                                     },
+                    "added_2026_06_25":  [
+                                             "F-114: DB migration 014 — cure_partners 프로필 15개 필드 추가 (photo, title, bio, vip_level 등) — Supabase 실행 필요",
+                                             "F-115: /cure-partners 공개 페이지 (Jairos JMM 마케팅 기반, 4단계 여정·프로토콜·파트너 카드)",
+                                             "F-116: /about 페이지 (미션·3자 협업·파트너 생태계·원칙)",
+                                             "F-101-B 강화: Admin Cure Partner 등록 폼 — 15개 신규 필드, 7개 섹션, 체크박스 프로토콜"
+                                         ]
                 }
 }
 

@@ -94,18 +94,27 @@ $$ LANGUAGE sql SECURITY DEFINER STABLE;
 -- ── 9. RLS Policies ──────────────────────────────────────────────────────────
 
 -- agents
+DROP POLICY IF EXISTS "agents: own record" ON agents;
+DROP POLICY IF EXISTS "agents: admin full" ON agents;
 CREATE POLICY "agents: own record" ON agents
   FOR SELECT USING (profile_id = auth.uid());
 CREATE POLICY "agents: admin full" ON agents
   FOR ALL USING (public.user_role() = 'admin');
 
 -- cure_partners
+DROP POLICY IF EXISTS "cure_partners: own record" ON cure_partners;
+DROP POLICY IF EXISTS "cure_partners: admin full" ON cure_partners;
 CREATE POLICY "cure_partners: own record" ON cure_partners
   FOR SELECT USING (profile_id = auth.uid());
 CREATE POLICY "cure_partners: admin full" ON cure_partners
   FOR ALL USING (public.user_role() = 'admin');
 
 -- cases
+DROP POLICY IF EXISTS "cases: agent sees own" ON cases;
+DROP POLICY IF EXISTS "cases: agent can insert" ON cases;
+DROP POLICY IF EXISTS "cases: cure_partner sees assigned" ON cases;
+DROP POLICY IF EXISTS "cases: cure_partner can update" ON cases;
+DROP POLICY IF EXISTS "cases: admin full" ON cases;
 CREATE POLICY "cases: agent sees own" ON cases
   FOR SELECT USING (agent_id = public.user_agent_id());
 CREATE POLICY "cases: agent can insert" ON cases
@@ -118,6 +127,9 @@ CREATE POLICY "cases: admin full" ON cases
   FOR ALL USING (public.user_role() = 'admin');
 
 -- case_notes
+DROP POLICY IF EXISTS "case_notes: participants select" ON case_notes;
+DROP POLICY IF EXISTS "case_notes: participants insert" ON case_notes;
+DROP POLICY IF EXISTS "case_notes: admin full" ON case_notes;
 CREATE POLICY "case_notes: participants select" ON case_notes
   FOR SELECT USING (
     EXISTS (
@@ -143,6 +155,8 @@ CREATE POLICY "case_notes: admin full" ON case_notes
   FOR ALL USING (public.user_role() = 'admin');
 
 -- commissions
+DROP POLICY IF EXISTS "commissions: agent sees own" ON commissions;
+DROP POLICY IF EXISTS "commissions: admin full" ON commissions;
 CREATE POLICY "commissions: agent sees own" ON commissions
   FOR SELECT USING (agent_id = public.user_agent_id());
 CREATE POLICY "commissions: admin full" ON commissions

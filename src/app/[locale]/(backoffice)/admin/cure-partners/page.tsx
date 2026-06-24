@@ -11,7 +11,7 @@ export default async function AdminCurePartnersPage({ params }: Props) {
 
   const { data: curePartners } = await supabase
     .from("cure_partners")
-    .select("id, full_name, languages, specialty_areas, status, created_at, profiles(email)")
+    .select("id, full_name, languages, specialty_areas, service_regions, status, vip_level, contact_whatsapp, nationality, base_country, created_at, profiles(email)")
     .order("created_at", { ascending: false });
 
   return (

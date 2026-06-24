@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
 
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "site_settings: admin full access" ON site_settings;
 CREATE POLICY "site_settings: admin full access" ON site_settings
   FOR ALL USING (public.user_role() = 'admin');
 
