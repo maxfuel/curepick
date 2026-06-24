@@ -22,12 +22,22 @@ export function CurepickLogo({ showTagline = true, size = "md" }: Props) {
         <VipBadge size={badgeSize} />
       </div>
       {showTagline && (
-        <span
-          className={`${taglineSize} font-medium tracking-wide mt-0.5`}
-          style={{ color: "#2563eb" }}
-        >
-          The best S.Korea VIP Medical Tourism Platform
-        </span>
+        size === "sm" ? (
+          <div
+            className={`${taglineSize} font-medium tracking-wide mt-0.5 leading-tight`}
+            style={{ color: "#2563eb" }}
+          >
+            <div className="whitespace-nowrap">The best S.Korea VIP</div>
+            <div className="whitespace-nowrap">Medical Tourism Platform</div>
+          </div>
+        ) : (
+          <span
+            className={`${taglineSize} font-medium tracking-wide mt-0.5`}
+            style={{ color: "#2563eb" }}
+          >
+            The best S.Korea VIP Medical Tourism Platform
+          </span>
+        )
       )}
     </div>
   );

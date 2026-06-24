@@ -122,19 +122,19 @@
                                             "description":  "Vercel에 프로젝트 배포 연결",
                                             "phase":  "phase-0",
                                             "category":  "infrastructure",
-                                            "status":  "pending",
+                                            "status":  "done",
                                             "tasks":  [
                                                           {
                                                               "task":  "Vercel 프로젝트 연결",
-                                                              "done":  false
+                                                              "done":  true
                                                           },
                                                           {
                                                               "task":  "환경 변수 Vercel에 등록",
-                                                              "done":  false
+                                                              "done":  true
                                                           },
                                                           {
                                                               "task":  "초기 배포 확인",
-                                                              "done":  false
+                                                              "done":  true
                                                           }
                                                       ]
                                         }
@@ -2377,8 +2377,8 @@
                     "total_phases":  11,
                     "total_features":  72,
                     "total_tasks":  327,
-                    "done_features":  55,
-                    "pending_features":  17,
+                    "done_features":  56,
+                    "pending_features":  16,
                     "categories":  {
                                        "infrastructure":  4,
                                        "database":  10,
