@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Mail, Phone } from "lucide-react";
+import { CurepickLogo } from "@/components/ui/CurepickLogo";
 
 export function Footer() {
   const t = useTranslations("footer");
@@ -12,8 +13,8 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Column 1: Logo & Description */}
           <div className="space-y-4">
-            <Link href="/" className="text-xl font-bold">
-              Curepick
+            <Link href="/">
+              <CurepickLogo size="md" showTagline={true} />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {t("description")}
