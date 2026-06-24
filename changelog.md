@@ -69,4 +69,13 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
 - **문의 알림 이메일 신뢰성**: `src/app/api/inquiries/route.ts`의 알림 발송을 `await` 없는 fire-and-forget → Next 16 `after()`로 변경. 서버리스 Lambda가 응답 후 freeze되어 이메일이 누락되던 위험 제거.
 - **빌드 검증**: 로컬 `next build`로 컴파일·TypeScript 통과 확인(실패는 로컬 env 부재만). Next 16 Turbopack 빌드는 ESLint를 실행하지 않아 기존 lint 경고가 배포를 막지 않음을 확인.
 
+### 배포 진행 상태 (F-004 — 진행 중)
+- ✅ 위 런칭 준비 변경분 전체를 커밋 후 `main`에 푸시 완료 (commit `2ca5044`, 12개 파일).
+- ⏳ **남은 작업 (대시보드, 수동)** — 아래 완료 시 F-004 done 처리 예정:
+  1. **Supabase**: SQL Editor에서 `supabase/migrations/011_site_settings_table.sql` 실행 (현재 개발 프로젝트 `fxoiltwmqomvnzirdcho` 재사용).
+  2. **Vercel**: `maxfuel/curepick` Import → 환경변수 등록. 🔴 빌드 필수: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (없으면 `supabaseUrl is required`로 빌드 실패). 🟠 런타임: `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `ADMIN_EMAIL`, `GOOGLE_TRANSLATE_API_KEY`. 선택: `NEXT_PUBLIC_SITE_URL`(SEO), `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_WECHAT_ID`.
+  3. **도메인**: Vercel 기본 `*.vercel.app` 사용. 실제 도메인 확정 후 `NEXT_PUBLIC_SITE_URL` 교정 → Redeploy.
+  4. **Supabase Auth**: URL Configuration의 Site URL + Redirect URLs(`https://<도메인>/**`)에 vercel.app 도메인 추가 (OAuth/이메일 콜백용).
+  5. 배포 후 스모크 테스트(홈/상세/검색/문의/로그인/Admin 히어로 교체) → 통과 시 `features-checklist.json` F-004 `pending → done` 처리.
+
 ---
