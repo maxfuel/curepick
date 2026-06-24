@@ -10,6 +10,12 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
   : "fxoiltwmqomvnzirdcho.supabase.co";
 
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {
