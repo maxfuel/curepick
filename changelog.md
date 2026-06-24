@@ -57,4 +57,16 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
 - **홈 > Intent Section** ("무엇을 찾고 계신가요?"): 불필요한 섹션 제거
 - **홈 > "전체 카테고리 보기" 링크**: 캐러셀 도입으로 필요없어져 제거
 
+### 런칭 준비 (Vercel 배포 차단 요소 해소)
+- **Hero 이미지 저장 방식 전환** (배포 차단): `src/lib/site-settings.ts`가 `fs.writeFileSync`로 `data/site-settings.json`에 저장하던 방식 → Supabase `site_settings` 테이블로 전환. Vercel 서버리스의 읽기 전용 FS에서 Admin 히어로 이미지 교체 시 `EROFS` 크래시가 발생하던 문제 해결.
+  - `supabase/migrations/011_site_settings_table.sql` 추가 (단일행 테이블, 기존 hero URL 시드, public read RLS)
+  - `readSiteSettings`/`writeSiteSettings` async 전환 + 호출부 4곳 `await` 처리 (`page.tsx`, `admin/settings/page.tsx`, `admin-settings.ts`)
+  - 위 [Added] 항목의 "Supabase 테이블 + unstable_cache 방식으로 전환 필요 (미해결)" 경고 해소
+- **연락처 env 일원화**: `ContactButtons.tsx`의 하드코딩 WhatsApp 번호(`821012345678` 플레이스홀더)/WeChat ID → `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_WECHAT_ID` 환경변수로 교체 (success 페이지와 소스 일원화). 값 미설정 시 버튼 자동 숨김.
+- **이미지 도메인 일반화**: `next.config.ts`의 `images.remotePatterns`에 하드코딩되던 Supabase project ref → `NEXT_PUBLIC_SUPABASE_URL`에서 host 파생 (환경별 대응).
+- **`.env.example` 정리**: 누락되어 있던 `RESEND_API_KEY`, `ADMIN_EMAIL`, `GOOGLE_TRANSLATE_API_KEY`, `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_WECHAT_ID` 추가 + `SUPABASE_SERVICE_ROLE_KEY`를 필수로 표기.
+- **Node 버전 고정**: `package.json`에 `engines.node: "22.x"` + `.nvmrc`(22) 추가. Next 16.2.9는 Node ≥20.9 필요 → Vercel 빌드 Node 결정성 확보.
+- **문의 알림 이메일 신뢰성**: `src/app/api/inquiries/route.ts`의 알림 발송을 `await` 없는 fire-and-forget → Next 16 `after()`로 변경. 서버리스 Lambda가 응답 후 freeze되어 이메일이 누락되던 위험 제거.
+- **빌드 검증**: 로컬 `next build`로 컴파일·TypeScript 통과 확인(실패는 로컬 env 부재만). Next 16 Turbopack 빌드는 ESLint를 실행하지 않아 기존 lint 경고가 배포를 막지 않음을 확인.
+
 ---

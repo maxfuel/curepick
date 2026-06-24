@@ -61,7 +61,7 @@ export default async function HomePage({ params }: Props) {
       .limit(6),
   ]);
 
-  const { hero_image_url: heroImageUrl } = readSiteSettings();
+  const { hero_image_url: heroImageUrl } = await readSiteSettings();
 
   return (
     <div>

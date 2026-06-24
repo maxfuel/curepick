@@ -3,12 +3,18 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+// Derive the Supabase Storage host from the env var so this works across
+// environments (dev/prod) without hardcoding a project ref.
+const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+  : "fxoiltwmqomvnzirdcho.supabase.co";
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "fxoiltwmqomvnzirdcho.supabase.co",
+        hostname: supabaseHost,
         pathname: "/storage/v1/object/public/**",
       },
     ],

@@ -2,11 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 
-// Update these values to set your actual contact info
-const WHATSAPP_NUMBER = "821012345678"; // e.g. "821012345678" (country code + number, no +)
-const WECHAT_ID = "curepick_official";   // WeChat ID to display
+// Contact info comes from env (NEXT_PUBLIC_* so it is available in client components).
+// Country code + number, no leading "+". Same source as inquiry/success page.
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+const WECHAT_ID = process.env.NEXT_PUBLIC_WECHAT_ID;
 
 export function WhatsAppButton() {
+  if (!WHATSAPP_NUMBER) return null;
   return (
     <Button
       size="lg"
@@ -21,6 +23,7 @@ export function WhatsAppButton() {
 }
 
 export function WeChatButton() {
+  if (!WECHAT_ID) return null;
   return (
     <Button
       size="lg"

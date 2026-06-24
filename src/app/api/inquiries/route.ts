@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { inquirySchema } from "@/lib/validations/inquiry";
@@ -73,9 +73,16 @@ export async function POST(request: Request) {
         : undefined;
   }
 
-  sendInquiryNotification({ name, email, message, hospitalEmail, hospitalName }).catch(
-    console.error
-  );
+  // Send notification after the response is flushed. `after()` keeps the
+  // serverless function alive until this completes, so the email is not dropped
+  // when the Lambda would otherwise freeze (a plain fire-and-forget can be lost).
+  after(async () => {
+    try {
+      await sendInquiryNotification({ name, email, message, hospitalEmail, hospitalName });
+    } catch (e) {
+      console.error("Inquiry notification failed:", e);
+    }
+  });
 
   return NextResponse.json({ success: true }, { status: 201 });
 }

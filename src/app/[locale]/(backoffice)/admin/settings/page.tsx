@@ -3,7 +3,7 @@ import { readSiteSettings } from "@/lib/site-settings";
 import Image from "next/image";
 
 export default async function AdminSettingsPage() {
-  const { hero_image_url: heroImageUrl } = readSiteSettings();
+  const { hero_image_url: heroImageUrl } = await readSiteSettings();
 
   return (
     <div className="p-6 max-w-2xl">

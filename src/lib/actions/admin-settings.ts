@@ -3,7 +3,7 @@
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { getProfile } from "@/lib/auth/get-user";
-import { readSiteSettings, writeSiteSettings } from "@/lib/site-settings";
+import { writeSiteSettings } from "@/lib/site-settings";
 
 const BUCKET = "site-assets";
 
@@ -45,7 +45,7 @@ export async function updateHeroImage(formData: FormData) {
 
   const { data: { publicUrl } } = admin.storage.from(BUCKET).getPublicUrl(data.path);
 
-  writeSiteSettings({ hero_image_url: publicUrl });
+  await writeSiteSettings({ hero_image_url: publicUrl });
 
   revalidatePath("/");
   revalidatePath("/en");
@@ -55,7 +55,7 @@ export async function removeHeroImage() {
   const profile = await getProfile();
   if (!profile || profile.role !== "admin") throw new Error("Forbidden");
 
-  writeSiteSettings({ hero_image_url: null });
+  await writeSiteSettings({ hero_image_url: null });
 
   revalidatePath("/");
   revalidatePath("/en");

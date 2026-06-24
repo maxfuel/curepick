@@ -1,7 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
-import { join } from "path";
-
-const SETTINGS_FILE = join(process.cwd(), "data", "site-settings.json");
+import { createClient } from "@supabase/supabase-js";
 
 interface SiteSettings {
   hero_image_url: string | null;
@@ -11,20 +8,42 @@ const DEFAULTS: SiteSettings = {
   hero_image_url: null,
 };
 
-export function readSiteSettings(): SiteSettings {
+// Singleton row — the table is constrained to a single row with id = 1.
+const SETTINGS_ID = 1;
+
+// Public read uses the anon key (RLS allows SELECT). Reads happen in server
+// components, so no cookie/session scope is required.
+function anonClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+
+// Writes use the service role key (bypasses RLS) — only called from admin server actions.
+function serviceClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
+
+export async function readSiteSettings(): Promise<SiteSettings> {
   try {
-    if (!existsSync(SETTINGS_FILE)) return DEFAULTS;
-    const raw = readFileSync(SETTINGS_FILE, "utf-8");
-    return { ...DEFAULTS, ...JSON.parse(raw) };
+    const { data, error } = await anonClient()
+      .from("site_settings")
+      .select("hero_image_url")
+      .eq("id", SETTINGS_ID)
+      .maybeSingle();
+    if (error || !data) return DEFAULTS;
+    return { ...DEFAULTS, ...data };
   } catch {
     return DEFAULTS;
   }
 }
 
-export function writeSiteSettings(patch: Partial<SiteSettings>): void {
-  const current = readSiteSettings();
-  const updated = { ...current, ...patch };
-  const dir = join(process.cwd(), "data");
-  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-  writeFileSync(SETTINGS_FILE, JSON.stringify(updated, null, 2), "utf-8");
+export async function writeSiteSettings(patch: Partial<SiteSettings>): Promise<void> {
+  await serviceClient()
+    .from("site_settings")
+    .upsert({ id: SETTINGS_ID, ...patch, updated_at: new Date().toISOString() });
 }
