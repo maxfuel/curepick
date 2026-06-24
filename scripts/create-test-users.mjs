@@ -1,5 +1,5 @@
 /**
- * One-time script to create test accounts for local development.
+ * Creates all test accounts defined in scripts/test-accounts.json.
  * Run: node --env-file=.env.local scripts/create-test-users.mjs
  */
 
@@ -7,12 +7,10 @@ import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
-// Load .env.local manually as fallback for Node < 20
 function loadEnv() {
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL) return; // already loaded via --env-file
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL) return;
   try {
-    const envPath = resolve(process.cwd(), ".env.local");
-    const content = readFileSync(envPath, "utf-8");
+    const content = readFileSync(resolve(process.cwd(), ".env.local"), "utf-8");
     for (const line of content.split("\n")) {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith("#")) continue;
@@ -23,7 +21,7 @@ function loadEnv() {
       process.env[key] = value;
     }
   } catch {
-    console.error("Could not load .env.local — pass env vars manually.");
+    console.error("Could not load .env.local");
     process.exit(1);
   }
 }
@@ -34,115 +32,102 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-  console.error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local");
+  console.error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
   process.exit(1);
 }
 
-const adminClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+const db = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
-const TEST_USERS = [
-  {
-    email: "admin@test.curepick.com",
-    password: "Admin1234!",
-    full_name: "Admin Test",
-    role: "admin",
-    hospital_id: null,
-  },
-  {
-    email: "hospital@test.curepick.com",
-    password: "Hospital1234!",
-    full_name: "Hospital Staff Test",
-    role: "hospital_staff",
-    hospital_id: "FIRST", // replaced dynamically below
-  },
-  {
-    email: "user@test.curepick.com",
-    password: "User1234!",
-    full_name: "User Test",
-    role: null,
-    hospital_id: null,
-  },
-];
+const { accounts, password, portals } = JSON.parse(
+  readFileSync(resolve(process.cwd(), "scripts/test-accounts.json"), "utf-8")
+);
 
-async function getFirstHospitalId() {
-  const { data, error } = await adminClient
-    .from("hospitals")
-    .select("id, name")
-    .order("created_at", { ascending: true })
-    .limit(1)
-    .single();
-  if (error || !data) {
-    console.warn("No hospitals found in DB — hospital_staff will have no hospital_id");
-    return null;
-  }
-  const name = typeof data.name === "object" ? (data.name.en ?? JSON.stringify(data.name)) : data.name;
-  console.log(`  → Assigning hospital: "${name}" (${data.id})`);
-  return data.id;
+async function getExistingEmails() {
+  const { data } = await db.auth.admin.listUsers({ perPage: 1000 });
+  return new Set((data?.users ?? []).map((u) => u.email));
 }
 
-async function createOrSkipUser(user) {
-  // Check if already exists
-  const { data: existing } = await adminClient.auth.admin.listUsers();
-  const found = existing?.users?.find((u) => u.email === user.email);
-
-  if (found) {
-    console.log(`  ⏭  ${user.email} already exists — skipping`);
-    return;
-  }
-
-  const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
-    email: user.email,
-    password: user.password,
+async function createUser(email, fullName) {
+  const { data, error } = await db.auth.admin.createUser({
+    email,
+    password,
     email_confirm: true,
   });
-
-  if (authError || !authData?.user) {
-    console.error(`  ✗  Failed to create ${user.email}: ${authError?.message}`);
-    return;
-  }
-
-  const userId = authData.user.id;
-
-  const { error: profileError } = await adminClient
-    .from("profiles")
-    .update({
-      role: user.role,
-      full_name: user.full_name,
-      hospital_id: user.hospital_id,
-    })
-    .eq("id", userId);
-
-  if (profileError) {
-    console.error(`  ✗  Profile update failed for ${user.email}: ${profileError.message}`);
-    return;
-  }
-
-  console.log(`  ✓  ${user.email} created (role: ${user.role})`);
+  if (error) throw new Error(error.message);
+  await db.from("profiles").update({ full_name: fullName }).eq("id", data.user.id);
+  return data.user.id;
 }
 
 async function main() {
-  console.log("\n🔧 Curepick — Creating test users\n");
+  console.log("\n🔧 Curepick — Creating test accounts\n");
+  const existing = await getExistingEmails();
 
-  const firstHospitalId = await getFirstHospitalId();
-  for (const user of TEST_USERS) {
-    if (user.hospital_id === "FIRST") user.hospital_id = firstHospitalId;
+  // ── Patients ─────────────────────────────────────────────────────────────
+  console.log("👤 Patients");
+  for (const u of accounts.patients) {
+    if (existing.has(u.email)) { console.log(`  ⏭  ${u.email} (exists)`); continue; }
+    try {
+      const id = await createUser(u.email, u.full_name);
+      await db.from("profiles").update({ role: "patient" }).eq("id", id);
+      console.log(`  ✓  ${u.email}`);
+    } catch (e) { console.error(`  ✗  ${u.email}: ${e.message}`); }
   }
 
-  for (const user of TEST_USERS) {
-    process.stdout.write(`Creating ${user.email}...\n`);
-    await createOrSkipUser(user);
+  // ── Admins ───────────────────────────────────────────────────────────────
+  console.log("\n🛡️  Admins");
+  for (const u of accounts.admins) {
+    if (existing.has(u.email)) { console.log(`  ⏭  ${u.email} (exists)`); continue; }
+    try {
+      const id = await createUser(u.email, u.full_name);
+      await db.from("profiles").update({ role: "admin" }).eq("id", id);
+      console.log(`  ✓  ${u.email}`);
+    } catch (e) { console.error(`  ✗  ${u.email}: ${e.message}`); }
   }
 
-  console.log("\n✅ Done!\n");
-  console.log("Test accounts:");
-  console.log("  admin@test.curepick.com      / Admin1234!    → /en/admin");
-  console.log("  hospital@test.curepick.com   / Hospital1234! → /en/hospital");
-  console.log("  user@test.curepick.com       / User1234!     → /en/my\n");
+  // ── Cure Partners ─────────────────────────────────────────────────────────
+  console.log("\n🩺 Cure Partners");
+  for (const u of accounts.cure_partners) {
+    if (existing.has(u.email)) { console.log(`  ⏭  ${u.email} (exists)`); continue; }
+    try {
+      const id = await createUser(u.email, u.full_name);
+      await db.from("profiles").update({ role: "cure_partner" }).eq("id", id);
+      await db.from("cure_partners").insert({
+        profile_id: id,
+        full_name: u.full_name,
+        languages: u.languages,
+        specialty_areas: u.specialty_areas,
+        status: "active",
+      });
+      console.log(`  ✓  ${u.email}`);
+    } catch (e) { console.error(`  ✗  ${u.email}: ${e.message}`); }
+  }
+
+  // ── Local Agents ──────────────────────────────────────────────────────────
+  console.log("\n🌏 Local Agents (Partners)");
+  for (const u of accounts.local_agents) {
+    if (existing.has(u.email)) { console.log(`  ⏭  ${u.email} (exists)`); continue; }
+    try {
+      const id = await createUser(u.email, u.full_name);
+      await db.from("profiles").update({ role: "local_agent" }).eq("id", id);
+      await db.from("agents").insert({
+        profile_id: id,
+        company_name: u.company_name,
+        country: u.country,
+        commission_rate: u.commission_rate,
+        status: "active",
+      });
+      console.log(`  ✓  ${u.email}`);
+    } catch (e) { console.error(`  ✗  ${u.email}: ${e.message}`); }
+  }
+
+  console.log("\n✅ Done! Password for all accounts: " + password);
+  console.log("\nPortals:");
+  for (const [role, path] of Object.entries(portals)) {
+    console.log(`  ${role.padEnd(14)} → ${path}`);
+  }
+  console.log();
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+main().catch((err) => { console.error(err); process.exit(1); });

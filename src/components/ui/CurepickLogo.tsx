@@ -8,22 +8,18 @@ export function CurepickLogo({ showTagline = true, size = "md" }: Props) {
     size === "sm" ? "text-lg" : size === "lg" ? "text-3xl" : "text-2xl";
   const taglineSize =
     size === "sm" ? "text-[9px]" : size === "lg" ? "text-xs" : "text-[10px]";
-  const iconSize =
-    size === "sm" ? 10 : size === "lg" ? 16 : 13;
-  const iconOffset =
-    size === "sm" ? "-top-2.5" : size === "lg" ? "-top-4" : "-top-3";
+  const badgeSize = size === "sm" ? 18 : size === "lg" ? 28 : 22;
 
   return (
     <div className="flex flex-col leading-none select-none">
-      <div className="flex items-baseline">
-        <span className={`${textSize} font-bold tracking-tight`}>Curep</span>
-        <span className="relative inline-flex flex-col items-center">
-          <span className={`absolute ${iconOffset} left-1/2 -translate-x-1/2`}>
-            <MedicalIcon size={iconSize} />
-          </span>
-          <span className={`${textSize} font-bold tracking-tight`}>i</span>
+      <div className="flex items-start">
+        <span
+          className={`${textSize} font-bold tracking-tight`}
+          style={{ color: "#1c1c1c" }}
+        >
+          Curepick
         </span>
-        <span className={`${textSize} font-bold tracking-tight`}>ck</span>
+        <VipBadge size={badgeSize} />
       </div>
       {showTagline && (
         <span
@@ -37,18 +33,27 @@ export function CurepickLogo({ showTagline = true, size = "md" }: Props) {
   );
 }
 
-function MedicalIcon({ size }: { size: number }) {
+function VipBadge({ size }: { size: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: size,
+        height: size,
+        border: "1.5px solid #888888",
+        borderRadius: "50%",
+        fontSize: Math.round(size * 0.33),
+        fontWeight: 600,
+        color: "#666666",
+        marginLeft: 4,
+        marginTop: -4,
+        letterSpacing: "0.05em",
+        flexShrink: 0,
+      }}
     >
-      <circle cx="12" cy="12" r="12" fill="#2563eb" />
-      <rect x="10" y="5" width="4" height="14" rx="1.5" fill="white" />
-      <rect x="5" y="10" width="14" height="4" rx="1.5" fill="white" />
-    </svg>
+      VIP
+    </span>
   );
 }
