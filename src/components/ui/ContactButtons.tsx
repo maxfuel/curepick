@@ -1,9 +1,8 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 
-// Contact info comes from env (NEXT_PUBLIC_* so it is available in client components).
-// Country code + number, no leading "+". Same source as inquiry/success page.
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 const WECHAT_ID = process.env.NEXT_PUBLIC_WECHAT_ID;
 
@@ -23,16 +22,67 @@ export function WhatsAppButton() {
 }
 
 export function WeChatButton() {
+  const [showPopover, setShowPopover] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   if (!WECHAT_ID) return null;
+
+  const handleClick = () => {
+    // Try to open WeChat app via URL scheme
+    window.location.href = "weixin://";
+
+    // Fallback: if page is still active after 1.5s, app probably isn't installed
+    timerRef.current = setTimeout(() => setShowPopover(true), 1500);
+
+    // If app opened, page becomes hidden — cancel the fallback
+    const onVisibility = () => {
+      if (document.hidden) {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        document.removeEventListener("visibilitychange", onVisibility);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(WECHAT_ID!);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <Button
-      size="lg"
-      className="bg-[#07C160] text-white hover:bg-[#06a952]"
-      onClick={() => alert(`WeChat ID: ${WECHAT_ID}`)}
-    >
-      <WeChatIcon />
-      WeChat
-    </Button>
+    <div className="relative inline-block">
+      <Button
+        size="lg"
+        className="bg-[#07C160] text-white hover:bg-[#06a952]"
+        onClick={handleClick}
+      >
+        <WeChatIcon />
+        WeChat
+      </Button>
+
+      {showPopover && (
+        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 w-52 rounded-xl border border-gray-100 bg-white px-4 py-3 shadow-xl text-sm">
+          <button
+            className="absolute top-2 right-2 text-gray-300 hover:text-gray-500 leading-none"
+            onClick={() => setShowPopover(false)}
+          >
+            ✕
+          </button>
+          <p className="text-xs text-gray-400 mb-1">WeChat ID</p>
+          <p className="font-semibold text-gray-800 mb-2">{WECHAT_ID}</p>
+          <button
+            onClick={handleCopy}
+            className="w-full rounded-lg bg-[#07C160] py-1.5 text-xs font-medium text-white hover:bg-[#06a952] transition-colors"
+          >
+            {copied ? "Copied ✓" : "Copy ID"}
+          </button>
+          {/* Tooltip arrow */}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-white" />
+        </div>
+      )}
+    </div>
   );
 }
 
