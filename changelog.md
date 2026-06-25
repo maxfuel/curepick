@@ -6,6 +6,23 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
 
 ---
 
+## [2026-06-25]
+
+### Added
+- **서비스 우선순위 ordering**: 2025 한국 의료관광 통계 기반으로 카테고리 sort_order 설정
+  - Beauty & Skin(1) > Plastic Surgery(2) > Dental(3) > Health Check-up(4) > Fertility(5) > Hair(6) > Eye Care(7) > Orthopedics & Spine(8)
+- **성형외과 카테고리 + 서비스**: Plastic Surgery 카테고리와 Rhinoplasty / Eyelid Surgery / Liposuction 서비스 추가
+- **카테고리 다국어 확장**: 기존 카테고리 이름을 16개 언어로 업데이트
+- **서비스 드롭다운 optgroup 그룹핑**: 파트너 케이스 등록 폼, 공개 문의 폼, 어드민 문의 필터 — 모두 카테고리별 `<optgroup>` 적용
+- **Admin 관리 UI sort_order 입력**: 카테고리 생성 폼 + 서비스 생성/수정 폼에 "순서" 숫자 입력 추가
+- **카테고리 목록 순서 배지**: 어드민 서비스 페이지 카테고리 chip에 `#N` 순서 표시
+
+### Improved
+- **서비스 드롭다운 정렬**: 모든 서비스 select에서 `name->en` 알파벳 정렬 → `sort_order` 인기순 정렬로 통일
+- **카테고리 다국어 이름 정규화**: 16개 언어 완전 지원 (기존 ko/en/zh/ja만 있던 것 확장)
+
+---
+
 ## [2026-06-24]
 
 ### Fixed
@@ -148,5 +165,27 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
   - `alert()` 제거 → `weixin://` URL scheme으로 WeChat 앱 직접 실행
   - 앱 미설치 감지(1.5초 timeout + `visibilitychange`): 팝오버 fallback 표시
   - 팝오버: WeChat ID + "Copy ID" 버튼(클립보드 복사), ✕ 닫기 버튼
+- **병원 상세 페이지 Doctors 어드민 관리** (`src/lib/actions/admin-hospitals.ts`):
+  - `addDoctor(hospitalId, formData)` — 이름·전문분야(다국어), 경력, 언어, 사진 업로드 → `doctors` 테이블 insert
+  - `removeDoctor(doctorId)` — 의사 행 삭제
+- **병원 어드민 편집 페이지 Medical Team 섹션** (`src/app/.../admin/hospitals/[id]/page.tsx`):
+  - 기존 의사 목록 표시 (사진/이니셜, 이름 EN, 전문분야, 경력)
+  - `<details>` 접기형 Add Doctor 폼 (MultilingualInput × 2, 경력·언어·사진)
+  - Remove 버튼으로 즉시 삭제
+- **Logo/Hero 업로드 독립 폼 분리**:
+  - 기존 main form에서 `logo_file`, `hero_file` input 제거 → 각각 별도 `<form>` + 서버액션
+  - `updateHospitalLogo(id, formData)`, `updateHospitalHero(id, formData)` 추가
+- **`next.config.ts`**: `experimental.serverActions.bodySizeLimit: "10mb"` — Vercel 기본 1MB 제한 초과 방지
+
+### Fixed
+- **Supabase Storage 업로드 실패** (`src/lib/actions/admin-hospitals.ts`):
+  - `uploadImage()` — anon client → `createAdminClient(SERVICE_ROLE_KEY)` 교체
+  - `await file.arrayBuffer()` 패턴 적용 (File 객체 직접 전달 금지)
+  - `ensureHospitalBucket()` — `hospital-images` 버킷 자동 생성
+- **병원 slug 공백 문제** — `updateHospital()`/`createHospital()` 에서 수동 입력 slug도 `slugify()` 강제 적용 (URL 인코딩 404 방지)
+- **Hero 이미지 opacity** (`/hospitals/[slug]/page.tsx`):
+  - 이미지에 `opacity-60` 제거 → 100% 원본 품질 표시
+  - 그라디언트 조건부: 이미지 있을 때 `from-black/80 via-black/20` (텍스트 가독성 확보), 없을 때 어두운 단색 배경
+- **Admin 버튼 커서** — `<button type="submit">` 전체에 `cursor-pointer` 추가
 
 ---
