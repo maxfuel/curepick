@@ -158,7 +158,7 @@ export default async function DoctorDetailPage({ params }: Props) {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             {doctor.photo_url ? (
-              <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-full">
+              <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl">
                 <Image
                   src={doctor.photo_url}
                   alt={doctorName}
@@ -169,7 +169,7 @@ export default async function DoctorDetailPage({ params }: Props) {
                 />
               </div>
             ) : (
-              <div className="flex h-32 w-32 shrink-0 items-center justify-center rounded-full bg-background">
+              <div className="flex h-32 w-32 shrink-0 items-center justify-center rounded-xl bg-background">
                 <Users className="h-12 w-12 text-muted-foreground" />
               </div>
             )}
