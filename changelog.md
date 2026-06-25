@@ -6,6 +6,44 @@ MVP+ 개발 완료 이후 진행되는 개선·수정 사항을 날짜별로 기
 
 ---
 
+## [2026-06-26]
+
+### Added
+- **`FileDropzone` 공유 컴포넌트** (`src/components/ui/FileDropzone.tsx`): 모든 파일 업로드 입력에 drag & drop 지원
+  - DataTransfer API로 드롭한 파일을 native input에 주입 → Server Action form 제출 정상 작동
+  - `URL.createObjectURL`로 즉시 이미지 미리보기, `useRef`로 URL 정리(메모리 누수 방지)
+  - Props: `name`, `accept`, `multiple`, `maxFiles`, `currentPreviewUrl`, `onChange`, `label`
+- **`YouTubePreviewInput` 공유 컴포넌트** (`src/components/ui/YouTubePreviewInput.tsx`): YouTube URL 입력 + 썸네일 미리보기
+  - 정규식으로 `watch?v=`, `youtu.be/`, `embed/` 형식 모두 파싱
+  - 썸네일 클릭 시 `autoplay=1` iframe으로 인라인 재생
+- **`HospitalPhotoMosaic` 컴포넌트** (`src/components/hospitals/HospitalPhotoMosaic.tsx`): Bookimed 벤치마크 이미지 모자이크 레이아웃
+  - 데스크탑: `grid-cols-[3fr_2fr]` — 좌측 히어로 + 우측 2×2 갤러리 그리드
+  - 모바일: 히어로 단독 full-width (기존과 동일)
+  - 내장 라이트박스 (← → Esc 키보드 네비게이션), "+N 사진 더 보기" 오버레이
+- **병원 Doctor 사진 업로드 수정** (`src/lib/actions/admin-doctors.ts`): Service Role client + `arrayBuffer()` 패턴 적용, `ensureDoctorBucket()` 추가
+- **Doctor 사진 크기 확대**: `DoctorCard.tsx` 64px → 96px (1.5×), `/doctors/[slug]` 페이지 `rounded-full` → `rounded-xl` (얼굴 잘림 방지)
+- **병원 포털 철학 + UI 컴포넌트 규칙 CLAUDE.md 추가**: Hospital Portal Philosophy, FileDropzone/YouTubePreviewInput 의무 사용 규칙
+- **병원 미디어 자체 관리 페이지** (`src/app/[locale]/(backoffice)/hospital/media/page.tsx`): 병원 스태프가 직접 미디어 관리
+  - 4개 섹션: 로고 / 히어로 이미지 / 사진 갤러리 / YouTube 영상
+  - 갤러리: 4열 그리드, hover 시 삭제 버튼
+  - 영상: 제목·유형 입력 + YouTubePreviewInput, 영상 목록 카드형
+- **`hospital-media.ts` 서버 액션** (`src/lib/actions/hospital-media.ts`): 6개 액션 — 모두 `getProfile()`로 `hospital_id` 서버 검증
+  - `updateHospitalLogo`, `updateHospitalHero`, `addHospitalGalleryImage`, `removeHospitalGalleryImage`, `addHospitalVideo`, `removeHospitalVideo`
+- **병원 사이드바 "미디어 관리" 네비 추가** (`HospitalSidebar.tsx`) + 16개 언어 번역 키
+
+### Improved
+- **Admin 병원 관리 폼** (`/admin/hospitals/[id]`, `/admin/hospitals/new`): 모든 파일 입력 → `FileDropzone`, YouTube URL → `YouTubePreviewInput`으로 교체
+- **리뷰 폼** (`ReviewForm.tsx`): 사진·영상 첨부 → `FileDropzone`으로 교체
+- **Cure Partner 폼** (`CurePartnersClient.tsx`): `intro_video_url` → `YouTubePreviewInput`으로 교체
+- **사이트 설정 Hero 폼** (`/admin/settings`): → `FileDropzone`으로 교체
+- **병원 상세 Hero** (`/hospitals/[slug]`): 단일 배경 이미지 → `HospitalPhotoMosaic` 모자이크 레이아웃으로 교체
+
+### Fixed
+- **`NEXT_PUBLIC_SITE_URL=""`(빈 문자열) 500 에러**: `layout.tsx`의 `??` → `||` 변경 (빈 문자열도 fallback 처리)
+- **로컬 개발 환경 `.env.local` 누락**: Vercel env vars가 Production/Preview에만 등록되어 있어 `vercel env pull --environment=production` 필요함을 확인
+
+---
+
 ## [2026-06-25]
 
 ### Added
