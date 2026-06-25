@@ -4,13 +4,19 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createCase } from "@/lib/actions/partner-cases";
 
-interface Props {
-  locale: string;
-  hospitals: { id: string; name: string }[];
+interface ServiceGroup {
+  categoryId: string;
+  categoryLabel: string;
   services: { id: string; name: string }[];
 }
 
-export default function NewCaseForm({ locale, hospitals, services }: Props) {
+interface Props {
+  locale: string;
+  hospitals: { id: string; name: string }[];
+  serviceGroups: ServiceGroup[];
+}
+
+export default function NewCaseForm({ locale, hospitals, serviceGroups }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -61,8 +67,12 @@ export default function NewCaseForm({ locale, hospitals, services }: Props) {
           <label className="text-sm font-medium">Service (optional)</label>
           <select name="service_id" className="w-full rounded-md border bg-background px-3 py-2 text-sm">
             <option value="">Select service…</option>
-            {services.map((s) => (
-              <option key={s.id} value={s.id}>{s.name}</option>
+            {serviceGroups.map((group) => (
+              <optgroup key={group.categoryId} label={group.categoryLabel}>
+                {group.services.map((s) => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </div>

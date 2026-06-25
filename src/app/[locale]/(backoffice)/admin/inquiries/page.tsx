@@ -38,9 +38,10 @@ export default async function AdminInquiriesPage({ params, searchParams }: Props
     .order("created_at", { ascending: false })
     .range((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE - 1);
 
-  const [{ data: hospitals }, { data: services }] = await Promise.all([
+  const [{ data: hospitals }, { data: services }, { data: categories }] = await Promise.all([
     supabase.from("hospitals").select("id, name").order("name->en"),
-    supabase.from("services").select("id, name").order("name->en"),
+    supabase.from("services").select("id, name, category_id").order("sort_order"),
+    supabase.from("categories").select("id, name").order("sort_order"),
   ]);
 
   const hospitalMap = new Map(hospitals?.map((h) => [h.id, getEn(h.name)]) ?? []);
@@ -89,7 +90,8 @@ export default async function AdminInquiriesPage({ params, searchParams }: Props
 
         <InquiryFilters
           hospitals={hospitals?.map((h) => ({ id: h.id, name: getEn(h.name) })) ?? []}
-          services={services?.map((s) => ({ id: s.id, name: getEn(s.name) })) ?? []}
+          services={services?.map((s) => ({ id: s.id, name: getEn(s.name), category_id: s.category_id ?? undefined })) ?? []}
+          categories={categories?.map((c) => ({ id: c.id, label: getEn(c.name) })) ?? []}
           currentHospital={hospitalFilter ?? ""}
           currentService={serviceFilter ?? ""}
           labelAllHospitals={t("allHospitals")}

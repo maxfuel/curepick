@@ -11,14 +11,23 @@ CREATE TABLE IF NOT EXISTS site_settings (
   CONSTRAINT site_settings_singleton CHECK (id = 1)
 );
 
--- Seed the singleton row, preserving the hero image that was previously stored in
--- data/site-settings.json so the homepage hero is unchanged after the switch.
-INSERT INTO site_settings (id, hero_image_url)
-VALUES (
-  1,
-  'https://fxoiltwmqomvnzirdcho.supabase.co/storage/v1/object/public/site-assets/hero/hero-bg-1782233284730.png'
-)
-ON CONFLICT (id) DO NOTHING;
+-- Only insert if this table uses the id-based schema (not the key/value schema from 012)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'site_settings'
+      AND column_name = 'id'
+  ) THEN
+    INSERT INTO site_settings (id, hero_image_url)
+    VALUES (
+      1,
+      'https://fxoiltwmqomvnzirdcho.supabase.co/storage/v1/object/public/site-assets/hero/hero-bg-1782233284730.png'
+    )
+    ON CONFLICT (id) DO NOTHING;
+  END IF;
+END $$;
 
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 

@@ -4,7 +4,8 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 interface Props {
   hospitals: { id: string; name: string }[];
-  services: { id: string; name: string }[];
+  services: { id: string; name: string; category_id?: string }[];
+  categories?: { id: string; label: string }[];
   currentHospital: string;
   currentService: string;
   labelAllHospitals: string;
@@ -14,6 +15,7 @@ interface Props {
 export default function InquiryFilters({
   hospitals,
   services,
+  categories,
   currentHospital,
   currentService,
   labelAllHospitals,
@@ -49,9 +51,21 @@ export default function InquiryFilters({
         className="rounded-md border bg-background px-3 py-1.5 text-sm"
       >
         <option value="">{labelAllServices}</option>
-        {services.map((s) => (
-          <option key={s.id} value={s.id}>{s.name}</option>
-        ))}
+        {categories && categories.length > 0
+          ? categories.map((cat) => {
+              const catServices = services.filter((s) => s.category_id === cat.id);
+              if (catServices.length === 0) return null;
+              return (
+                <optgroup key={cat.id} label={cat.label}>
+                  {catServices.map((s) => (
+                    <option key={s.id} value={s.id}>{s.name}</option>
+                  ))}
+                </optgroup>
+              );
+            })
+          : services.map((s) => (
+              <option key={s.id} value={s.id}>{s.name}</option>
+            ))}
       </select>
     </div>
   );

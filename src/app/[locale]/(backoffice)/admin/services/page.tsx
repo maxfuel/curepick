@@ -52,6 +52,7 @@ export default async function AdminServicesPage({ params }: Props) {
         <div className="flex flex-wrap gap-2 mb-4">
           {categories?.map((cat) => (
             <div key={cat.id} className="flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-sm">
+              <span className="text-muted-foreground text-xs mr-1">#{cat.sort_order}</span>
               <span>{getEn(cat.name)}</span>
               <form action={deleteCategory.bind(null, cat.id)}>
                 <button type="submit" className="ml-1 text-muted-foreground hover:text-destructive text-xs">
@@ -70,6 +71,16 @@ export default async function AdminServicesPage({ params }: Props) {
               name="slug"
               placeholder="slug (auto)"
               className="rounded-md border bg-background px-3 py-2 text-sm w-32"
+            />
+          </div>
+          <div className="pb-1">
+            <input
+              type="number"
+              name="sort_order"
+              defaultValue={0}
+              min={0}
+              placeholder="순서"
+              className="rounded-md border bg-background px-3 py-2 text-sm w-20"
             />
           </div>
           <button

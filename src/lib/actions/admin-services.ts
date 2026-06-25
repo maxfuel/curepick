@@ -14,7 +14,8 @@ export async function createCategory(formData: FormData) {
   const supabase = await createClient();
   const name = parseMultilingual(formData.get("name") as string);
   const slug = (formData.get("slug") as string) || slugify(name.en ?? "");
-  await supabase.from("categories").insert({ name, slug });
+  const sort_order = Number(formData.get("sort_order") ?? 0);
+  await supabase.from("categories").insert({ name, slug, sort_order });
   revalidatePath("/admin/services");
 }
 
@@ -34,7 +35,8 @@ export async function createService(formData: FormData) {
   const overview = parseMultilingual(formData.get("overview") as string);
   const category_id = (formData.get("category_id") as string) || null;
   const is_featured = formData.get("is_featured") === "on";
-  await supabase.from("services").insert({ name, slug, description, overview, category_id, is_featured });
+  const sort_order = Number(formData.get("sort_order") ?? 0);
+  await supabase.from("services").insert({ name, slug, description, overview, category_id, is_featured, sort_order });
   revalidatePath("/admin/services");
 }
 
@@ -46,9 +48,10 @@ export async function updateService(id: string, formData: FormData) {
   const overview = parseMultilingual(formData.get("overview") as string);
   const category_id = (formData.get("category_id") as string) || null;
   const is_featured = formData.get("is_featured") === "on";
+  const sort_order = Number(formData.get("sort_order") ?? 0);
   await supabase
     .from("services")
-    .update({ name, slug, description, overview, category_id, is_featured })
+    .update({ name, slug, description, overview, category_id, is_featured, sort_order })
     .eq("id", id);
   revalidatePath("/admin/services");
 }
@@ -66,7 +69,8 @@ export async function createProcedure(formData: FormData) {
   const name = parseMultilingual(formData.get("name") as string);
   const slug = (formData.get("slug") as string) || slugify(name.en ?? "");
   const service_id = formData.get("service_id") as string;
-  await supabase.from("procedures").insert({ name, slug, service_id });
+  const sort_order = Number(formData.get("sort_order") ?? 0);
+  await supabase.from("procedures").insert({ name, slug, service_id, sort_order });
   revalidatePath("/admin/services");
 }
 

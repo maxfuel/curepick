@@ -26,21 +26,18 @@ export default async function InquiryPage({
 
   const supabase = await createClient();
 
-  const { data: services } = await supabase
-    .from("services")
-    .select("id, name")
-    .order("sort_order");
-
-  const { data: hospitals } = await supabase
-    .from("hospitals")
-    .select("id, name")
-    .order("name");
+  const [{ data: services }, { data: hospitals }, { data: categories }] = await Promise.all([
+    supabase.from("services").select("id, name, category_id").order("sort_order"),
+    supabase.from("hospitals").select("id, name").order("name"),
+    supabase.from("categories").select("id, name").order("sort_order"),
+  ]);
 
   return (
     <InquiryPageContent
       profile={profile}
       services={services ?? []}
       hospitals={hospitals ?? []}
+      categories={categories ?? []}
       locale={locale}
       defaultServiceId={sp.service}
       defaultHospitalId={sp.hospital}
@@ -52,13 +49,15 @@ function InquiryPageContent({
   profile,
   services,
   hospitals,
+  categories,
   locale,
   defaultServiceId,
   defaultHospitalId,
 }: {
   profile: { full_name: string | null; email: string | null; phone: string | null; nationality: string | null } | null;
-  services: { id: string; name: unknown }[];
+  services: { id: string; name: unknown; category_id?: string | null }[];
   hospitals: { id: string; name: unknown }[];
+  categories: { id: string; name: unknown }[];
   locale: string;
   defaultServiceId?: string;
   defaultHospitalId?: string;
@@ -77,6 +76,7 @@ function InquiryPageContent({
           profile={profile}
           services={services}
           hospitals={hospitals}
+          categories={categories}
           locale={locale}
           defaultServiceId={defaultServiceId}
           defaultHospitalId={defaultHospitalId}

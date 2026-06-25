@@ -18,10 +18,27 @@ export default async function NewCasePage({ params }: Props) {
   const { locale } = await params;
   const supabase = await createClient();
 
-  const [{ data: hospitals }, { data: services }] = await Promise.all([
+  const [{ data: hospitals }, { data: services }, { data: categories }] = await Promise.all([
     supabase.from("hospitals").select("id, name").order("name->en"),
-    supabase.from("services").select("id, name").order("name->en"),
+    supabase.from("services").select("id, name, category_id").order("sort_order").order("name->en"),
+    supabase.from("categories").select("id, name").order("sort_order"),
   ]);
+
+  const serviceGroups = (categories ?? []).map((cat) => ({
+    categoryId: cat.id,
+    categoryLabel: getEn(cat.name),
+    services: (services ?? [])
+      .filter((s) => s.category_id === cat.id)
+      .map((s) => ({ id: s.id, name: getEn(s.name) })),
+  })).filter((g) => g.services.length > 0);
+
+  const categorizedIds = new Set(serviceGroups.flatMap((g) => g.services.map((s) => s.id)));
+  const uncategorized = (services ?? [])
+    .filter((s) => !categorizedIds.has(s.id))
+    .map((s) => ({ id: s.id, name: getEn(s.name) }));
+  if (uncategorized.length > 0) {
+    serviceGroups.push({ categoryId: "other", categoryLabel: "Other", services: uncategorized });
+  }
 
   return (
     <div className="p-6 max-w-2xl">
@@ -29,7 +46,7 @@ export default async function NewCasePage({ params }: Props) {
       <NewCaseForm
         locale={locale}
         hospitals={(hospitals ?? []).map((h) => ({ id: h.id, name: getEn(h.name) }))}
-        services={(services ?? []).map((s) => ({ id: s.id, name: getEn(s.name) }))}
+        serviceGroups={serviceGroups}
       />
     </div>
   );

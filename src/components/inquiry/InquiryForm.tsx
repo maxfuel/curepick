@@ -24,8 +24,9 @@ interface InquiryFormProps {
     phone: string | null;
     nationality: string | null;
   } | null;
-  services: { id: string; name: unknown }[];
+  services: { id: string; name: unknown; category_id?: string | null }[];
   hospitals: { id: string; name: unknown }[];
+  categories?: { id: string; name: unknown }[];
   locale: string;
   defaultServiceId?: string;
   defaultHospitalId?: string;
@@ -35,6 +36,7 @@ export function InquiryForm({
   profile,
   services,
   hospitals,
+  categories,
   locale,
   defaultServiceId,
   defaultHospitalId,
@@ -162,11 +164,25 @@ export function InquiryForm({
             {...register("serviceId")}
           >
             <option value="">{t("servicePlaceholder")}</option>
-            {services.map((s) => (
-              <option key={s.id} value={s.id}>
-                {getLocalizedName(s.name, locale)}
-              </option>
-            ))}
+            {categories && categories.length > 0
+              ? categories.map((cat) => {
+                  const catServices = services.filter((s) => s.category_id === cat.id);
+                  if (catServices.length === 0) return null;
+                  return (
+                    <optgroup key={cat.id} label={getLocalizedName(cat.name, locale)}>
+                      {catServices.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {getLocalizedName(s.name, locale)}
+                        </option>
+                      ))}
+                    </optgroup>
+                  );
+                })
+              : services.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {getLocalizedName(s.name, locale)}
+                  </option>
+                ))}
           </select>
         </div>
 
