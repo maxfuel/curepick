@@ -19,6 +19,18 @@ export async function createCategory(formData: FormData) {
   revalidatePath("/admin/services");
 }
 
+export async function updateCategory(id: string, formData: FormData) {
+  const supabase = await createClient();
+  const name = parseMultilingual(formData.get("name") as string);
+  const slug = (formData.get("slug") as string) || slugify(name.en ?? "");
+  const sort_order = Number(formData.get("sort_order") ?? 0);
+  await supabase
+    .from("categories")
+    .update({ name, slug, sort_order })
+    .eq("id", id);
+  revalidatePath("/admin/services");
+}
+
 export async function deleteCategory(id: string) {
   const supabase = await createClient();
   await supabase.from("categories").delete().eq("id", id);
