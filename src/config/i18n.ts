@@ -1,15 +1,3 @@
-export const locales = ["en", "ko", "ja", "zh"] as const;
-export type Locale = (typeof locales)[number];
-
-export const defaultLocale: Locale = "en";
-
-export const localeNames: Record<Locale, string> = {
-  en: "English",
-  ko: "한국어",
-  ja: "日本語",
-  zh: "中文",
-};
-
 export const SUPPORTED_LANGS = [
   { code: "ko", label: "KR", name: "한국어" },
   { code: "en", label: "EN", name: "English" },
@@ -32,3 +20,10 @@ export const SUPPORTED_LANGS = [
 export type LangCode = (typeof SUPPORTED_LANGS)[number]["code"];
 export type MultilingualValue = Partial<Record<LangCode, string>>;
 export const PRIMARY_LANGS = ["ko", "en"] as const;
+
+export const locales = SUPPORTED_LANGS.map((l) => l.code) as [LangCode, ...LangCode[]];
+export type Locale = LangCode;
+export const defaultLocale: Locale = "en";
+export const localeNames = Object.fromEntries(
+  SUPPORTED_LANGS.map((l) => [l.code, l.name])
+) as Record<LangCode, string>;

@@ -22,17 +22,12 @@ export const metadata: Metadata = {
     "Discover, compare, and inquire about medical services in Korea. Your trusted medical tourism marketplace.",
 };
 
+export const fontVars = `${plusJakartaSans.variable} ${geistMono.variable}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html
-      className={`${plusJakartaSans.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
-    </html>
-  );
+  return children;
 }
