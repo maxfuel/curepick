@@ -13,3 +13,68 @@ Before applying project-specific rules, load:
 기능 구현 완료 후 반드시 features-checklist.json을 업데이트할 것:
 - 완료된 task의 "done"을 true로 변경
 - 모든 task가 완료되면 feature의 "status"를 "done"으로 변경
+
+---
+
+## Supabase Client Rules
+
+Three clients exist — use the right one:
+
+| Client | Import | When to use |
+|--------|--------|-------------|
+| Browser | `@/lib/supabase/client` | Client Components only |
+| Server | `@/lib/supabase/server` | Server Components, Route Handlers |
+| Admin | `createClient` from `@supabase/supabase-js` + `SUPABASE_SERVICE_ROLE_KEY` | Server Actions that bypass RLS (storage uploads, admin writes) |
+
+Never use `SUPABASE_SERVICE_ROLE_KEY` in Client Components.
+
+---
+
+## Server Action Rules
+
+- Every server action file must start with `"use server"`
+- Call `revalidatePath()` after any mutation
+- File uploads in Server Actions: use Admin client + `arrayBuffer()` pattern (not `File` directly)
+- Server Actions body size limit is 10mb — do not increase without updating `next.config.ts`
+
+---
+
+## Slug Rules
+
+Any field named `slug` must pass through `slugify()` before saving — including manually entered values.
+
+```ts
+function slugify(str: string): string {
+  return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+}
+```
+
+---
+
+## Multilingual Field Rules
+
+Multilingual text fields are stored as JSON: `{ en: "", ko: "", zh: "", ja: "" }`.
+
+- Use `parseMultilingual()` to safely read these fields
+- Never store a plain string in a multilingual column
+- Display order: `ko` first for Korean users, `en` as fallback
+
+---
+
+## Language Rules
+
+| Context | Language |
+|---------|----------|
+| Code, variable names, file names | English |
+| Comments, commit messages | English |
+| Responses to the user | Korean |
+
+---
+
+## Git Push Rule
+
+**커밋 후 반드시 즉시 push할 것.**
+
+- `git commit` 직후 항상 `git push origin main` 실행
+- 절대 커밋만 하고 push 없이 세션을 끝내지 말 것
+- Vercel은 GitHub 기준으로 배포 — 로컬 커밋은 push 전까지 배포에 반영되지 않음
