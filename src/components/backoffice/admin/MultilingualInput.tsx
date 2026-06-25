@@ -65,8 +65,8 @@ export function MultilingualInput({
           return next;
         });
       }
-    } catch {
-      setError("번역 중 오류가 발생했습니다. 다시 시도해주세요.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "번역 중 오류가 발생했습니다.");
     } finally {
       setState("idle");
     }
@@ -75,14 +75,15 @@ export function MultilingualInput({
   const translateField = async (code: LangCode) => {
     const from: LangCode = "ko";
     setFieldState((s) => ({ ...s, [code]: "loading" }));
+    setError(null);
     try {
       const translations = await callTranslate(from, [code]);
       if (translations[code]) {
         setVals((v) => ({ ...v, [code]: translations[code]! }));
         setAutoTranslated((prev) => new Set([...prev, code]));
       }
-    } catch {
-      // field-level error is silent; user can retry
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "번역 중 오류가 발생했습니다.");
     } finally {
       setFieldState((s) => ({ ...s, [code]: "idle" }));
     }
