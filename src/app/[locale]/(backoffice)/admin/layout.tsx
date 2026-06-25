@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getProfile } from "@/lib/auth/get-user";
 import { BackofficeShell } from "@/components/backoffice/BackofficeShell";
 import { AdminSidebar } from "@/components/backoffice/admin/AdminSidebar";
+import { AdminHeader } from "@/components/backoffice/admin/AdminHeader";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -22,6 +23,7 @@ export default async function AdminLayout({
 
   return (
     <BackofficeShell sidebar={<AdminSidebar locale={locale} />}>
+      <AdminHeader email={profile.email!} role={profile.role!} fullName={profile.full_name} />
       {children}
     </BackofficeShell>
   );

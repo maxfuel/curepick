@@ -138,7 +138,7 @@ export default async function AdminDashboardPage({ params }: Props) {
         <div>
           <p className="text-xs text-muted-foreground mb-2">현황</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <StatCard label="회원수" value={totalPatients ?? 0} />
+            <StatCard label="회원수" value={totalPatients ?? 0} href={`/${locale}/admin/members`} />
             <StatCard
               label="로컬에이전트"
               value={totalAgents ?? 0}
