@@ -40,7 +40,8 @@ export function MultilingualInput({
       body: JSON.stringify({ text, from, targets }),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json() as { translations: Partial<Record<LangCode, string>> };
+    const data = await res.json() as { translations: Partial<Record<LangCode, string>>; error?: string };
+    if (data.error) throw new Error(data.error);
     return data.translations;
   };
 

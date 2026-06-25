@@ -32,14 +32,21 @@ export async function POST(req: NextRequest) {
   );
 
   const translations: Partial<Record<LangCode, string>> = {};
+  const errors: string[] = [];
   for (const result of results) {
     if (result.status === "fulfilled") {
       const [code, translated] = result.value;
       translations[code] = translated;
+    } else {
+      errors.push(String((result.reason as Error).message));
     }
   }
 
   void force; // force flag handled client-side (which fields to overwrite)
+
+  if (Object.keys(translations).length === 0 && errors.length > 0) {
+    return NextResponse.json({ translations, error: errors[0] });
+  }
 
   return NextResponse.json({ translations });
 }

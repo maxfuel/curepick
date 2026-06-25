@@ -15,7 +15,10 @@ export async function translateText(
   );
 
   if (!response.ok) {
-    throw new Error(`Google Translate API error: ${response.status}`);
+    const errBody = await response.json().catch(() => ({}));
+    const msg = (errBody as { error?: { message?: string } }).error?.message
+      ?? `HTTP ${response.status}`;
+    throw new Error(msg);
   }
 
   const data = (await response.json()) as {
