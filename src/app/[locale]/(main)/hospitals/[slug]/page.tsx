@@ -10,6 +10,7 @@ import { DoctorCard } from "@/components/cards/DoctorCard";
 import { VideoGallery } from "@/components/hospitals/VideoGallery";
 import { PhotoGallery } from "@/components/hospitals/PhotoGallery";
 import { ReadMoreText } from "@/components/hospitals/ReadMoreText";
+import { HospitalPhotoMosaic } from "@/components/hospitals/HospitalPhotoMosaic";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -233,18 +234,11 @@ export default async function HospitalDetailPage({ params }: Props) {
       {/* ════════════════════════════════════════
           HERO
       ════════════════════════════════════════ */}
-      <section className="relative min-h-[480px] flex items-end bg-gray-900">
-        {hospital.hero_image_url && (
-          <Image
-            src={hospital.hero_image_url}
-            alt={hospitalName}
-            fill
-            priority
-            className="object-cover"
-          />
-        )}
-        <div className={`absolute inset-0 ${hospital.hero_image_url ? "bg-gradient-to-t from-black/80 via-black/20 to-transparent" : "bg-gradient-to-t from-gray-900 via-gray-900/70 to-gray-900/30"}`} />
-
+      <HospitalPhotoMosaic
+        heroImageUrl={hospital.hero_image_url}
+        galleryImages={galleryImages}
+        altText={hospitalName}
+      >
         <div className="relative container mx-auto px-4 pb-10 pt-24">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             {/* Left: identity */}
@@ -321,7 +315,7 @@ export default async function HospitalDetailPage({ params }: Props) {
             </div>
           </div>
         </div>
-      </section>
+      </HospitalPhotoMosaic>
 
       {/* ════════════════════════════════════════
           SECTION NAV
