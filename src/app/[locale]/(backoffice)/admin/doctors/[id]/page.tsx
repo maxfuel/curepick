@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
+import { DoctorPhotoInput } from "@/components/backoffice/admin/DoctorPhotoInput";
 import { updateDoctor } from "@/lib/actions/admin-doctors";
 import type { Json } from "@/lib/types/database";
 
@@ -72,13 +73,7 @@ export default async function EditDoctorPage({ params }: Props) {
           />
         </div>
 
-        <div className="space-y-1">
-          <label className="text-sm font-medium">{t("fieldPhoto")} (leave empty to keep current)</label>
-          <input name="photo_file" type="file" accept="image/*" className="w-full text-sm" />
-          {doctor.photo_url && (
-            <p className="text-xs text-muted-foreground">Current: {doctor.photo_url}</p>
-          )}
-        </div>
+        <DoctorPhotoInput currentPhotoUrl={doctor.photo_url} />
 
         <div className="flex gap-3 pt-2">
           <button type="submit" className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">

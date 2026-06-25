@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
+import { DoctorPhotoInput } from "@/components/backoffice/admin/DoctorPhotoInput";
 import { createDoctor } from "@/lib/actions/admin-doctors";
 import type { Json } from "@/lib/types/database";
 
@@ -72,10 +73,7 @@ export default async function NewDoctorPage({ params }: Props) {
           />
         </div>
 
-        <div className="space-y-1">
-          <label className="text-sm font-medium">{t("fieldPhoto")}</label>
-          <input name="photo_file" type="file" accept="image/*" className="w-full text-sm" />
-        </div>
+        <DoctorPhotoInput />
 
         <div className="flex gap-3 pt-2">
           <button
