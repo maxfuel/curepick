@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { SUPPORTED_LANGS, PRIMARY_LANGS, type LangCode, type MultilingualValue } from "@/config/i18n";
 
 const SECONDARY_LANGS = SUPPORTED_LANGS.filter(
@@ -28,8 +28,6 @@ export function MultilingualInput({
   const [autoTranslated, setAutoTranslated] = useState<Set<LangCode>>(new Set());
   const [state, setState] = useState<TranslateState>("idle");
   const [fieldState, setFieldState] = useState<Partial<Record<LangCode, TranslateState>>>({});
-  const [showMenu, setShowMenu] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   const callTranslate = async (from: LangCode, targets: LangCode[]): Promise<Partial<Record<LangCode, string>>> => {
     const text = vals[from] ?? "";
@@ -57,7 +55,6 @@ export function MultilingualInput({
       return next;
     });
     setState("idle");
-    setShowMenu(false);
   };
 
   const translateField = async (code: LangCode) => {
@@ -84,7 +81,7 @@ export function MultilingualInput({
           <button
             type="button"
             disabled={state === "loading"}
-            onClick={() => translateFrom("ko")}
+            onClick={() => translateFrom("ko", true)}
             className="px-2 py-0.5 rounded text-xs font-medium bg-muted hover:bg-muted/70 disabled:opacity-50 transition-colors"
           >
             {state === "loading" ? "번역 중…" : "KO로 번역"}
@@ -92,38 +89,11 @@ export function MultilingualInput({
           <button
             type="button"
             disabled={state === "loading"}
-            onClick={() => translateFrom("en")}
+            onClick={() => translateFrom("en", true)}
             className="px-2 py-0.5 rounded text-xs font-medium bg-muted hover:bg-muted/70 disabled:opacity-50 transition-colors"
           >
             EN으로 번역
           </button>
-          <div ref={menuRef} className="relative">
-            <button
-              type="button"
-              onClick={() => setShowMenu((v) => !v)}
-              className="px-2 py-0.5 rounded text-xs font-medium bg-muted hover:bg-muted/70 transition-colors"
-            >
-              ···
-            </button>
-            {showMenu && (
-              <div className="absolute right-0 top-6 z-10 bg-popover border rounded shadow-md text-xs w-40">
-                <button
-                  type="button"
-                  onClick={() => translateFrom("ko", true)}
-                  className="w-full text-left px-3 py-2 hover:bg-muted transition-colors"
-                >
-                  KO 전체 강제 재번역
-                </button>
-                <button
-                  type="button"
-                  onClick={() => translateFrom("en", true)}
-                  className="w-full text-left px-3 py-2 hover:bg-muted transition-colors"
-                >
-                  EN 전체 강제 재번역
-                </button>
-              </div>
-            )}
-          </div>
         </div>
       </div>
 
