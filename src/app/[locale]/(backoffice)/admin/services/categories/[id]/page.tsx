@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { updateCategory } from "@/lib/actions/admin-services";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
@@ -21,8 +21,13 @@ export default async function EditCategoryPage({ params }: Props) {
 
   if (!category) notFound();
 
-  const updateAction = updateCategory.bind(null, id);
   const backHref = `/${locale}/admin/services?tab=categories`;
+
+  async function handleUpdate(formData: FormData) {
+    "use server";
+    await updateCategory(id, formData);
+    redirect(backHref);
+  }
 
   return (
     <div className="p-6 max-w-xl">
@@ -36,7 +41,7 @@ export default async function EditCategoryPage({ params }: Props) {
 
       <h1 className="text-2xl font-semibold mb-6">카테고리 수정</h1>
 
-      <form action={updateAction} className="space-y-4">
+      <form action={handleUpdate} className="space-y-4">
         <MultilingualInput
           name="name"
           label="카테고리 이름"
