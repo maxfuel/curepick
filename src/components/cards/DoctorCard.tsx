@@ -31,18 +31,18 @@ export function DoctorCard({
     >
       <div className="flex items-start gap-4">
         {photoUrl ? (
-          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full">
+          <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full">
             <Image
               src={photoUrl}
               alt={name}
               fill
               className="object-cover"
-              sizes="64px"
+              sizes="96px"
             />
           </div>
         ) : (
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-muted">
-            <Users className="h-6 w-6 text-muted-foreground" />
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-muted">
+            <Users className="h-8 w-8 text-muted-foreground" />
           </div>
         )}
         <div className="min-w-0">
