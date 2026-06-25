@@ -5,6 +5,8 @@ import Image from "next/image";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
 import {
   updateHospital,
+  updateHospitalLogo,
+  updateHospitalHero,
   upsertHospitalProcedure,
   removeHospitalProcedure,
   addHospitalVideo,
@@ -13,6 +15,8 @@ import {
   removeHospitalGalleryImage,
   addHospitalAward,
   removeHospitalAward,
+  addDoctor,
+  removeDoctor,
 } from "@/lib/actions/admin-hospitals";
 import type { Json } from "@/lib/types/database";
 
@@ -37,13 +41,18 @@ export default async function EditHospitalPage({ params }: Props) {
   const supabase = await createClient();
   const t = await getTranslations("admin.hospitals");
 
-  const [{ data: hospital }, { data: allProcedures }, { data: hospitalProcs }] = await Promise.all([
+  const [{ data: hospital }, { data: allProcedures }, { data: hospitalProcs }, { data: hospitalDoctors }] = await Promise.all([
     (supabase.from("hospitals") as any).select("*").eq("id", id).single(),
     supabase.from("procedures").select("id, name").order("name->en"),
     supabase
       .from("hospital_procedures")
       .select("id, procedure_id, cost_min, cost_max, cost_currency, annual_volume, specialist_count, waiting_time_days, procedures(name)")
       .eq("hospital_id", id),
+    supabase
+      .from("doctors")
+      .select("id, slug, name, specialty, experience_years, photo_url")
+      .eq("hospital_id", id)
+      .order("created_at"),
   ]);
 
   if (!hospital) notFound();
@@ -59,6 +68,8 @@ export default async function EditHospitalPage({ params }: Props) {
   const addVideo = addHospitalVideo.bind(null, id);
   const addGallery = addHospitalGalleryImage.bind(null, id);
   const addAward = addHospitalAward.bind(null, id);
+  const uploadLogo = updateHospitalLogo.bind(null, id);
+  const uploadHero = updateHospitalHero.bind(null, id);
 
   return (
     <div className="p-6 max-w-3xl space-y-10">
@@ -92,29 +103,6 @@ export default async function EditHospitalPage({ params }: Props) {
           </div>
           <Field label={t("fieldLanguages") + " (comma-separated)"} name="languages" defaultValue={(hospital.languages as string[] | null)?.join(", ") ?? ""} />
 
-          {/* Logo */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Logo Image</label>
-            <input name="logo_file" type="file" accept="image/*" className="w-full text-sm" />
-            {hospital.logo_url && (
-              <div className="mt-1 flex items-center gap-2">
-                <Image src={hospital.logo_url} alt="logo" width={40} height={40} className="rounded object-cover" />
-                <span className="text-xs text-muted-foreground truncate">{hospital.logo_url}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Hero image */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Hero Image</label>
-            <input name="hero_file" type="file" accept="image/*" className="w-full text-sm" />
-            {hospital.hero_image_url && (
-              <div className="mt-1 relative h-24 w-full overflow-hidden rounded-lg">
-                <Image src={hospital.hero_image_url} alt="hero" fill className="object-cover" />
-              </div>
-            )}
-          </div>
-
           <div className="flex gap-4">
             <label className="flex items-center gap-2 text-sm">
               <input name="is_featured" type="checkbox" defaultChecked={hospital.is_featured ?? false} />
@@ -127,12 +115,48 @@ export default async function EditHospitalPage({ params }: Props) {
           </div>
 
           <div className="flex gap-3 pt-2">
-            <button type="submit" className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+            <button type="submit" className="cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
               {t("save")}
             </button>
-            <a href={`/${locale}/admin/hospitals`} className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted">
+            <a href={`/${locale}/admin/hospitals`} className="cursor-pointer rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted">
               {t("cancel")}
             </a>
+          </div>
+        </form>
+      </section>
+
+      {/* ── Logo Image ─────────────────────────────────────── */}
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold border-b pb-2">Logo Image</h2>
+        {hospital.logo_url && (
+          <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3">
+            <Image src={hospital.logo_url} alt="logo" width={56} height={56} className="rounded-lg object-cover shrink-0" />
+            <span className="text-xs text-muted-foreground truncate">{hospital.logo_url}</span>
+          </div>
+        )}
+        <form action={uploadLogo} className="rounded-lg border p-4">
+          <label className="text-sm font-medium">Upload Logo</label>
+          <div className="mt-2 flex items-center gap-3">
+            <input name="logo_file" type="file" accept="image/*" required className="flex-1 text-sm file:mr-3 file:cursor-pointer file:rounded file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium" />
+            <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80 whitespace-nowrap">Upload</button>
+          </div>
+        </form>
+      </section>
+
+      {/* ── Hero Image ─────────────────────────────────────── */}
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold border-b pb-2">Hero Image</h2>
+        <p className="text-sm text-muted-foreground">Recommended: 1920×1080px or wider. Shown as full-width background on the hospital page.</p>
+        {hospital.hero_image_url && (
+          <div className="relative h-32 w-full overflow-hidden rounded-lg border">
+            <Image src={hospital.hero_image_url} alt="hero" fill className="object-cover" />
+          </div>
+        )}
+        <form action={uploadHero} className="rounded-lg border p-4">
+          <label className="text-sm font-medium">Upload Hero Image</label>
+          <div className="mt-2 flex items-center gap-3">
+            <input name="hero_file" type="file" accept="image/*" required className="flex-1 text-sm file:mr-3 file:cursor-pointer file:rounded file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium" />
+            <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80 whitespace-nowrap">Upload</button>
           </div>
         </form>
       </section>
@@ -163,7 +187,7 @@ export default async function EditHospitalPage({ params }: Props) {
                       <td className="px-3 py-2 text-muted-foreground">{hp.annual_volume ?? "—"}</td>
                       <td className="px-3 py-2">
                         <form action={removeHospitalProcedure.bind(null, hp.id)} className="inline">
-                          <button type="submit" className="text-destructive text-xs hover:underline">{t("remove")}</button>
+                          <button type="submit" className="cursor-pointer text-destructive text-xs hover:underline">{t("remove")}</button>
                         </form>
                       </td>
                     </tr>
@@ -191,7 +215,7 @@ export default async function EditHospitalPage({ params }: Props) {
               <Field label={t("colCurrency")} name="cost_currency" defaultValue="USD" />
               <Field label={t("colVolume")} name="annual_volume" type="number" />
             </div>
-            <button type="submit" className="rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">
+            <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">
               {t("addProcedureBtn")}
             </button>
           </form>
@@ -213,7 +237,7 @@ export default async function EditHospitalPage({ params }: Props) {
                   <span className="inline-block mt-0.5 text-xs bg-primary/10 text-primary rounded px-1.5 py-0.5">{v.type}</span>
                 </div>
                 <form action={removeHospitalVideo.bind(null, id, i)}>
-                  <button type="submit" className="text-xs text-destructive hover:underline shrink-0">Remove</button>
+                  <button type="submit" className="cursor-pointer text-xs text-destructive hover:underline shrink-0">Remove</button>
                 </form>
               </div>
             ))}
@@ -237,7 +261,7 @@ export default async function EditHospitalPage({ params }: Props) {
               <input name="url" type="url" required placeholder="https://www.youtube.com/watch?v=..." className="w-full rounded-md border bg-background px-3 py-2 text-sm" />
             </div>
           </div>
-          <button type="submit" className="rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">Add Video</button>
+          <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">Add Video</button>
         </form>
       </section>
 
@@ -284,7 +308,7 @@ export default async function EditHospitalPage({ params }: Props) {
                   {a.description && <p className="text-xs text-muted-foreground mt-0.5">{a.description}</p>}
                 </div>
                 <form action={removeHospitalAward.bind(null, id, i)}>
-                  <button type="submit" className="text-xs text-destructive hover:underline shrink-0">Remove</button>
+                  <button type="submit" className="cursor-pointer text-xs text-destructive hover:underline shrink-0">Remove</button>
                 </form>
               </div>
             ))}
@@ -307,8 +331,79 @@ export default async function EditHospitalPage({ params }: Props) {
               <input name="description" placeholder="Short description" className="w-full rounded-md border bg-background px-3 py-2 text-sm" />
             </div>
           </div>
-          <button type="submit" className="rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">Add Award</button>
+          <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">Add Award</button>
         </form>
+      </section>
+
+      {/* ── Medical Team ────────────────────────────────────── */}
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold border-b pb-2">Medical Team</h2>
+        <p className="text-sm text-muted-foreground">Add doctors and staff members. These appear in the Doctors section on the hospital page.</p>
+
+        {(hospitalDoctors ?? []).length > 0 && (
+          <div className="space-y-2">
+            {(hospitalDoctors ?? []).map((doctor) => (
+              <div key={doctor.id} className="flex items-center gap-3 rounded-lg border bg-muted/30 px-4 py-3">
+                {doctor.photo_url ? (
+                  <Image
+                    src={doctor.photo_url}
+                    alt={getEn(doctor.name as any)}
+                    width={48}
+                    height={48}
+                    className="h-12 w-12 rounded-full object-cover shrink-0"
+                  />
+                ) : (
+                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center shrink-0">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {getEn(doctor.name as any).charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium">{getEn(doctor.name as any)}</p>
+                  <p className="text-xs text-muted-foreground">{getEn(doctor.specialty as any)}</p>
+                  {doctor.experience_years && (
+                    <p className="text-xs text-muted-foreground">{doctor.experience_years} yrs experience</p>
+                  )}
+                </div>
+                <form action={removeDoctor.bind(null, doctor.id)}>
+                  <button type="submit" className="cursor-pointer text-xs text-destructive hover:underline shrink-0">
+                    Remove
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <details className="rounded-lg border">
+          <summary className="cursor-pointer px-4 py-3 text-sm font-medium hover:bg-muted/50">
+            + Add Doctor / Staff Member
+          </summary>
+          <form action={addDoctor.bind(null, id)} className="space-y-3 border-t p-4">
+            <MultilingualInput name="name" label="Name" value={{}} />
+            <MultilingualInput name="specialty" label="Specialty / Title" value={{}} />
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Experience (years)" name="experience_years" type="number" placeholder="10" />
+              <Field label="Languages (KO, EN, ZH)" name="languages" defaultValue="" placeholder="Korean, English" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Profile Photo</label>
+              <input
+                name="photo_file"
+                type="file"
+                accept="image/*"
+                className="block w-full text-sm file:mr-3 file:rounded file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium"
+              />
+            </div>
+            <button
+              type="submit"
+              className="cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              Add to Team
+            </button>
+          </form>
+        </details>
       </section>
     </div>
   );
