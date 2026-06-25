@@ -240,10 +240,10 @@ export default async function HospitalDetailPage({ params }: Props) {
             alt={hospitalName}
             fill
             priority
-            className="object-cover opacity-60"
+            className="object-cover"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-gray-900/10" />
+        <div className={`absolute inset-0 ${hospital.hero_image_url ? "bg-gradient-to-t from-black/80 via-black/20 to-transparent" : "bg-gradient-to-t from-gray-900 via-gray-900/70 to-gray-900/30"}`} />
 
         <div className="relative container mx-auto px-4 pb-10 pt-24">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
