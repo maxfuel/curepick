@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { flushSync } from "react-dom";
 import { SUPPORTED_LANGS, PRIMARY_LANGS, type LangCode, type MultilingualValue } from "@/config/i18n";
 
 const SECONDARY_LANGS = SUPPORTED_LANGS.filter(
@@ -28,6 +29,7 @@ export function MultilingualInput({
   const [autoTranslated, setAutoTranslated] = useState<Set<LangCode>>(new Set());
   const [state, setState] = useState<TranslateState>("idle");
   const [fieldState, setFieldState] = useState<Partial<Record<LangCode, TranslateState>>>({});
+  const [error, setError] = useState<string | null>(null);
 
   const callTranslate = async (from: LangCode, targets: LangCode[]): Promise<Partial<Record<LangCode, string>>> => {
     const text = vals[from] ?? "";
@@ -37,35 +39,52 @@ export function MultilingualInput({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, from, targets }),
     });
-    if (!res.ok) return {};
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json() as { translations: Partial<Record<LangCode, string>> };
     return data.translations;
   };
 
   const translateFrom = async (from: LangCode, force = false) => {
-    setState("loading");
+    flushSync(() => {
+      setState("loading");
+      setError(null);
+    });
     const targets = SUPPORTED_LANGS
       .map((l) => l.code as LangCode)
       .filter((code) => code !== from && (force || !(vals[code] ?? "").trim()));
-    const translations = await callTranslate(from, targets);
-    setVals((v) => ({ ...v, ...translations }));
-    setAutoTranslated((prev) => {
-      const next = new Set(prev);
-      Object.keys(translations).forEach((k) => next.add(k as LangCode));
-      return next;
-    });
-    setState("idle");
+    try {
+      const translations = await callTranslate(from, targets);
+      if (Object.keys(translations).length === 0) {
+        setError("번역에 실패했습니다. API 키를 확인하세요.");
+      } else {
+        setVals((v) => ({ ...v, ...translations }));
+        setAutoTranslated((prev) => {
+          const next = new Set(prev);
+          Object.keys(translations).forEach((k) => next.add(k as LangCode));
+          return next;
+        });
+      }
+    } catch {
+      setError("번역 중 오류가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+      setState("idle");
+    }
   };
 
   const translateField = async (code: LangCode) => {
     const from: LangCode = "ko";
     setFieldState((s) => ({ ...s, [code]: "loading" }));
-    const translations = await callTranslate(from, [code]);
-    if (translations[code]) {
-      setVals((v) => ({ ...v, [code]: translations[code]! }));
-      setAutoTranslated((prev) => new Set([...prev, code]));
+    try {
+      const translations = await callTranslate(from, [code]);
+      if (translations[code]) {
+        setVals((v) => ({ ...v, [code]: translations[code]! }));
+        setAutoTranslated((prev) => new Set([...prev, code]));
+      }
+    } catch {
+      // field-level error is silent; user can retry
+    } finally {
+      setFieldState((s) => ({ ...s, [code]: "idle" }));
     }
-    setFieldState((s) => ({ ...s, [code]: "idle" }));
   };
 
   const inputClass = (code: LangCode) =>
@@ -96,6 +115,10 @@ export function MultilingualInput({
           </button>
         </div>
       </div>
+
+      {error && (
+        <p className="text-xs text-destructive">{error}</p>
+      )}
 
       {/* Primary langs: KO + EN side by side */}
       <div className="grid grid-cols-2 gap-2">
