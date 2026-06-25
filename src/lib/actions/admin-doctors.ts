@@ -2,14 +2,10 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { parseMultilingual } from "@/lib/utils/multilingual";
 
 function slugify(str: string): string {
   return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-}
-
-function parseMultilingual(raw: string | null) {
-  if (!raw) return { en: "", ko: "", zh: "", ja: "" };
-  try { return JSON.parse(raw); } catch { return { en: raw, ko: raw, zh: raw, ja: raw }; }
 }
 
 async function uploadImage(file: File, bucket: string, path: string): Promise<string | null> {
@@ -24,7 +20,7 @@ async function uploadImage(file: File, bucket: string, path: string): Promise<st
 export async function createDoctor(formData: FormData) {
   const supabase = await createClient();
   const name = parseMultilingual(formData.get("name") as string);
-  const slug = (formData.get("slug") as string) || slugify(name.en);
+  const slug = (formData.get("slug") as string) || slugify(name.en ?? "");
   const specialty = parseMultilingual(formData.get("specialty") as string);
   const bio = parseMultilingual(formData.get("bio") as string);
   const hospital_id = (formData.get("hospital_id") as string) || null;
@@ -47,7 +43,7 @@ export async function createDoctor(formData: FormData) {
 export async function updateDoctor(id: string, formData: FormData) {
   const supabase = await createClient();
   const name = parseMultilingual(formData.get("name") as string);
-  const slug = (formData.get("slug") as string) || slugify(name.en);
+  const slug = (formData.get("slug") as string) || slugify(name.en ?? "");
   const specialty = parseMultilingual(formData.get("specialty") as string);
   const bio = parseMultilingual(formData.get("bio") as string);
   const hospital_id = (formData.get("hospital_id") as string) || null;

@@ -3,14 +3,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
+import { parseMultilingual } from "@/lib/utils/multilingual";
 
 function slugify(str: string): string {
   return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-}
-
-function parseMultilingual(raw: string | null) {
-  if (!raw) return { en: "", ko: "", zh: "", ja: "" };
-  try { return JSON.parse(raw); } catch { return { en: raw, ko: raw, zh: raw, ja: raw }; }
 }
 
 const HOSPITAL_BUCKET = "hospital-images";
@@ -51,7 +47,7 @@ export async function createHospital(formData: FormData) {
   const supabase = await createClient();
   const name = parseMultilingual(formData.get("name") as string);
   const slugRaw = (formData.get("slug") as string).trim();
-  const slug = slugRaw ? slugify(slugRaw) : slugify(name.en);
+  const slug = slugRaw ? slugify(slugRaw) : slugify(name.en ?? "");
   const description = parseMultilingual(formData.get("description") as string);
   const address = parseMultilingual(formData.get("address") as string);
   const city = (formData.get("city") as string) || null;
@@ -81,7 +77,7 @@ export async function updateHospital(id: string, formData: FormData) {
   const supabase = await createClient();
   const name = parseMultilingual(formData.get("name") as string);
   const slugRaw = (formData.get("slug") as string).trim();
-  const slug = slugRaw ? slugify(slugRaw) : slugify(name.en);
+  const slug = slugRaw ? slugify(slugRaw) : slugify(name.en ?? "");
   const description = parseMultilingual(formData.get("description") as string);
   const address = parseMultilingual(formData.get("address") as string);
   const city = (formData.get("city") as string) || null;

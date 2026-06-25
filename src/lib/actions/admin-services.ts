@@ -2,18 +2,10 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { parseMultilingual } from "@/lib/utils/multilingual";
 
 function slugify(str: string): string {
   return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-}
-
-function parseMultilingual(raw: string | null) {
-  if (!raw) return { en: "", ko: "", zh: "", ja: "" };
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return { en: raw, ko: raw, zh: raw, ja: raw };
-  }
 }
 
 // ─── Categories ─────────────────────────────────────────────────────────────
@@ -21,7 +13,7 @@ function parseMultilingual(raw: string | null) {
 export async function createCategory(formData: FormData) {
   const supabase = await createClient();
   const name = parseMultilingual(formData.get("name") as string);
-  const slug = (formData.get("slug") as string) || slugify(name.en);
+  const slug = (formData.get("slug") as string) || slugify(name.en ?? "");
   await supabase.from("categories").insert({ name, slug });
   revalidatePath("/admin/services");
 }
@@ -37,7 +29,7 @@ export async function deleteCategory(id: string) {
 export async function createService(formData: FormData) {
   const supabase = await createClient();
   const name = parseMultilingual(formData.get("name") as string);
-  const slug = (formData.get("slug") as string) || slugify(name.en);
+  const slug = (formData.get("slug") as string) || slugify(name.en ?? "");
   const description = parseMultilingual(formData.get("description") as string);
   const overview = parseMultilingual(formData.get("overview") as string);
   const category_id = (formData.get("category_id") as string) || null;
@@ -49,7 +41,7 @@ export async function createService(formData: FormData) {
 export async function updateService(id: string, formData: FormData) {
   const supabase = await createClient();
   const name = parseMultilingual(formData.get("name") as string);
-  const slug = (formData.get("slug") as string) || slugify(name.en);
+  const slug = (formData.get("slug") as string) || slugify(name.en ?? "");
   const description = parseMultilingual(formData.get("description") as string);
   const overview = parseMultilingual(formData.get("overview") as string);
   const category_id = (formData.get("category_id") as string) || null;
@@ -72,7 +64,7 @@ export async function deleteService(id: string) {
 export async function createProcedure(formData: FormData) {
   const supabase = await createClient();
   const name = parseMultilingual(formData.get("name") as string);
-  const slug = (formData.get("slug") as string) || slugify(name.en);
+  const slug = (formData.get("slug") as string) || slugify(name.en ?? "");
   const service_id = formData.get("service_id") as string;
   await supabase.from("procedures").insert({ name, slug, service_id });
   revalidatePath("/admin/services");
