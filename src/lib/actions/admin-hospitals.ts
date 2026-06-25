@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 
 function slugify(str: string): string {
@@ -12,12 +13,37 @@ function parseMultilingual(raw: string | null) {
   try { return JSON.parse(raw); } catch { return { en: raw, ko: raw, zh: raw, ja: raw }; }
 }
 
+const HOSPITAL_BUCKET = "hospital-images";
+
+async function ensureHospitalBucket() {
+  const admin = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  const { data: buckets } = await admin.storage.listBuckets();
+  if (!buckets?.find((b) => b.name === HOSPITAL_BUCKET)) {
+    await admin.storage.createBucket(HOSPITAL_BUCKET, { public: true });
+  }
+}
+
 async function uploadImage(file: File, bucket: string, path: string): Promise<string | null> {
   if (!file || file.size === 0) return null;
-  const supabase = await createClient();
-  const { data, error } = await supabase.storage.from(bucket).upload(path, file, { upsert: true });
+
+  await ensureHospitalBucket();
+
+  const admin = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  const ext = file.name.split(".").pop() ?? "jpg";
+  const { data, error } = await admin.storage
+    .from(bucket)
+    .upload(path, await file.arrayBuffer(), {
+      contentType: file.type || `image/${ext}`,
+      upsert: true,
+    });
   if (error || !data) return null;
-  const { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(data.path);
+  const { data: { publicUrl } } = admin.storage.from(bucket).getPublicUrl(data.path);
   return publicUrl;
 }
 
