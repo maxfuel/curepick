@@ -8,6 +8,7 @@ const navItems = [
   { key: "dashboard", href: "/hospital/dashboard" },
   { key: "inquiries", href: "/hospital/inquiries" },
   { key: "profile", href: "/hospital/profile" },
+  { key: "media", href: "/hospital/media" },
   { key: "doctors", href: "/hospital/doctors" },
   { key: "procedures", href: "/hospital/procedures" },
   { key: "reviews", href: "/hospital/reviews" },
