@@ -71,6 +71,18 @@ Multilingual text fields are stored as JSON: `{ en: "", ko: "", zh: "", ja: "" }
 
 ---
 
+## Hospital Portal Philosophy
+
+병원 포털(`/hospital/*`)은 병원이 자신의 콘텐츠를 직접 관리하는 공간이다.
+
+- **병원 콘텐츠는 병원이 직접 관리한다** — 사진, 영상, 의사 정보, 시술 가격 등
+- **Admin은 거버넌스/모더레이션만 담당** — 콘텐츠 입력/편집은 병원 스태프 몫
+- **새 기능 설계 시:** "병원 스태프가 직접 할 수 있는가?" 를 먼저 확인할 것
+- **보안:** 병원 스태프 서버 액션은 반드시 `getProfile()`로 `hospital_id`를 서버에서 검증해야 함 — URL param 또는 form field의 `hospital_id`를 신뢰하지 말 것
+- **병원 스태프용 서버 액션 위치:** `src/lib/actions/hospital-*.ts`
+
+---
+
 ## UI Component Rules
 
 - All file upload inputs must use `FileDropzone` (`src/components/ui/FileDropzone.tsx`)
