@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { deactivateCurePartner } from "@/lib/actions/admin-cure-partners";
+import { YouTubePreviewInput } from "@/components/ui/YouTubePreviewInput";
 
 interface CurePartnerRow {
   id: string;
@@ -260,7 +261,7 @@ export default function CurePartnersClient({ initialCurePartners }: { initialCur
               <Field label="WhatsApp Number" name="contact_whatsapp" placeholder="+82 10 XXXX XXXX" />
               <Field label="WeChat ID" name="contact_wechat" placeholder="wechat_id" />
               <Field label="Profile Photo URL" name="photo_url" placeholder="https://..." className="col-span-2" />
-              <Field label="Intro Video URL" name="intro_video_url" placeholder="https://youtube.com/..." className="col-span-2" />
+              <YouTubePreviewInput name="intro_video_url" placeholder="https://youtube.com/..." label="Intro Video URL" className="col-span-2" />
             </div>
           </section>
 

@@ -71,6 +71,18 @@ Multilingual text fields are stored as JSON: `{ en: "", ko: "", zh: "", ja: "" }
 
 ---
 
+## UI Component Rules
+
+- All file upload inputs must use `FileDropzone` (`src/components/ui/FileDropzone.tsx`)
+  - Supports drag & drop, click-to-open, image preview, multi-file display
+  - Pass `currentPreviewUrl` on edit forms to show the existing file before replacement
+  - Pass `onChange` callback when the form manages state (e.g. ReviewForm)
+- YouTube URL inputs must use `YouTubePreviewInput` (`src/components/ui/YouTubePreviewInput.tsx`)
+  - Shows thumbnail once a valid YouTube URL is typed
+  - Clicking the thumbnail plays the video inline (iframe embed)
+
+---
+
 ## Git Push Rule
 
 **커밋 후 반드시 즉시 push할 것.**

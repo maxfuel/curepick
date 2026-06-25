@@ -1,6 +1,7 @@
 import { updateHeroImage, removeHeroImage } from "@/lib/actions/admin-settings";
 import { readSiteSettings } from "@/lib/site-settings";
 import Image from "next/image";
+import { FileDropzone } from "@/components/ui/FileDropzone";
 
 export default async function AdminSettingsPage() {
   const { hero_image_url: heroImageUrl } = await readSiteSettings();
@@ -45,18 +46,12 @@ export default async function AdminSettingsPage() {
         )}
 
         <form action={updateHeroImage} className="space-y-3">
-          <div className="space-y-1">
-            <label className="text-sm font-medium">
-              {heroImageUrl ? "이미지 교체" : "이미지 업로드"}
-            </label>
-            <input
-              name="hero_file"
-              type="file"
-              accept="image/*"
-              required
-              className="block w-full text-sm text-muted-foreground file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary-foreground hover:file:bg-primary/90"
-            />
-          </div>
+          <FileDropzone
+            name="hero_file"
+            accept="image/*"
+            currentPreviewUrl={heroImageUrl}
+            label={heroImageUrl ? "이미지 교체" : "이미지 업로드"}
+          />
           <button
             type="submit"
             className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"

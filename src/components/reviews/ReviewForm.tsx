@@ -12,6 +12,7 @@ import { uploadReviewMedia } from "@/lib/storage/upload";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { FileDropzone } from "@/components/ui/FileDropzone";
 
 function getLocalizedName(name: unknown, locale: string): string {
   if (typeof name === "object" && name !== null) {
@@ -198,46 +199,21 @@ export function ReviewForm({ hospitals, procedures, locale }: ReviewFormProps) {
         )}
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="photos" className="text-sm font-medium">
-          {t("uploadPhotos")}
-        </label>
-        <input
-          id="photos"
-          type="file"
-          accept="image/*"
-          multiple
-          className="text-sm"
-          onChange={(e) => {
-            const files = Array.from(e.target.files ?? []).slice(0, 5);
-            setPhotos(files);
-          }}
-        />
-        {photos.length > 0 && (
-          <p className="text-xs text-muted-foreground">
-            {photos.length} file(s) selected
-          </p>
-        )}
-      </div>
+      <FileDropzone
+        name="photos"
+        accept="image/*"
+        multiple
+        maxFiles={5}
+        label={t("uploadPhotos")}
+        onChange={(files) => setPhotos(files)}
+      />
 
-      <div className="space-y-2">
-        <label htmlFor="video" className="text-sm font-medium">
-          {t("uploadVideo")}
-        </label>
-        <input
-          id="video"
-          type="file"
-          accept="video/*"
-          className="text-sm"
-          onChange={(e) => {
-            const file = e.target.files?.[0] ?? null;
-            setVideo(file);
-          }}
-        />
-        {video && (
-          <p className="text-xs text-muted-foreground">{video.name}</p>
-        )}
-      </div>
+      <FileDropzone
+        name="video"
+        accept="video/*"
+        label={t("uploadVideo")}
+        onChange={(files) => setVideo(files[0] ?? null)}
+      />
 
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending ? t("submittingReview") : t("submitReview")}

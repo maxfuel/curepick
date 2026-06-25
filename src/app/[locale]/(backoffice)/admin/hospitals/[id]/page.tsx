@@ -3,6 +3,8 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
+import { FileDropzone } from "@/components/ui/FileDropzone";
+import { YouTubePreviewInput } from "@/components/ui/YouTubePreviewInput";
 import {
   updateHospital,
   updateHospitalLogo,
@@ -134,12 +136,9 @@ export default async function EditHospitalPage({ params }: Props) {
             <span className="text-xs text-muted-foreground truncate">{hospital.logo_url}</span>
           </div>
         )}
-        <form action={uploadLogo} className="rounded-lg border p-4">
-          <label className="text-sm font-medium">Upload Logo</label>
-          <div className="mt-2 flex items-center gap-3">
-            <input name="logo_file" type="file" accept="image/*" required className="flex-1 text-sm file:mr-3 file:cursor-pointer file:rounded file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium" />
-            <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80 whitespace-nowrap">Upload</button>
-          </div>
+        <form action={uploadLogo} className="rounded-lg border p-4 space-y-3">
+          <FileDropzone name="logo_file" accept="image/*" currentPreviewUrl={hospital.logo_url} label="Upload Logo" />
+          <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">Upload</button>
         </form>
       </section>
 
@@ -152,12 +151,9 @@ export default async function EditHospitalPage({ params }: Props) {
             <Image src={hospital.hero_image_url} alt="hero" fill className="object-cover" />
           </div>
         )}
-        <form action={uploadHero} className="rounded-lg border p-4">
-          <label className="text-sm font-medium">Upload Hero Image</label>
-          <div className="mt-2 flex items-center gap-3">
-            <input name="hero_file" type="file" accept="image/*" required className="flex-1 text-sm file:mr-3 file:cursor-pointer file:rounded file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium" />
-            <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80 whitespace-nowrap">Upload</button>
-          </div>
+        <form action={uploadHero} className="rounded-lg border p-4 space-y-3">
+          <FileDropzone name="hero_file" accept="image/*" currentPreviewUrl={hospital.hero_image_url} label="Upload Hero Image" />
+          <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">Upload</button>
         </form>
       </section>
 
@@ -256,9 +252,8 @@ export default async function EditHospitalPage({ params }: Props) {
                 <option value="doctor">Doctor Interview</option>
               </select>
             </div>
-            <div className="col-span-2 space-y-1">
-              <label className="text-sm font-medium">YouTube URL *</label>
-              <input name="url" type="url" required placeholder="https://www.youtube.com/watch?v=..." className="w-full rounded-md border bg-background px-3 py-2 text-sm" />
+            <div className="col-span-2">
+              <YouTubePreviewInput name="url" required label="YouTube URL *" />
             </div>
           </div>
           <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">Add Video</button>
@@ -283,12 +278,9 @@ export default async function EditHospitalPage({ params }: Props) {
           </div>
         )}
 
-        <form action={addGallery} className="rounded-lg border p-4">
-          <label className="text-sm font-medium">Add Photo</label>
-          <div className="mt-2 flex items-center gap-3">
-            <input name="image_file" type="file" accept="image/*" required className="flex-1 text-sm" />
-            <button type="submit" className="rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80 whitespace-nowrap">Upload</button>
-          </div>
+        <form action={addGallery} className="rounded-lg border p-4 space-y-3">
+          <FileDropzone name="image_file" accept="image/*" label="Add Photo" />
+          <button type="submit" className="rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">Upload</button>
         </form>
       </section>
 
@@ -322,9 +314,8 @@ export default async function EditHospitalPage({ params }: Props) {
               <input name="title" required placeholder="e.g. JCI Accreditation" className="w-full rounded-md border bg-background px-3 py-2 text-sm" />
             </div>
             <Field label="Year" name="year" type="number" placeholder="2023" />
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Badge Image (optional)</label>
-              <input name="image_file" type="file" accept="image/*" className="w-full text-sm" />
+            <div className="col-span-1">
+              <FileDropzone name="image_file" accept="image/*" label="Badge Image (optional)" />
             </div>
             <div className="col-span-2 space-y-1">
               <label className="text-sm font-medium">Description (optional)</label>
@@ -387,15 +378,7 @@ export default async function EditHospitalPage({ params }: Props) {
               <Field label="Experience (years)" name="experience_years" type="number" placeholder="10" />
               <Field label="Languages (KO, EN, ZH)" name="languages" defaultValue="" placeholder="Korean, English" />
             </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Profile Photo</label>
-              <input
-                name="photo_file"
-                type="file"
-                accept="image/*"
-                className="block w-full text-sm file:mr-3 file:rounded file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium"
-              />
-            </div>
+            <FileDropzone name="photo_file" accept="image/*" label="Profile Photo" />
             <button
               type="submit"
               className="cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"

@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
+import { FileDropzone } from "@/components/ui/FileDropzone";
 import { createHospital } from "@/lib/actions/admin-hospitals";
 
 interface Props {
@@ -70,10 +71,7 @@ export default async function NewHospitalPage({ params }: Props) {
           />
         </div>
 
-        <div className="space-y-1">
-          <label className="text-sm font-medium">{t("fieldLogo")}</label>
-          <input name="logo_file" type="file" accept="image/*" className="w-full text-sm" />
-        </div>
+        <FileDropzone name="logo_file" accept="image/*" label={t("fieldLogo")} />
 
         <div className="flex gap-4">
           <label className="flex items-center gap-2 text-sm">
