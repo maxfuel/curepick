@@ -102,7 +102,7 @@ export default async function AdminDashboardPage({ params }: Props) {
         {/* 고객진행 확정 */}
         <div>
           <p className="text-xs text-muted-foreground mb-2">고객진행 확정</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <StatCard
               label="출국전"
               value={casesPre ?? 0}
@@ -119,6 +119,11 @@ export default async function AdminDashboardPage({ params }: Props) {
               value={casesPost ?? 0}
               href={`/${locale}/admin/cases?status=completed`}
             />
+            <StatCard
+              label="서비스 완료건"
+              value={completedCases ?? 0}
+              href={`/${locale}/admin/cases?status=completed`}
+            />
           </div>
         </div>
       </section>
@@ -132,7 +137,7 @@ export default async function AdminDashboardPage({ params }: Props) {
         {/* 현황 */}
         <div>
           <p className="text-xs text-muted-foreground mb-2">현황</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <StatCard label="회원수" value={totalPatients ?? 0} />
             <StatCard
               label="로컬에이전트"
@@ -143,11 +148,6 @@ export default async function AdminDashboardPage({ params }: Props) {
               label="큐어파트너"
               value={totalCurePartners ?? 0}
               href={`/${locale}/admin/cure-partners`}
-            />
-            <StatCard
-              label="서비스 완료건"
-              value={completedCases ?? 0}
-              href={`/${locale}/admin/cases?status=completed`}
             />
           </div>
         </div>
