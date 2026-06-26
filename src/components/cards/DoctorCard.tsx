@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { getLangLabel } from "@/config/i18n";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Users } from "lucide-react";
@@ -59,7 +60,7 @@ export function DoctorCard({
             <div className="mt-2 flex flex-wrap gap-1">
               {languages.map((lang) => (
                 <Badge key={lang} variant="outline" className="text-xs">
-                  {lang}
+                  {getLangLabel(lang)}
                 </Badge>
               ))}
             </div>

@@ -24,6 +24,10 @@ export const PRIMARY_LANGS = ["ko", "en"] as const;
 export const locales = SUPPORTED_LANGS.map((l) => l.code) as [LangCode, ...LangCode[]];
 export type Locale = LangCode;
 export const defaultLocale: Locale = "en";
+
+export function getLangLabel(code: string): string {
+  return SUPPORTED_LANGS.find((l) => l.code === code)?.label ?? code.toUpperCase();
+}
 export const localeNames = Object.fromEntries(
   SUPPORTED_LANGS.map((l) => [l.code, l.name])
 ) as Record<LangCode, string>;

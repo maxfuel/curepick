@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { getLangLabel } from "@/config/i18n";
 import {
   Card,
   CardContent,
@@ -126,7 +127,7 @@ export function HospitalCard({
           <div className="flex flex-wrap gap-1">
             {languages.map((lang) => (
               <Badge key={lang} variant="outline">
-                {lang}
+                {getLangLabel(lang)}
               </Badge>
             ))}
           </div>

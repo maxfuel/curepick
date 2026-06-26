@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getLocalizedField } from "@/lib/utils/i18n-field";
+import { getLangLabel } from "@/config/i18n";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { SearchBar } from "@/components/ui/SearchBar";
@@ -204,7 +205,7 @@ export default async function SearchPage({ params, searchParams }: Props) {
                               variant="outline"
                               className="text-xs"
                             >
-                              {lang}
+                              {getLangLabel(lang)}
                             </Badge>
                           ))}
                         </div>

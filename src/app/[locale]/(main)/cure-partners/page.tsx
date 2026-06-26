@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getLocalizedField } from "@/lib/utils/i18n-field";
+import { getLangLabel } from "@/config/i18n";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import {
@@ -265,7 +266,7 @@ export default async function CurePartnersPage({ params }: Props) {
                       )}
                       <div className="flex flex-wrap gap-1.5">
                         {cp.languages?.map((lang) => (
-                          <Badge key={lang} variant="secondary" className="text-xs">{lang}</Badge>
+                          <Badge key={lang} variant="secondary" className="text-xs">{getLangLabel(lang)}</Badge>
                         ))}
                       </div>
                       {cp.service_regions && cp.service_regions.length > 0 && (

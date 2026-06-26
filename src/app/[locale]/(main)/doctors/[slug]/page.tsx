@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getLocalizedField } from "@/lib/utils/i18n-field";
-import { locales } from "@/config/i18n";
+import { locales, getLangLabel } from "@/config/i18n";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CTAButton } from "@/components/ui/CTAButton";
@@ -301,7 +301,7 @@ export default async function DoctorDetailPage({ params }: Props) {
               <div className="flex flex-wrap gap-2">
                 {doctor.languages.map((lang) => (
                   <Badge key={lang} variant="secondary">
-                    {lang}
+                    {getLangLabel(lang)}
                   </Badge>
                 ))}
               </div>

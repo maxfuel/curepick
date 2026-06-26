@@ -2,7 +2,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { getLocalizedField } from "@/lib/utils/i18n-field";
-import { locales } from "@/config/i18n";
+import { locales, getLangLabel } from "@/config/i18n";
 import { PriceRange } from "@/components/ui/PriceRange";
 import { Badge } from "@/components/ui/badge";
 import { CTAButton } from "@/components/ui/CTAButton";
@@ -562,7 +562,7 @@ export default async function HospitalDetailPage({ params }: Props) {
                 <InfoCard icon={<Languages className="size-5 text-violet-500" />} title={t("supportedLanguages")}>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {hospital.languages!.map((lang) => (
-                      <Badge key={lang} variant="secondary" className="text-xs">{lang}</Badge>
+                      <Badge key={lang} variant="secondary" className="text-xs">{getLangLabel(lang)}</Badge>
                     ))}
                   </div>
                 </InfoCard>
