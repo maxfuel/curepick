@@ -10,6 +10,7 @@ const navItems = [
   { key: "hospitals", href: "/admin/hospitals" },
   { key: "doctors", href: "/admin/doctors" },
   { key: "inquiries", href: "/admin/inquiries" },
+  { key: "members", href: "/admin/members" },
   { key: "accounts", href: "/admin/accounts" },
   { key: "reviews", href: "/admin/reviews" },
   { key: "cases", href: "/admin/cases" },
