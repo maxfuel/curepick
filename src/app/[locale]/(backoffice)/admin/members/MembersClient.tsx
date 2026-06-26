@@ -1,25 +1,10 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { updateUserRole } from "@/lib/actions/admin-members";
 
-type Role = "patient" | "hospital_staff" | "admin" | "local_agent" | "cure_partner";
+type Role = "patient" | "hospital_staff" | "cure_partner" | "local_agent";
 
 interface Member {
   id: string;
@@ -206,71 +191,66 @@ export function MembersClient({ members, hospitals, locale }: MembersClientProps
         </table>
       </div>
 
-      {/* Role Change Dialog */}
-      <Dialog open={!!editingMember} onOpenChange={(open) => !open && closeEdit()}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>역할 변경</DialogTitle>
-          </DialogHeader>
-          {editingMember && (
-            <div className="space-y-4 py-2">
-              <div>
-                <p className="text-sm font-medium mb-1">{editingMember.full_name ?? editingMember.email}</p>
-                <p className="text-xs text-muted-foreground">{editingMember.email}</p>
-              </div>
+      {/* Role Change Modal */}
+      {editingMember && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={(e) => e.target === e.currentTarget && closeEdit()}
+        >
+          <div className="bg-background rounded-lg border shadow-lg w-full max-w-sm p-6 space-y-4">
+            <h2 className="text-base font-semibold">역할 변경</h2>
 
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">새 역할</label>
-                <Select value={selectedRole} onValueChange={setSelectedRole}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ASSIGNABLE_ROLES.map((r) => (
-                      <SelectItem key={r.value} value={r.value}>
-                        {r.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {selectedRole === "hospital_staff" && (
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium">소속 병원 (선택)</label>
-                  <Select
-                    value={selectedHospital}
-                    onValueChange={setSelectedHospital}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="병원 선택..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {hospitals.map((h) => (
-                        <SelectItem key={h.id} value={h.id}>
-                          {getLocalizedName(h.name, locale)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              {error && (
-                <p className="text-sm text-destructive">{error}</p>
-              )}
+            <div>
+              <p className="text-sm font-medium">{editingMember.full_name ?? editingMember.email}</p>
+              <p className="text-xs text-muted-foreground">{editingMember.email}</p>
             </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={closeEdit} disabled={isPending}>
-              취소
-            </Button>
-            <Button onClick={handleSave} disabled={isPending}>
-              {isPending ? "저장 중..." : "저장"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium">새 역할</label>
+              <select
+                value={selectedRole}
+                onChange={(e) => setSelectedRole(e.target.value)}
+                className="w-full border rounded-md px-3 py-2 text-sm bg-background"
+              >
+                {ASSIGNABLE_ROLES.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {selectedRole === "hospital_staff" && (
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium">소속 병원 (선택)</label>
+                <select
+                  value={selectedHospital}
+                  onChange={(e) => setSelectedHospital(e.target.value)}
+                  className="w-full border rounded-md px-3 py-2 text-sm bg-background"
+                >
+                  <option value="">병원 선택...</option>
+                  {hospitals.map((h) => (
+                    <option key={h.id} value={h.id}>
+                      {getLocalizedName(h.name, locale)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {error && <p className="text-sm text-destructive">{error}</p>}
+
+            <div className="flex gap-2 justify-end pt-2">
+              <Button variant="outline" onClick={closeEdit} disabled={isPending}>
+                취소
+              </Button>
+              <Button onClick={handleSave} disabled={isPending}>
+                {isPending ? "저장 중..." : "저장"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
