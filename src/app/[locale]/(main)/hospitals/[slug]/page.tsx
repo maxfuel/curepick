@@ -46,6 +46,7 @@ interface GroupedService {
     id: string;
     slug: string;
     name: string;
+    differentiatorSummary: string | null;
     costMin: number | null;
     costMax: number | null;
     currency: string | null;
@@ -112,10 +113,9 @@ export default async function HospitalDetailPage({ params }: Props) {
   // ── Fetch procedures + doctors in parallel
   const [{ data: hospitalProcedures }, { data: doctors }, { data: reviews }] =
     await Promise.all([
-      supabase
-        .from("hospital_procedures")
+      (supabase.from("hospital_procedures") as any)
         .select(
-          "id, annual_volume, specialist_count, waiting_time_days, cost_min, cost_max, cost_currency, evidence_score, procedures(id, slug, name, service_id)"
+          "id, annual_volume, specialist_count, waiting_time_days, cost_min, cost_max, cost_currency, evidence_score, name, differentiator_summary, procedures(id, slug, name, service_id)"
         )
         .eq("hospital_id", hospital.id),
       supabase
@@ -136,7 +136,7 @@ export default async function HospitalDetailPage({ params }: Props) {
   const procServiceIds = [
     ...new Set(
       (hospitalProcedures ?? [])
-        .map((hp) => (hp.procedures as unknown as { service_id?: string } | null)?.service_id)
+        .map((hp: any) => (hp.procedures as unknown as { service_id?: string } | null)?.service_id)
         .filter(Boolean) as string[]
     ),
   ];
@@ -181,10 +181,14 @@ export default async function HospitalDetailPage({ params }: Props) {
         procedures: [],
       });
     }
+    const hpAny = hp as any;
     grouped.get(proc.service_id)!.procedures.push({
       id: proc.id,
       slug: proc.slug,
-      name: getLocalizedField(proc.name, locale),
+      name: getLocalizedField(hpAny.name, locale) || getLocalizedField(proc.name, locale),
+      differentiatorSummary: hpAny.differentiator_summary
+        ? (getLocalizedField(hpAny.differentiator_summary, locale) || null)
+        : null,
       costMin: hp.cost_min,
       costMax: hp.cost_max,
       currency: hp.cost_currency,
@@ -432,12 +436,19 @@ export default async function HospitalDetailPage({ params }: Props) {
                         className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="min-w-0">
-                          <Link
-                            href={`/services/${group.serviceSlug}`}
-                            className="font-medium hover:text-primary hover:underline transition-colors"
-                          >
-                            {proc.name}
-                          </Link>
+                          <div>
+                            <Link
+                              href={`/services/${group.serviceSlug}`}
+                              className="font-medium hover:text-primary hover:underline transition-colors"
+                            >
+                              {proc.name}
+                            </Link>
+                            {proc.differentiatorSummary && (
+                              <p className="text-xs text-muted-foreground mt-0.5">
+                                {proc.differentiatorSummary}
+                              </p>
+                            )}
+                          </div>
                           <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                             {proc.annualVolume != null && (
                               <span className="flex items-center gap-1">
