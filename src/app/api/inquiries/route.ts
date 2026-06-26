@@ -40,6 +40,16 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let submitterRole = "patient";
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    submitterRole = profile?.role ?? "patient";
+  }
+
   const { error } = await supabase.from("inquiries").insert({
     name,
     email,
@@ -50,7 +60,8 @@ export async function POST(request: Request) {
     message: message || null,
     user_id: user?.id || null,
     status: "new",
-  });
+    submitter_role: submitterRole,
+  } as any);
 
   if (error) {
     console.error("Inquiry insert failed:", error);

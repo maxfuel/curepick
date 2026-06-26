@@ -4,9 +4,16 @@ import Link from "next/link";
 import type { Json } from "@/lib/types/database";
 import InquiryFilters from "./InquiryFilters";
 
+const SOURCE_COLORS: Record<string, string> = {
+  patient:        "bg-muted text-muted-foreground border-border",
+  local_agent:    "bg-orange-500/10 text-orange-700 border-orange-500/20",
+  cure_partner:   "bg-purple-500/10 text-purple-700 border-purple-500/20",
+  hospital_staff: "bg-green-500/10 text-green-700 border-green-500/20",
+};
+
 interface Props {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ status?: string; hospital?: string; service?: string; page?: string }>;
+  searchParams: Promise<{ status?: string; hospital?: string; service?: string; source?: string; page?: string }>;
 }
 
 function getEn(val: Json | null | undefined): string {
@@ -21,18 +28,19 @@ const PAGE_SIZE = 50;
 
 export default async function AdminInquiriesPage({ params, searchParams }: Props) {
   const { locale } = await params;
-  const { status: statusFilter, hospital: hospitalFilter, service: serviceFilter, page } = await searchParams;
+  const { status: statusFilter, hospital: hospitalFilter, service: serviceFilter, source: sourceFilter, page } = await searchParams;
   const currentPage = Math.max(1, Number(page) || 1);
   const supabase = await createClient();
   const t = await getTranslations("admin.inquiries");
 
-  let query = supabase
+  let query = (supabase as any)
     .from("inquiries")
-    .select("id, name, email, phone, nationality, status, created_at, hospital_id, service_id", { count: "exact" });
+    .select("id, name, email, phone, nationality, status, created_at, hospital_id, service_id, submitter_role", { count: "exact" });
 
   if (statusFilter && statusFilter !== "all") query = query.eq("status", statusFilter);
   if (hospitalFilter) query = query.eq("hospital_id", hospitalFilter);
   if (serviceFilter) query = query.eq("service_id", serviceFilter);
+  if (sourceFilter) query = query.eq("submitter_role", sourceFilter);
 
   const { data: inquiries, count } = await query
     .order("created_at", { ascending: false })
@@ -49,12 +57,20 @@ export default async function AdminInquiriesPage({ params, searchParams }: Props
 
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
 
+  const sourceOptions = [
+    { value: "patient",        label: t("sourcePatient") },
+    { value: "local_agent",    label: t("sourceLocalAgent") },
+    { value: "cure_partner",   label: t("sourceCurePartner") },
+    { value: "hospital_staff", label: t("sourceHospitalStaff") },
+  ];
+
   const buildHref = (overrides: Record<string, string | undefined>) => {
     const sp = new URLSearchParams();
     const merged = {
       status: statusFilter,
       hospital: hospitalFilter,
       service: serviceFilter,
+      source: sourceFilter,
       page: String(currentPage),
       ...overrides,
     };
@@ -94,8 +110,11 @@ export default async function AdminInquiriesPage({ params, searchParams }: Props
           categories={categories?.map((c) => ({ id: c.id, label: getEn(c.name) })) ?? []}
           currentHospital={hospitalFilter ?? ""}
           currentService={serviceFilter ?? ""}
+          currentSource={sourceFilter ?? ""}
           labelAllHospitals={t("allHospitals")}
           labelAllServices={t("allServices")}
+          labelAllSources={t("allSources")}
+          sourceOptions={sourceOptions}
         />
       </div>
 
@@ -109,6 +128,7 @@ export default async function AdminInquiriesPage({ params, searchParams }: Props
               <th className="text-left px-4 py-3 font-medium">{t("colNationality")}</th>
               <th className="text-left px-4 py-3 font-medium">{t("colHospital")}</th>
               <th className="text-left px-4 py-3 font-medium">{t("colService")}</th>
+              <th className="text-left px-4 py-3 font-medium">{t("colSource")}</th>
               <th className="text-left px-4 py-3 font-medium">{t("colStatus")}</th>
               <th className="text-left px-4 py-3 font-medium">{t("colDate")}</th>
               <th className="px-4 py-3" />
@@ -116,7 +136,7 @@ export default async function AdminInquiriesPage({ params, searchParams }: Props
           </thead>
           <tbody>
             {inquiries && inquiries.length > 0 ? (
-              inquiries.map((inq) => (
+              inquiries.map((inq: any) => (
                 <tr key={inq.id} className="border-b last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3 font-medium">{inq.name}</td>
                   <td className="px-4 py-3 text-muted-foreground">{inq.email}</td>
@@ -127,6 +147,21 @@ export default async function AdminInquiriesPage({ params, searchParams }: Props
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {inq.service_id ? serviceMap.get(inq.service_id) ?? "—" : "—"}
+                  </td>
+                  <td className="px-4 py-3">
+                    {(() => {
+                      const role = (inq as any).submitter_role ?? "patient";
+                      const colorClass = SOURCE_COLORS[role] ?? SOURCE_COLORS.patient;
+                      const labelKey = role === "local_agent" ? "sourceLocalAgent"
+                        : role === "cure_partner" ? "sourceCurePartner"
+                        : role === "hospital_staff" ? "sourceHospitalStaff"
+                        : "sourcePatient";
+                      return (
+                        <span className={`inline-flex text-xs font-medium px-2 py-0.5 rounded-full border ${colorClass}`}>
+                          {t(labelKey as any)}
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td className="px-4 py-3">
                     <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
@@ -152,7 +187,7 @@ export default async function AdminInquiriesPage({ params, searchParams }: Props
               ))
             ) : (
               <tr>
-                <td colSpan={9} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={10} className="px-4 py-8 text-center text-muted-foreground">
                   {t("noInquiries")}
                 </td>
               </tr>

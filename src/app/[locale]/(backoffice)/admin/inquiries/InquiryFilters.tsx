@@ -8,8 +8,11 @@ interface Props {
   categories?: { id: string; label: string }[];
   currentHospital: string;
   currentService: string;
+  currentSource: string;
   labelAllHospitals: string;
   labelAllServices: string;
+  labelAllSources: string;
+  sourceOptions: Array<{ value: string; label: string }>;
 }
 
 export default function InquiryFilters({
@@ -18,8 +21,11 @@ export default function InquiryFilters({
   categories,
   currentHospital,
   currentService,
+  currentSource,
   labelAllHospitals,
   labelAllServices,
+  labelAllSources,
+  sourceOptions,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -34,6 +40,17 @@ export default function InquiryFilters({
 
   return (
     <div className="flex gap-2">
+      <select
+        defaultValue={currentSource}
+        onChange={(e) => navigate("source", e.target.value)}
+        className="rounded-md border bg-background px-3 py-1.5 text-sm"
+      >
+        <option value="">{labelAllSources}</option>
+        {sourceOptions.map((s) => (
+          <option key={s.value} value={s.value}>{s.label}</option>
+        ))}
+      </select>
+
       <select
         defaultValue={currentHospital}
         onChange={(e) => navigate("hospital", e.target.value)}

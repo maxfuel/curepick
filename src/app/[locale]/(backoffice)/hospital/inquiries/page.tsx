@@ -4,6 +4,20 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
+const SOURCE_COLORS: Record<string, string> = {
+  patient:        "bg-muted text-muted-foreground border-border",
+  local_agent:    "bg-orange-500/10 text-orange-700 border-orange-500/20",
+  cure_partner:   "bg-purple-500/10 text-purple-700 border-purple-500/20",
+  hospital_staff: "bg-green-500/10 text-green-700 border-green-500/20",
+};
+
+const SOURCE_LABELS: Record<string, string> = {
+  patient: "고객",
+  local_agent: "로컬파트너",
+  cure_partner: "큐어파트너",
+  hospital_staff: "병원스테프",
+};
+
 interface Props {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ status?: string; page?: string }>;
@@ -29,9 +43,9 @@ export default async function HospitalInquiriesPage({
   const pageSize = 50;
   const from = (page - 1) * pageSize;
 
-  let query = supabase
+  let query = (supabase as any)
     .from("inquiries")
-    .select("id, name, email, status, created_at", { count: "exact" })
+    .select("id, name, email, status, created_at, submitter_role", { count: "exact" })
     .eq("hospital_id", profile!.hospital_id!)
     .order("created_at", { ascending: false })
     .range(from, from + pageSize - 1);
@@ -82,6 +96,7 @@ export default async function HospitalInquiriesPage({
             <tr className="border-b bg-muted/50">
               <th className="text-left px-4 py-3 font-medium">{t("colName")}</th>
               <th className="text-left px-4 py-3 font-medium">{t("colEmail")}</th>
+              <th className="text-left px-4 py-3 font-medium">{t("colSource")}</th>
               <th className="text-left px-4 py-3 font-medium">{t("colStatus")}</th>
               <th className="text-left px-4 py-3 font-medium">{t("colDate")}</th>
               <th className="px-4 py-3" />
@@ -89,10 +104,20 @@ export default async function HospitalInquiriesPage({
           </thead>
           <tbody>
             {inquiries && inquiries.length > 0 ? (
-              inquiries.map((inq) => (
+              inquiries.map((inq: any) => (
                 <tr key={inq.id} className="border-b last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3 font-medium">{inq.name}</td>
                   <td className="px-4 py-3 text-muted-foreground">{inq.email}</td>
+                  <td className="px-4 py-3">
+                    {(() => {
+                      const role = (inq as any).submitter_role ?? "patient";
+                      return (
+                        <span className={`inline-flex text-xs font-medium px-2 py-0.5 rounded-full border ${SOURCE_COLORS[role] ?? SOURCE_COLORS.patient}`}>
+                          {SOURCE_LABELS[role] ?? "고객"}
+                        </span>
+                      );
+                    })()}
+                  </td>
                   <td className="px-4 py-3">
                     <Badge variant={statusVariant(inq.status)}>
                       {inq.status ?? "new"}
@@ -113,7 +138,7 @@ export default async function HospitalInquiriesPage({
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                   {t("noInquiries")}
                 </td>
               </tr>
