@@ -108,6 +108,7 @@ export default async function CategoryDetailPage({ params }: Props) {
       name: unknown;
       city: string | null;
       logo_url: string | null;
+      hero_image_url: string | null;
       languages: string[] | null;
     };
     cost_min: number | null;
@@ -124,7 +125,7 @@ export default async function CategoryDetailPage({ params }: Props) {
     const { data: hp } = await supabase
       .from("hospital_procedures")
       .select(
-        "hospital_id, cost_min, cost_max, cost_currency, annual_volume, specialist_count, waiting_time_days, evidence_score, languages, hospitals(slug, name, city, logo_url, languages)"
+        "hospital_id, cost_min, cost_max, cost_currency, annual_volume, specialist_count, waiting_time_days, evidence_score, languages, hospitals(slug, name, city, logo_url, hero_image_url, languages)"
       )
       .in("procedure_id", procedureIds)
       .eq("is_featured", true)
@@ -140,6 +141,7 @@ export default async function CategoryDetailPage({ params }: Props) {
           name: unknown;
           city: string | null;
           logo_url: string | null;
+          hero_image_url: string | null;
           languages: string[] | null;
         };
         if (hospital) {
@@ -262,6 +264,7 @@ export default async function CategoryDetailPage({ params }: Props) {
                     name={getLocalizedField(item.hospital.name, locale)}
                     city={item.hospital.city}
                     logoUrl={item.hospital.logo_url}
+                    heroImageUrl={item.hospital.hero_image_url}
                     costMin={item.cost_min}
                     costMax={item.cost_max}
                     costCurrency={item.cost_currency}

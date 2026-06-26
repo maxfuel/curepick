@@ -15,6 +15,7 @@ interface HospitalCardProps {
   name: string;
   city: string | null;
   logoUrl: string | null;
+  heroImageUrl?: string | null;
   costMin: number | null;
   costMax: number | null;
   costCurrency: string | null;
@@ -37,6 +38,7 @@ export function HospitalCard({
   name,
   city,
   logoUrl,
+  heroImageUrl,
   costMin,
   costMax,
   costCurrency,
@@ -48,7 +50,18 @@ export function HospitalCard({
   translations,
 }: HospitalCardProps) {
   return (
-    <Card className="h-full">
+    <Card className="h-full overflow-hidden">
+      {heroImageUrl && (
+        <div className="relative aspect-[16/9] w-full overflow-hidden">
+          <Image
+            src={heroImageUrl}
+            alt={name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        </div>
+      )}
       <CardHeader>
         <div className="flex items-start gap-3">
           {logoUrl && (
