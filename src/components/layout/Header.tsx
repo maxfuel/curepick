@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import { CategoryNav } from "./CategoryNav";
 import { HeaderClient } from "./HeaderClient";
-import { LayoutDashboard, Building2 } from "lucide-react";
+import { LayoutDashboard, Building2, Stethoscope } from "lucide-react";
 import { CurepickLogo } from "@/components/ui/CurepickLogo";
 
 export async function Header() {
@@ -60,6 +60,15 @@ export async function Header() {
             >
               <Building2 className="size-3" />
               Hospital
+            </Link>
+          )}
+          {role === "cure_partner" && (
+            <Link
+              href="/cure-partner"
+              className="hidden lg:inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700 transition-colors hover:bg-purple-100"
+            >
+              <Stethoscope className="size-3" />
+              Cure Partner
             </Link>
           )}
           <HeaderClient categories={formattedCategories} />
