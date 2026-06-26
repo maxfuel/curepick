@@ -1,7 +1,9 @@
 "use client";
 
-import { LogOut } from "lucide-react";
+import { LogOut, ExternalLink } from "lucide-react";
 import { signOut } from "@/lib/auth/actions";
+import { Link } from "@/i18n/navigation";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 
 const ROLE_LABELS: Record<string, string> = {
   admin: "Admin",
@@ -30,22 +32,33 @@ export function AdminHeader({ email, role, fullName }: AdminHeaderProps) {
   const colorClass = ROLE_COLORS[role] ?? ROLE_COLORS.patient;
 
   return (
-    <header className="sticky top-0 z-10 flex items-center justify-end gap-3 border-b bg-background/95 backdrop-blur px-6 py-2">
-      <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${colorClass}`}>
-        {label}
-      </span>
-      <span className="text-sm text-muted-foreground">
-        {fullName ?? email}
-      </span>
-      <form action={signOut}>
-        <button
-          type="submit"
-          title="로그아웃"
-          className="flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-        >
-          <LogOut className="size-4" />
-        </button>
-      </form>
+    <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 backdrop-blur px-6 py-2">
+      <Link
+        href="/"
+        className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ExternalLink className="size-4" />
+        Curepick
+      </Link>
+      <div className="flex items-center gap-3">
+        <LanguageSwitcher />
+        <div className="w-px h-4 bg-border" />
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${colorClass}`}>
+          {label}
+        </span>
+        <span className="text-sm text-muted-foreground">
+          {fullName ?? email}
+        </span>
+        <form action={signOut}>
+          <button
+            type="submit"
+            title="로그아웃"
+            className="flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            <LogOut className="size-4" />
+          </button>
+        </form>
+      </div>
     </header>
   );
 }
