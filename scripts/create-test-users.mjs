@@ -75,6 +75,17 @@ async function main() {
     } catch (e) { console.error(`  ✗  ${u.email}: ${e.message}`); }
   }
 
+  // ── Hospital Staff ────────────────────────────────────────────────────────
+  console.log("\n🏥 Hospital Staff");
+  for (const u of accounts.hospital_staff) {
+    if (existing.has(u.email)) { console.log(`  ⏭  ${u.email} (exists)`); continue; }
+    try {
+      const id = await createUser(u.email, u.full_name);
+      await db.from("profiles").update({ role: "hospital_staff", hospital_id: u.hospital_id }).eq("id", id);
+      console.log(`  ✓  ${u.email} → ${u.hospital_name}`);
+    } catch (e) { console.error(`  ✗  ${u.email}: ${e.message}`); }
+  }
+
   // ── Admins ───────────────────────────────────────────────────────────────
   console.log("\n🛡️  Admins");
   for (const u of accounts.admins) {
