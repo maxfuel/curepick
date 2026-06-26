@@ -22,7 +22,7 @@ export function CategoryCard({
 }: CategoryCardProps) {
   return (
     <Link href={`/categories/${slug}`} className="block">
-      <Card className="h-full transition-shadow hover:shadow-md">
+      <Card className="h-full transition-shadow hover:shadow-md border border-gray-200 ring-0">
         {imageUrl && (
           <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-xl">
             <Image

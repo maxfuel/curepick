@@ -61,6 +61,8 @@ export function CategoryCarousel({ categories }: { categories: CategoryItem[] })
             gridTemplateRows: "repeat(2, auto)",
             gridAutoFlow: "column",
             gridAutoColumns: "minmax(200px, 270px)",
+            width: "fit-content",
+            margin: "0 auto",
           }}
         >
           {categories.map((cat) => (
