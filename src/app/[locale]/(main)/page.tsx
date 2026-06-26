@@ -127,15 +127,7 @@ export default async function HomePage({ params }: Props) {
           <>
             <Separator />
             <section>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">{t("featuredHospitals")}</h2>
-                <Link
-                  href="/hospitals"
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  {t("viewAllHospitals")} &rarr;
-                </Link>
-              </div>
+              <h2 className="text-2xl font-bold mb-6">{t("popularHospitals")}</h2>
               <HospitalCarousel
                 hospitals={featuredHospitals.map((h) => ({
                   id: h.id,
@@ -146,6 +138,14 @@ export default async function HomePage({ params }: Props) {
                   logoUrl: h.logo_url,
                 }))}
               />
+              <div className="flex justify-end mt-4">
+                <Link
+                  href="/hospitals"
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  {t("viewAllHospitals")} &rarr;
+                </Link>
+              </div>
             </section>
           </>
         )}
