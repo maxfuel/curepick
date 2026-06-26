@@ -1480,22 +1480,34 @@
                                         },
                                         {
                                             "id":  "F-074",
-                                            "name":  "Hospital Procedures 관리",
-                                            "description":  "시술/패키지 정보 관리 (/hospital/procedures)",
+                                            "name":  "Hospital Procedures 관리 (당사시술 CRUD)",
+                                            "description":  "당사시술 직접 추가/수정/삭제 (/hospital/procedures)",
                                             "phase":  "phase-7",
                                             "category":  "page",
                                             "status":  "done",
                                             "tasks":  [
                                                           {
-                                                              "task":  "연결된 시술 목록 표시 (hospital_procedures)",
+                                                              "task":  "당사시술 목록 표시 (커스텀 이름 또는 전역 시술명)",
                                                               "done":  true
                                                           },
                                                           {
-                                                              "task":  "가격, 대기시간 등 정보 수정 요청",
+                                                              "task":  "DB 마이그레이션 (name, differentiator_summary, differentiator_bullets JSONB 컬럼 추가)",
                                                               "done":  true
                                                           },
                                                           {
-                                                              "task":  "신규 시술 연결 요청",
+                                                              "task":  "서버 액션 (createHospitalProcedure, updateHospitalProcedure, deleteHospitalProcedure)",
+                                                              "done":  true
+                                                          },
+                                                          {
+                                                              "task":  "신규 당사시술 추가 서브페이지 (/hospital/procedures/new)",
+                                                              "done":  true
+                                                          },
+                                                          {
+                                                              "task":  "당사시술 수정 서브페이지 (/hospital/procedures/[id]/edit)",
+                                                              "done":  true
+                                                          },
+                                                          {
+                                                              "task":  "Public 병원 상세 페이지에 커스텀 이름 및 차별점 표시 업데이트",
                                                               "done":  true
                                                           }
                                                       ]
