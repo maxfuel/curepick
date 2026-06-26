@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getProfile } from "@/lib/auth/get-user";
 import { BackofficeShell } from "@/components/backoffice/BackofficeShell";
 import { PartnerSidebar } from "@/components/backoffice/partner/PartnerSidebar";
+import { AdminHeader } from "@/components/backoffice/admin/AdminHeader";
 
 interface Props {
   children: ReactNode;
@@ -19,6 +20,7 @@ export default async function PartnerLayout({ children, params }: Props) {
 
   return (
     <BackofficeShell sidebar={<PartnerSidebar locale={locale} />}>
+      <AdminHeader email={profile.email!} role={profile.role!} fullName={profile.full_name} />
       {children}
     </BackofficeShell>
   );
