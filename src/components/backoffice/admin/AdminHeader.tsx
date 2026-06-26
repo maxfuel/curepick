@@ -25,9 +25,10 @@ interface AdminHeaderProps {
   email: string;
   role: string;
   fullName?: string | null;
+  subtitle?: string | null;
 }
 
-export function AdminHeader({ email, role, fullName }: AdminHeaderProps) {
+export function AdminHeader({ email, role, fullName, subtitle }: AdminHeaderProps) {
   const label = ROLE_LABELS[role] ?? role;
   const colorClass = ROLE_COLORS[role] ?? ROLE_COLORS.patient;
 
@@ -48,6 +49,9 @@ export function AdminHeader({ email, role, fullName }: AdminHeaderProps) {
         </span>
         <span className="text-sm text-muted-foreground">
           {fullName ?? email}
+          {subtitle && (
+            <span className="text-muted-foreground/60"> · {subtitle}</span>
+          )}
         </span>
         <form action={signOut}>
           <button
