@@ -2,14 +2,13 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getLocalizedField } from "@/lib/utils/i18n-field";
 import { CategoryCarousel } from "@/components/cards/CategoryCarousel";
+import { HospitalCarousel } from "@/components/cards/HospitalCarousel";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { WhatsAppButton, WeChatButton } from "@/components/ui/ContactButtons";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
-import { MapPin } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { readSiteSettings } from "@/lib/site-settings";
@@ -38,15 +37,19 @@ export default async function HomePage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: "home" });
   const tCat = await getTranslations({ locale, namespace: "categories" });
 
-  // Fetch all data in parallel
   const [
     { data: categories },
+    { data: categoriesWithServices },
     { data: featuredServices },
     { data: featuredHospitals },
   ] = await Promise.all([
     supabase
       .from("categories")
       .select("id, slug, name, image_url, services(count)")
+      .order("sort_order"),
+    supabase
+      .from("categories")
+      .select("id, slug, name, services(id, slug, name)")
       .order("sort_order"),
     supabase
       .from("services")
@@ -56,9 +59,9 @@ export default async function HomePage({ params }: Props) {
       .limit(6),
     supabase
       .from("hospitals")
-      .select("id, slug, name, city, logo_url, languages")
+      .select("id, slug, name, city, hero_image_url, logo_url")
       .eq("is_featured", true)
-      .limit(6),
+      .limit(8),
   ]);
 
   const { hero_image_url: heroImageUrl } = await readSiteSettings();
@@ -95,7 +98,7 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       <div className="container mx-auto px-4 py-16 space-y-16">
-        {/* Category Grid */}
+        {/* Browse Categories */}
         {categories && categories.length > 0 && (
           <>
             <Separator />
@@ -115,6 +118,75 @@ export default async function HomePage({ params }: Props) {
                   };
                 })}
               />
+            </section>
+          </>
+        )}
+
+        {/* Featured Hospitals Carousel */}
+        {featuredHospitals && featuredHospitals.length > 0 && (
+          <>
+            <Separator />
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">{t("featuredHospitals")}</h2>
+                <Link
+                  href="/hospitals"
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  {t("viewAllHospitals")} &rarr;
+                </Link>
+              </div>
+              <HospitalCarousel
+                hospitals={featuredHospitals.map((h) => ({
+                  id: h.id,
+                  slug: h.slug,
+                  name: getLocalizedField(h.name, locale),
+                  city: h.city,
+                  heroImageUrl: h.hero_image_url,
+                  logoUrl: h.logo_url,
+                }))}
+              />
+            </section>
+          </>
+        )}
+
+        {/* Choose Specialties */}
+        {categoriesWithServices && categoriesWithServices.length > 0 && (
+          <>
+            <Separator />
+            <section>
+              <h2 className="text-2xl font-bold mb-6">{t("chooseSpecialties")}</h2>
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+                {categoriesWithServices.map((cat) => {
+                  const catName = getLocalizedField(cat.name, locale);
+                  const services = (
+                    cat.services as Array<{ id: string; slug: string; name: unknown }>
+                  ) ?? [];
+                  return (
+                    <div key={cat.id}>
+                      <Link
+                        href={`/categories/${cat.slug}`}
+                        className="block font-bold text-sm hover:underline"
+                      >
+                        {catName}
+                      </Link>
+                      <div className="border-t my-2" />
+                      <ul className="space-y-1">
+                        {services.map((svc) => (
+                          <li key={svc.id}>
+                            <Link
+                              href={`/services/${svc.slug}`}
+                              className="text-sm text-muted-foreground hover:text-foreground"
+                            >
+                              {getLocalizedField(svc.name, locale)}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
             </section>
           </>
         )}
@@ -172,73 +244,6 @@ export default async function HomePage({ params }: Props) {
           </>
         )}
 
-        {/* Featured Hospitals */}
-        {featuredHospitals && featuredHospitals.length > 0 && (
-          <>
-            <Separator />
-            <section>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">
-                  {t("featuredHospitals")}
-                </h2>
-                <Link
-                  href="/categories"
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  {t("viewAllHospitals")} &rarr;
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {featuredHospitals.map((hospital) => {
-                  const name = getLocalizedField(hospital.name, locale);
-                  return (
-                    <Link
-                      key={hospital.id}
-                      href={`/hospitals/${hospital.slug}`}
-                      className="flex items-start gap-4 rounded-xl border p-6 transition-colors hover:bg-muted/50"
-                    >
-                      {hospital.logo_url && (
-                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg">
-                          <Image
-                            src={hospital.logo_url}
-                            alt={name}
-                            fill
-                            className="object-cover"
-                            sizes="56px"
-                          />
-                        </div>
-                      )}
-                      <div className="min-w-0">
-                        <h3 className="font-semibold">{name}</h3>
-                        {hospital.city && (
-                          <p className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-                            <MapPin className="h-3.5 w-3.5" />
-                            {hospital.city}
-                          </p>
-                        )}
-                        {hospital.languages &&
-                          hospital.languages.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-1">
-                              {hospital.languages.map((lang) => (
-                                <Badge
-                                  key={lang}
-                                  variant="outline"
-                                  className="text-xs"
-                                >
-                                  {lang}
-                                </Badge>
-                              ))}
-                            </div>
-                          )}
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
-          </>
-        )}
-
         {/* CTA Section */}
         <Separator />
         <section className="text-center py-12">
@@ -255,14 +260,4 @@ export default async function HomePage({ params }: Props) {
       </div>
     </div>
   );
-}
-
-function intentEmoji(slug: string): string {
-  const map: Record<string, string> = {
-    treat: "\u{1F3E5}",
-    improve: "\u{2728}",
-    "look-better": "\u{1F48E}",
-    "live-longer": "\u{1F331}",
-  };
-  return map[slug] || "\u{2695}";
 }
