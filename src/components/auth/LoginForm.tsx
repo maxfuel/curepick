@@ -69,6 +69,7 @@ export function LoginForm() {
           </label>
           <Link
             href="/reset-password"
+            tabIndex={-1}
             className="text-xs text-muted-foreground hover:text-foreground"
           >
             {t("forgotPassword")}
@@ -92,7 +93,7 @@ export function LoginForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         {t("noAccount")}{" "}
-        <Link href="/signup" className="text-primary hover:underline">
+        <Link href="/signup" tabIndex={-1} className="text-primary hover:underline">
           {t("signupLink")}
         </Link>
       </p>
