@@ -19,13 +19,12 @@ import {
   removeHospitalGalleryImage,
   addHospitalAward,
   removeHospitalAward,
-  addDoctor,
-  removeDoctor,
 } from "@/lib/actions/admin-hospitals";
 import type { Json } from "@/lib/types/database";
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ tab?: string }>;
 }
 
 interface HospitalVideo { title: string; url: string; type: string }
@@ -36,27 +35,22 @@ function getMultilingual(val: Json | null | undefined) {
   return val as Record<string, string>;
 }
 function getEn(val: Json | null | undefined): string {
-  const m = getMultilingual(val);
-  return m.en ?? "";
+  return getMultilingual(val).en ?? "";
 }
 
-export default async function EditHospitalPage({ params }: Props) {
+export default async function EditHospitalPage({ params, searchParams }: Props) {
   const { locale, id } = await params;
+  const { tab = "info" } = await searchParams;
   const supabase = await createClient();
   const t = await getTranslations("admin.hospitals");
 
-  const [{ data: hospital }, { data: allProcedures }, { data: hospitalProcs }, { data: hospitalDoctors }] = await Promise.all([
+  const [{ data: hospital }, { data: allProcedures }, { data: hospitalProcs }] = await Promise.all([
     (supabase.from("hospitals") as any).select("*").eq("id", id).single(),
     supabase.from("procedures").select("id, name").order("name->en"),
     supabase
       .from("hospital_procedures")
       .select("id, procedure_id, cost_min, cost_max, cost_currency, annual_volume, specialist_count, waiting_time_days, procedures(name)")
       .eq("hospital_id", id),
-    supabase
-      .from("doctors")
-      .select("id, slug, name, specialty, experience_years, photo_url")
-      .eq("hospital_id", id)
-      .order("created_at"),
   ]);
 
   if (!hospital) notFound();
@@ -75,15 +69,37 @@ export default async function EditHospitalPage({ params }: Props) {
   const uploadLogo = updateHospitalLogo.bind(null, id);
   const uploadHero = updateHospitalHero.bind(null, id);
 
+  const tabItems = [
+    { key: "info",       label: "기본 정보", href: `/${locale}/admin/hospitals/${id}` },
+    { key: "media",      label: "미디어",    href: `/${locale}/admin/hospitals/${id}?tab=media` },
+    { key: "procedures", label: "시술/인증", href: `/${locale}/admin/hospitals/${id}?tab=procedures` },
+  ];
+
   return (
-    <div className="p-6 max-w-3xl space-y-10">
+    <div className="p-6 max-w-3xl space-y-6">
       <h1 className="text-2xl font-semibold">
         {t("editHospital")}: {getEn(hospital.name)}
       </h1>
 
-      {/* ── Basic Info ─────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">Basic Information</h2>
+      {/* ── Tab Navigation ──────────────────────────────────────── */}
+      <div className="flex gap-0 border-b">
+        {tabItems.map((item) => (
+          <a
+            key={item.key}
+            href={item.href}
+            className={`px-5 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
+              tab === item.key
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+
+      {/* ── Tab: 기본 정보 ──────────────────────────────────────── */}
+      {tab === "info" && (
         <form action={handleUpdate} className="space-y-4">
           <MultilingualInput name="name" label={t("fieldName")} value={getMultilingual(hospital.name)} />
           <MultilingualInput name="description" label={t("fieldDescription")} multiline value={getMultilingual(hospital.description)} />
@@ -130,259 +146,243 @@ export default async function EditHospitalPage({ params }: Props) {
             </a>
           </div>
         </form>
-      </section>
+      )}
 
-      {/* ── Logo Image ─────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">Logo Image</h2>
-        {hospital.logo_url && (
-          <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3">
-            <Image src={hospital.logo_url} alt="logo" width={56} height={56} className="rounded-lg object-cover shrink-0" />
-            <span className="text-xs text-muted-foreground truncate">{hospital.logo_url}</span>
-          </div>
-        )}
-        <form action={uploadLogo} className="rounded-lg border p-4 space-y-3">
-          <FileDropzone name="logo_file" accept="image/*" currentPreviewUrl={hospital.logo_url} label="Upload Logo" />
-          <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">Upload</button>
-        </form>
-      </section>
-
-      {/* ── Hero Image ─────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">Hero Image</h2>
-        <p className="text-sm text-muted-foreground">Recommended: 1920×1080px or wider. Shown as full-width background on the hospital page.</p>
-        {hospital.hero_image_url && (
-          <div className="relative h-32 w-full overflow-hidden rounded-lg border">
-            <Image src={hospital.hero_image_url} alt="hero" fill className="object-cover" />
-          </div>
-        )}
-        <form action={uploadHero} className="rounded-lg border p-4 space-y-3">
-          <FileDropzone name="hero_file" accept="image/*" currentPreviewUrl={hospital.hero_image_url} label="Upload Hero Image" />
-          <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">Upload</button>
-        </form>
-      </section>
-
-      {/* ── Procedures ─────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">{t("procedures")}</h2>
-        {hospitalProcs && hospitalProcs.length > 0 && (
-          <div className="rounded-lg border overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-muted/50">
-                  <th className="text-left px-3 py-2 font-medium">{t("colProcedure")}</th>
-                  <th className="text-left px-3 py-2 font-medium">{t("colCost")}</th>
-                  <th className="text-left px-3 py-2 font-medium">{t("colVolume")}</th>
-                  <th className="px-3 py-2" />
-                </tr>
-              </thead>
-              <tbody>
-                {hospitalProcs.map((hp) => {
-                  const procName = hp.procedures ? getEn((hp.procedures as { name: Json }).name) : hp.procedure_id;
-                  return (
-                    <tr key={hp.id} className="border-b last:border-0">
-                      <td className="px-3 py-2">{procName}</td>
-                      <td className="px-3 py-2 text-muted-foreground">
-                        {hp.cost_min != null ? `${hp.cost_currency} ${hp.cost_min}–${hp.cost_max}` : "—"}
-                      </td>
-                      <td className="px-3 py-2 text-muted-foreground">{hp.annual_volume ?? "—"}</td>
-                      <td className="px-3 py-2">
-                        <DeleteButton action={removeHospitalProcedure.bind(null, hp.id)} label={t("remove")} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {availableProcedures.length > 0 && (
-          <form action={upsertHospitalProcedure} className="rounded-lg border p-4 space-y-3">
-            <input type="hidden" name="hospital_id" value={id} />
-            <div className="grid grid-cols-2 gap-3">
-              <div className="col-span-2 space-y-1">
-                <label className="text-sm font-medium">{t("addProcedure")}</label>
-                <select name="procedure_id" required className="w-full rounded-md border bg-background px-3 py-2 text-sm">
-                  <option value="">{t("selectProcedure")}</option>
-                  {availableProcedures.map((p) => (
-                    <option key={p.id} value={p.id}>{getEn(p.name)}</option>
-                  ))}
-                </select>
+      {/* ── Tab: 미디어 ─────────────────────────────────────────── */}
+      {tab === "media" && (
+        <div className="space-y-8">
+          {/* Logo */}
+          <section className="space-y-4">
+            <h2 className="text-base font-semibold border-b pb-2">로고</h2>
+            {hospital.logo_url && (
+              <div className="relative h-14 w-14 overflow-hidden rounded-lg border bg-muted">
+                <Image src={hospital.logo_url} alt="Logo" fill className="object-contain" />
               </div>
-              <Field label={t("colCostMin")} name="cost_min" type="number" />
-              <Field label={t("colCostMax")} name="cost_max" type="number" />
-              <Field label={t("colCurrency")} name="cost_currency" defaultValue="USD" />
-              <Field label={t("colVolume")} name="annual_volume" type="number" />
-            </div>
-            <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">
-              {t("addProcedureBtn")}
-            </button>
-          </form>
-        )}
-      </section>
+            )}
+            <form action={uploadLogo} className="rounded-lg border p-4 space-y-3">
+              <FileDropzone
+                name="logo_file"
+                accept="image/*"
+                currentPreviewUrl={hospital.logo_url}
+                label={hospital.logo_url ? "로고 교체" : "로고 업로드"}
+              />
+              <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">
+                저장
+              </button>
+            </form>
+          </section>
 
-      {/* ── Videos ─────────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">Videos</h2>
-        <p className="text-sm text-muted-foreground">Add YouTube URLs (watch links or youtu.be links). These appear as a video gallery on the hospital page.</p>
-
-        {videos.length > 0 && (
-          <div className="space-y-2">
-            {videos.map((v, i) => (
-              <div key={i} className="flex items-center gap-3 rounded-lg border bg-muted/30 px-4 py-3">
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium truncate">{v.title || "(no title)"}</p>
-                  <p className="text-xs text-muted-foreground truncate">{v.url}</p>
-                  <span className="inline-block mt-0.5 text-xs bg-primary/10 text-primary rounded px-1.5 py-0.5">{v.type}</span>
-                </div>
-                <DeleteButton action={removeHospitalVideo.bind(null, id, i)} label="Remove" className="cursor-pointer text-xs text-destructive hover:underline shrink-0" />
+          {/* Hero Image */}
+          <section className="space-y-4">
+            <h2 className="text-base font-semibold border-b pb-2">히어로 이미지</h2>
+            <p className="text-sm text-muted-foreground">권장: 1920×1080px 이상. 병원 페이지 최상단 전체 너비 배경으로 표시됩니다.</p>
+            {hospital.hero_image_url && (
+              <div className="relative h-32 w-full overflow-hidden rounded-lg border">
+                <Image src={hospital.hero_image_url} alt="Hero" fill className="object-cover" />
               </div>
-            ))}
-          </div>
-        )}
+            )}
+            <form action={uploadHero} className="rounded-lg border p-4 space-y-3">
+              <FileDropzone
+                name="hero_file"
+                accept="image/*"
+                currentPreviewUrl={hospital.hero_image_url}
+                label={hospital.hero_image_url ? "히어로 이미지 교체" : "히어로 이미지 업로드"}
+              />
+              <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">
+                저장
+              </button>
+            </form>
+          </section>
 
-        <form action={addVideo} className="rounded-lg border p-4 space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Video Title" name="title" placeholder="e.g. Hospital Tour" />
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Video Type</label>
-              <select name="type" className="w-full rounded-md border bg-background px-3 py-2 text-sm">
-                <option value="youtube">General</option>
-                <option value="facility">Facility Tour</option>
-                <option value="testimonial">Patient Story</option>
-                <option value="doctor">Doctor Interview</option>
-              </select>
-            </div>
-            <div className="col-span-2">
-              <YouTubePreviewInput name="url" required label="YouTube URL *" />
-            </div>
-          </div>
-          <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">Add Video</button>
-        </form>
-      </section>
+          {/* Photo Gallery */}
+          <section className="space-y-4">
+            <h2 className="text-base font-semibold border-b pb-2">사진 갤러리</h2>
+            <p className="text-sm text-muted-foreground">병원 시설 사진을 업로드하세요. 최대 20장을 권장합니다.</p>
 
-      {/* ── Gallery Images ──────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">Photo Gallery</h2>
-        <p className="text-sm text-muted-foreground">Upload facility photos — up to 20 recommended. Shown in a grid with lightbox on the hospital page.</p>
-
-        {galleryImages.length > 0 && (
-          <div className="grid grid-cols-4 gap-2">
-            {galleryImages.map((url, i) => (
-              <div key={i} className="group relative aspect-square overflow-hidden rounded-lg bg-muted">
-                <Image src={url} alt={`Gallery ${i + 1}`} fill className="object-cover" sizes="150px" />
-                <div className="absolute inset-0 hidden group-hover:flex items-center justify-center bg-black/50">
-                  <DeleteButton action={removeHospitalGalleryImage.bind(null, id, url)} label="Remove" className="rounded bg-destructive px-2 py-1 text-xs text-white font-medium" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <form action={addGallery} className="rounded-lg border p-4 space-y-3">
-          <FileDropzone name="image_file" accept="image/*" label="Add Photo" />
-          <button type="submit" className="rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">Upload</button>
-        </form>
-      </section>
-
-      {/* ── Awards & Accreditations ─────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">Awards & Accreditations</h2>
-
-        {awards.length > 0 && (
-          <div className="space-y-2">
-            {awards.map((a, i) => (
-              <div key={i} className="flex items-start gap-3 rounded-lg border bg-muted/30 px-4 py-3">
-                {a.image_url && (
-                  <Image src={a.image_url} alt={a.title} width={40} height={40} className="rounded object-contain shrink-0" />
-                )}
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium">{a.title}{a.year ? ` (${a.year})` : ""}</p>
-                  {a.description && <p className="text-xs text-muted-foreground mt-0.5">{a.description}</p>}
-                </div>
-                <DeleteButton action={removeHospitalAward.bind(null, id, i)} label="Remove" className="cursor-pointer text-xs text-destructive hover:underline shrink-0" />
-              </div>
-            ))}
-          </div>
-        )}
-
-        <form action={addAward} className="rounded-lg border p-4 space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="col-span-2 space-y-1">
-              <label className="text-sm font-medium">Award / Certification Title *</label>
-              <input name="title" required placeholder="e.g. JCI Accreditation" className="w-full rounded-md border bg-background px-3 py-2 text-sm" />
-            </div>
-            <Field label="Year" name="year" type="number" placeholder="2023" />
-            <div className="col-span-1">
-              <FileDropzone name="image_file" accept="image/*" label="Badge Image (optional)" />
-            </div>
-            <div className="col-span-2 space-y-1">
-              <label className="text-sm font-medium">Description (optional)</label>
-              <input name="description" placeholder="Short description" className="w-full rounded-md border bg-background px-3 py-2 text-sm" />
-            </div>
-          </div>
-          <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">Add Award</button>
-        </form>
-      </section>
-
-      {/* ── Medical Team ────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">Medical Team</h2>
-        <p className="text-sm text-muted-foreground">Add doctors and staff members. These appear in the Doctors section on the hospital page.</p>
-
-        {(hospitalDoctors ?? []).length > 0 && (
-          <div className="space-y-2">
-            {(hospitalDoctors ?? []).map((doctor) => (
-              <div key={doctor.id} className="flex items-center gap-3 rounded-lg border bg-muted/30 px-4 py-3">
-                {doctor.photo_url ? (
-                  <Image
-                    src={doctor.photo_url}
-                    alt={getEn(doctor.name as any)}
-                    width={48}
-                    height={48}
-                    className="h-12 w-12 rounded-full object-cover shrink-0"
-                  />
-                ) : (
-                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center shrink-0">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {getEn(doctor.name as any).charAt(0).toUpperCase()}
-                    </span>
+            {galleryImages.length > 0 && (
+              <div className="grid grid-cols-4 gap-2">
+                {galleryImages.map((url, i) => (
+                  <div key={i} className="group relative aspect-square overflow-hidden rounded-lg bg-muted">
+                    <Image src={url} alt={`Gallery ${i + 1}`} fill className="object-cover" sizes="150px" />
+                    <div className="absolute inset-0 hidden group-hover:flex items-center justify-center bg-black/50">
+                      <DeleteButton
+                        action={removeHospitalGalleryImage.bind(null, id, url)}
+                        label="삭제"
+                        className="rounded bg-destructive px-2 py-1 text-xs text-white font-medium"
+                      />
+                    </div>
                   </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium">{getEn(doctor.name as any)}</p>
-                  <p className="text-xs text-muted-foreground">{getEn(doctor.specialty as any)}</p>
-                  {doctor.experience_years && (
-                    <p className="text-xs text-muted-foreground">{doctor.experience_years} yrs experience</p>
-                  )}
-                </div>
-                <DeleteButton action={removeDoctor.bind(null, doctor.id)} label="Remove" className="cursor-pointer text-xs text-destructive hover:underline shrink-0" />
+                ))}
               </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        <details className="rounded-lg border">
-          <summary className="cursor-pointer px-4 py-3 text-sm font-medium hover:bg-muted/50">
-            + Add Doctor / Staff Member
-          </summary>
-          <form action={addDoctor.bind(null, id)} className="space-y-3 border-t p-4">
-            <MultilingualInput name="name" label="Name" value={{}} />
-            <MultilingualInput name="specialty" label="Specialty / Title" value={{}} />
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Experience (years)" name="experience_years" type="number" placeholder="10" />
-              <Field label="Languages (KO, EN, ZH)" name="languages" defaultValue="" placeholder="Korean, English" />
-            </div>
-            <FileDropzone name="photo_file" accept="image/*" label="Profile Photo" />
-            <button
-              type="submit"
-              className="cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-            >
-              Add to Team
-            </button>
-          </form>
-        </details>
-      </section>
+            <form action={addGallery} className="rounded-lg border p-4 space-y-3">
+              <FileDropzone name="image_file" accept="image/*" label="사진 추가" />
+              <button type="submit" className="rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">
+                업로드
+              </button>
+            </form>
+          </section>
+
+          {/* YouTube Videos */}
+          <section className="space-y-4">
+            <h2 className="text-base font-semibold border-b pb-2">YouTube 영상</h2>
+            <p className="text-sm text-muted-foreground">YouTube URL을 추가하세요. 병원 페이지 영상 갤러리에 표시됩니다.</p>
+
+            {videos.length > 0 && (
+              <div className="space-y-2">
+                {videos.map((v, i) => (
+                  <div key={i} className="flex items-center gap-3 rounded-lg border bg-muted/30 px-4 py-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate">{v.title || "(제목 없음)"}</p>
+                      <p className="text-xs text-muted-foreground truncate">{v.url}</p>
+                      <span className="inline-block mt-0.5 text-xs bg-primary/10 text-primary rounded px-1.5 py-0.5">{v.type}</span>
+                    </div>
+                    <DeleteButton
+                      action={removeHospitalVideo.bind(null, id, i)}
+                      label="삭제"
+                      className="cursor-pointer text-xs text-destructive hover:underline shrink-0"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <form action={addVideo} className="rounded-lg border p-4 space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="영상 제목" name="title" placeholder="예: 병원 투어" />
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">영상 유형</label>
+                  <select name="type" className="w-full rounded-md border bg-background px-3 py-2 text-sm">
+                    <option value="youtube">일반</option>
+                    <option value="facility">시설 투어</option>
+                    <option value="testimonial">환자 스토리</option>
+                    <option value="doctor">의사 인터뷰</option>
+                  </select>
+                </div>
+                <div className="col-span-2">
+                  <YouTubePreviewInput name="url" required label="YouTube URL *" />
+                </div>
+              </div>
+              <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">
+                영상 추가
+              </button>
+            </form>
+          </section>
+        </div>
+      )}
+
+      {/* ── Tab: 시술/인증 ──────────────────────────────────────── */}
+      {tab === "procedures" && (
+        <div className="space-y-8">
+          {/* Procedures */}
+          <section className="space-y-4">
+            <h2 className="text-base font-semibold border-b pb-2">{t("procedures")}</h2>
+
+            {hospitalProcs && hospitalProcs.length > 0 && (
+              <div className="rounded-lg border overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b bg-muted/50">
+                      <th className="text-left px-3 py-2 font-medium">{t("colProcedure")}</th>
+                      <th className="text-left px-3 py-2 font-medium">{t("colCost")}</th>
+                      <th className="text-left px-3 py-2 font-medium">{t("colVolume")}</th>
+                      <th className="px-3 py-2" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {hospitalProcs.map((hp) => {
+                      const procName = hp.procedures ? getEn((hp.procedures as { name: Json }).name) : hp.procedure_id;
+                      return (
+                        <tr key={hp.id} className="border-b last:border-0">
+                          <td className="px-3 py-2">{procName}</td>
+                          <td className="px-3 py-2 text-muted-foreground">
+                            {hp.cost_min != null ? `${hp.cost_currency} ${hp.cost_min}–${hp.cost_max}` : "—"}
+                          </td>
+                          <td className="px-3 py-2 text-muted-foreground">{hp.annual_volume ?? "—"}</td>
+                          <td className="px-3 py-2">
+                            <DeleteButton action={removeHospitalProcedure.bind(null, hp.id)} label={t("remove")} />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {availableProcedures.length > 0 && (
+              <form action={upsertHospitalProcedure} className="rounded-lg border p-4 space-y-3">
+                <input type="hidden" name="hospital_id" value={id} />
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2 space-y-1">
+                    <label className="text-sm font-medium">{t("addProcedure")}</label>
+                    <select name="procedure_id" required className="w-full rounded-md border bg-background px-3 py-2 text-sm">
+                      <option value="">{t("selectProcedure")}</option>
+                      {availableProcedures.map((p) => (
+                        <option key={p.id} value={p.id}>{getEn(p.name)}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <Field label={t("colCostMin")} name="cost_min" type="number" />
+                  <Field label={t("colCostMax")} name="cost_max" type="number" />
+                  <Field label={t("colCurrency")} name="cost_currency" defaultValue="USD" />
+                  <Field label={t("colVolume")} name="annual_volume" type="number" />
+                </div>
+                <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">
+                  {t("addProcedureBtn")}
+                </button>
+              </form>
+            )}
+          </section>
+
+          {/* Awards & Accreditations */}
+          <section className="space-y-4">
+            <h2 className="text-base font-semibold border-b pb-2">Awards & Accreditations</h2>
+
+            {awards.length > 0 && (
+              <div className="space-y-2">
+                {awards.map((a, i) => (
+                  <div key={i} className="flex items-start gap-3 rounded-lg border bg-muted/30 px-4 py-3">
+                    {a.image_url && (
+                      <Image src={a.image_url} alt={a.title} width={40} height={40} className="rounded object-contain shrink-0" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium">{a.title}{a.year ? ` (${a.year})` : ""}</p>
+                      {a.description && <p className="text-xs text-muted-foreground mt-0.5">{a.description}</p>}
+                    </div>
+                    <DeleteButton
+                      action={removeHospitalAward.bind(null, id, i)}
+                      label="삭제"
+                      className="cursor-pointer text-xs text-destructive hover:underline shrink-0"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <form action={addAward} className="rounded-lg border p-4 space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="col-span-2 space-y-1">
+                  <label className="text-sm font-medium">수상/인증 제목 *</label>
+                  <input name="title" required placeholder="예: JCI Accreditation" className="w-full rounded-md border bg-background px-3 py-2 text-sm" />
+                </div>
+                <Field label="연도" name="year" type="number" placeholder="2023" />
+                <div className="space-y-1">
+                  <FileDropzone name="image_file" accept="image/*" label="배지 이미지 (선택)" />
+                </div>
+                <div className="col-span-2 space-y-1">
+                  <label className="text-sm font-medium">설명 (선택)</label>
+                  <input name="description" placeholder="간단한 설명" className="w-full rounded-md border bg-background px-3 py-2 text-sm" />
+                </div>
+              </div>
+              <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">
+                추가
+              </button>
+            </form>
+          </section>
+        </div>
+      )}
     </div>
   );
 }
