@@ -89,6 +89,10 @@ export function MultilingualInput({
     }
   };
 
+  const translatedSecondaryCount = SECONDARY_LANGS.filter(
+    (l) => autoTranslated.has(l.code as LangCode)
+  ).length;
+
   const inputClass = (code: LangCode) =>
     `flex-1 rounded-md border px-2 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
       autoTranslated.has(code) ? "bg-blue-50/60 border-blue-200" : "bg-background"
@@ -155,48 +159,60 @@ export function MultilingualInput({
         })}
       </div>
 
-      {/* Secondary langs: 2-column grid */}
-      <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 pt-1 border-t">
-        {SECONDARY_LANGS.map((lang) => {
-          const code = lang.code as LangCode;
-          const isLoading = fieldState[code] === "loading";
-          return (
-            <div key={code} className="flex items-center gap-1.5">
-              <span className="text-xs text-muted-foreground w-7 shrink-0">{lang.label}</span>
-              {multiline ? (
-                <textarea
-                  rows={2}
-                  value={vals[code] ?? ""}
-                  onChange={(e) => {
-                    setVals((v) => ({ ...v, [code]: e.target.value }));
-                    setAutoTranslated((prev) => { const n = new Set(prev); n.delete(code); return n; });
-                  }}
-                  className={inputClass(code)}
-                />
-              ) : (
-                <input
-                  type="text"
-                  value={vals[code] ?? ""}
-                  onChange={(e) => {
-                    setVals((v) => ({ ...v, [code]: e.target.value }));
-                    setAutoTranslated((prev) => { const n = new Set(prev); n.delete(code); return n; });
-                  }}
-                  className={inputClass(code)}
-                />
-              )}
-              <button
-                type="button"
-                disabled={isLoading || !vals["ko"]?.trim()}
-                onClick={() => translateField(code)}
-                title="KO에서 재번역"
-                className="text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors shrink-0 text-xs"
-              >
-                {isLoading ? "…" : "↺"}
-              </button>
-            </div>
-          );
-        })}
-      </div>
+      {/* Translation completion message */}
+      {translatedSecondaryCount > 0 && (
+        <p className="text-xs text-muted-foreground">
+          {translatedSecondaryCount}개 언어로 번역이 완료되었습니다
+        </p>
+      )}
+
+      {/* Secondary langs: collapsible */}
+      <details className="border-t pt-1">
+        <summary className="cursor-pointer select-none py-1 text-xs text-muted-foreground hover:text-foreground">
+          나머지 {SECONDARY_LANGS.length}개 언어 보기
+        </summary>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 pt-2">
+          {SECONDARY_LANGS.map((lang) => {
+            const code = lang.code as LangCode;
+            const isLoading = fieldState[code] === "loading";
+            return (
+              <div key={code} className="flex items-center gap-1.5">
+                <span className="text-xs text-muted-foreground w-7 shrink-0">{lang.label}</span>
+                {multiline ? (
+                  <textarea
+                    rows={2}
+                    value={vals[code] ?? ""}
+                    onChange={(e) => {
+                      setVals((v) => ({ ...v, [code]: e.target.value }));
+                      setAutoTranslated((prev) => { const n = new Set(prev); n.delete(code); return n; });
+                    }}
+                    className={inputClass(code)}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={vals[code] ?? ""}
+                    onChange={(e) => {
+                      setVals((v) => ({ ...v, [code]: e.target.value }));
+                      setAutoTranslated((prev) => { const n = new Set(prev); n.delete(code); return n; });
+                    }}
+                    className={inputClass(code)}
+                  />
+                )}
+                <button
+                  type="button"
+                  disabled={isLoading || !vals["ko"]?.trim()}
+                  onClick={() => translateField(code)}
+                  title="KO에서 재번역"
+                  className="text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors shrink-0 text-xs"
+                >
+                  {isLoading ? "…" : "↺"}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </details>
 
       <input type="hidden" name={name} value={JSON.stringify(vals)} />
     </div>

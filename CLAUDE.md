@@ -92,6 +92,11 @@ Multilingual text fields are stored as JSON: `{ en: "", ko: "", zh: "", ja: "" }
 - YouTube URL inputs must use `YouTubePreviewInput` (`src/components/ui/YouTubePreviewInput.tsx`)
   - Shows thumbnail once a valid YouTube URL is typed
   - Clicking the thumbnail plays the video inline (iframe embed)
+- Multilingual text inputs must use `MultilingualInput` (`src/components/backoffice/admin/MultilingualInput.tsx`)
+  - KO + EN inputs are always visible; remaining 14 languages are collapsed in a `<details>` accordion (closed by default)
+  - After bulk translation, show "N개 언어로 번역이 완료되었습니다" — do NOT auto-expand the accordion
+  - Users can open the accordion to edit individual language fields manually
+  - Used on all admin forms that require multilingual content (services, hospitals, doctors, categories)
 
 ---
 
