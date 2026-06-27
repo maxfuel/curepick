@@ -49,12 +49,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = getLocalizedField(doctor.name, locale);
   const specialty = getLocalizedField(doctor.specialty, locale);
 
+  const safeImage = doctor.photo_url?.includes("/storage/v1/object/public/")
+    ? doctor.photo_url
+    : null;
+
   return buildMetadata({
     title: name,
     description: specialty ? `${name} — ${specialty}` : name,
     locale,
     path: `/doctors/${slug}`,
-    image: doctor.photo_url,
+    image: safeImage,
   });
 }
 
@@ -75,6 +79,12 @@ export default async function DoctorDetailPage({ params }: Props) {
     .single();
 
   if (!doctor) notFound();
+
+  // Only Supabase Storage URLs are allowed by next/image remotePatterns.
+  // If photo_url is set to an external URL, Image would throw at render time → 500.
+  const safePhotoUrl = doctor.photo_url?.includes("/storage/v1/object/public/")
+    ? doctor.photo_url
+    : null;
 
   // Fetch hospital info and hospital's procedures in parallel
   const [{ data: hospital }, { data: hospitalProcedures }] = await Promise.all([
@@ -157,10 +167,10 @@ export default async function DoctorDetailPage({ params }: Props) {
       <section className="bg-muted py-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-            {doctor.photo_url ? (
+            {safePhotoUrl ? (
               <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl">
                 <Image
-                  src={doctor.photo_url}
+                  src={safePhotoUrl}
                   alt={doctorName}
                   fill
                   className="object-cover"
