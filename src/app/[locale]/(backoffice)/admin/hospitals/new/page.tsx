@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
 import { LanguageTagPicker } from "@/components/backoffice/admin/LanguageTagPicker";
 import { createHospital } from "@/lib/actions/admin-hospitals";
+import { SaveForm } from "@/components/ui/SaveForm";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -21,7 +22,7 @@ export default async function NewHospitalPage({ params }: Props) {
   return (
     <div className="p-6 max-w-2xl">
       <h1 className="text-2xl font-semibold mb-6">{t("newHospital")}</h1>
-      <form action={handleCreate} className="space-y-4">
+      <SaveForm action={handleCreate} cancelHref={`/${locale}/admin/hospitals`} saveLabel={t("create")} cancelLabel={t("cancel")}>
         <MultilingualInput name="name" label={t("fieldName")} />
         <MultilingualInput name="description" label={t("fieldDescription")} multiline />
         <MultilingualInput name="address" label={t("fieldAddress")} />
@@ -78,22 +79,7 @@ export default async function NewHospitalPage({ params }: Props) {
             {t("fieldInternational")}
           </label>
         </div>
-
-        <div className="flex gap-3 pt-2">
-          <button
-            type="submit"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            {t("create")}
-          </button>
-          <a
-            href={`/${locale}/admin/hospitals`}
-            className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted"
-          >
-            {t("cancel")}
-          </a>
-        </div>
-      </form>
+      </SaveForm>
     </div>
   );
 }

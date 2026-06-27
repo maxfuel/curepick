@@ -5,6 +5,7 @@ import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInp
 import { DoctorPhotoInput } from "@/components/backoffice/admin/DoctorPhotoInput";
 import { LanguageTagPicker } from "@/components/backoffice/admin/LanguageTagPicker";
 import { updateDoctor } from "@/lib/actions/admin-doctors";
+import { SaveForm } from "@/components/ui/SaveForm";
 import type { Json } from "@/lib/types/database";
 
 interface Props {
@@ -38,7 +39,7 @@ export default async function EditDoctorPage({ params }: Props) {
   return (
     <div className="p-6 max-w-2xl">
       <h1 className="text-2xl font-semibold mb-6">{t("editDoctor")}: {getEn(doctor.name)}</h1>
-      <form action={handleUpdate} className="space-y-4">
+      <SaveForm action={handleUpdate} cancelHref={`/${locale}/admin/doctors`} saveLabel={t("save")} cancelLabel={t("cancel")}>
         <MultilingualInput name="name" label={t("fieldName")} value={getMultilingual(doctor.name)} />
         <MultilingualInput name="specialty" label={t("fieldSpecialty")} value={getMultilingual(doctor.specialty)} />
         <MultilingualInput name="bio" label={t("fieldBio")} multiline value={getMultilingual(doctor.bio)} />
@@ -70,16 +71,7 @@ export default async function EditDoctorPage({ params }: Props) {
         </div>
 
         <DoctorPhotoInput currentPhotoUrl={doctor.photo_url} />
-
-        <div className="flex gap-3 pt-2">
-          <button type="submit" className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-            {t("save")}
-          </button>
-          <a href={`/${locale}/admin/doctors`} className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted">
-            {t("cancel")}
-          </a>
-        </div>
-      </form>
+      </SaveForm>
     </div>
   );
 }
