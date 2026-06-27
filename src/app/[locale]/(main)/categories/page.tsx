@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getLocalizedField } from "@/lib/utils/i18n-field";
-import { CategoryCard } from "@/components/cards/CategoryCard";
+import { CategoriesMegaMenu } from "@/components/categories/CategoriesMegaMenu";
 import type { Metadata } from "next";
 
 interface Props {
@@ -24,41 +24,48 @@ export default async function CategoriesPage({ params }: Props) {
   const supabase = await createClient();
   const t = await getTranslations({ locale, namespace: "categories" });
 
-  const [{ data: intents }, { data: categories }] = await Promise.all([
-    supabase
-      .from("intents")
-      .select("id, name, slug, sort_order")
-      .order("sort_order"),
-    supabase
-      .from("categories")
-      .select("id, slug, name, image_url, intent_id, services(count)")
+  const [{ data: intentsRaw }, { data: categoriesRaw }] = await Promise.all([
+    supabase.from("intents").select("id, name, sort_order").order("sort_order"),
+    (supabase.from("categories") as any)
+      .select(`
+        id, slug, name, intent_id,
+        services(
+          id, slug, name, sort_order,
+          procedures(id, slug, name, sort_order)
+        )
+      `)
       .order("sort_order"),
   ]);
 
-  const intentMap = new Map<
-    string,
-    {
-      name: string;
-      categories: NonNullable<typeof categories>;
-    }
-  >();
+  const intents = (intentsRaw ?? []).map((i: any) => ({
+    id: i.id,
+    name: getLocalizedField(i.name, locale),
+  }));
 
-  for (const intent of intents ?? []) {
-    intentMap.set(intent.id, {
-      name: getLocalizedField(intent.name, locale),
-      categories: [],
-    });
-  }
-
-  for (const category of categories ?? []) {
-    if (category.intent_id && intentMap.has(category.intent_id)) {
-      intentMap.get(category.intent_id)!.categories.push(category);
-    }
-  }
+  const categories = (categoriesRaw ?? []).map((cat: any) => ({
+    id: cat.id,
+    slug: cat.slug,
+    name: getLocalizedField(cat.name, locale),
+    intentId: cat.intent_id ?? null,
+    services: ((cat.services ?? []) as any[])
+      .sort((a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      .map((svc: any) => ({
+        id: svc.id,
+        slug: svc.slug,
+        name: getLocalizedField(svc.name, locale),
+        procedures: ((svc.procedures ?? []) as any[])
+          .sort((a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+          .map((proc: any) => ({
+            id: proc.id,
+            slug: proc.slug,
+            name: getLocalizedField(proc.name, locale),
+          })),
+      })),
+  }));
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-12">
+      <div className="text-center mb-10">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           {t("title")}
         </h1>
@@ -67,34 +74,11 @@ export default async function CategoriesPage({ params }: Props) {
         </p>
       </div>
 
-      <div className="space-y-12">
-        {Array.from(intentMap.entries()).map(([intentId, intent]) => {
-          if (intent.categories.length === 0) return null;
-          return (
-            <section key={intentId}>
-              <h2 className="text-2xl font-bold mb-6">{intent.name}</h2>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {intent.categories.map((category) => {
-                  const serviceCount =
-                    (category.services as unknown as { count: number }[])?.[0]
-                      ?.count ?? 0;
-                  return (
-                    <CategoryCard
-                      key={category.id}
-                      slug={category.slug}
-                      name={getLocalizedField(category.name, locale)}
-                      imageUrl={category.image_url}
-                      servicesLabel={t("servicesCount", {
-                        count: serviceCount,
-                      })}
-                    />
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
-      </div>
+      <CategoriesMegaMenu
+        categories={categories}
+        intents={intents}
+        viewAllLabel={t("viewAll")}
+      />
     </div>
   );
 }
