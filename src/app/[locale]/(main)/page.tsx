@@ -127,7 +127,7 @@ export default async function HomePage({ params }: Props) {
           <>
             <Separator />
             <section>
-              <h2 className="text-2xl font-bold mb-6">{t("popularHospitals")}</h2>
+              <h2 className="text-2xl font-bold mb-6 text-center">{t("popularHospitals")}</h2>
               <HospitalCarousel
                 hospitals={featuredHospitals.map((h) => ({
                   id: h.id,
@@ -155,7 +155,7 @@ export default async function HomePage({ params }: Props) {
           <>
             <Separator />
             <section>
-              <h2 className="text-2xl font-bold mb-6">{t("chooseSpecialties")}</h2>
+              <h2 className="text-2xl font-bold mb-6 text-center">{t("chooseSpecialties")}</h2>
               <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
                 {categoriesWithServices.map((cat) => {
                   const catName = getLocalizedField(cat.name, locale);
