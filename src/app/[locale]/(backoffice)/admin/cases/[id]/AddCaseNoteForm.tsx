@@ -6,6 +6,7 @@ import { adminAddCaseNote } from "@/lib/actions/admin-cases";
 
 export default function AddCaseNoteForm({ caseId }: { caseId: string }) {
   const [content, setContent] = useState("");
+  const [saved, setSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -16,6 +17,8 @@ export default function AddCaseNoteForm({ caseId }: { caseId: string }) {
       await adminAddCaseNote(caseId, content.trim());
       setContent("");
       router.refresh();
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
     });
   }
 
@@ -28,13 +31,17 @@ export default function AddCaseNoteForm({ caseId }: { caseId: string }) {
         placeholder="Add a note…"
         className="w-full rounded-md border bg-background px-3 py-2 text-sm resize-none"
       />
-      <button
-        type="submit"
-        disabled={isPending || !content.trim()}
-        className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-      >
-        {isPending ? "Adding…" : "Add Note"}
-      </button>
+      {saved ? (
+        <p className="text-sm font-medium text-green-600">✓ 저장완료</p>
+      ) : (
+        <button
+          type="submit"
+          disabled={isPending || !content.trim()}
+          className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+        >
+          {isPending ? "Adding…" : "Add Note"}
+        </button>
+      )}
     </form>
   );
 }

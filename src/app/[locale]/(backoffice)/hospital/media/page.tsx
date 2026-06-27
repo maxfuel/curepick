@@ -12,6 +12,7 @@ import {
   removeHospitalVideo,
 } from "@/lib/actions/hospital-media";
 import { DeleteButton } from "@/components/ui/DeleteButton";
+import { SaveForm } from "@/components/ui/SaveForm";
 
 const VIDEO_TYPES = [
   { value: "general", label: "General" },
@@ -50,20 +51,14 @@ export default async function HospitalMediaPage() {
             <Image src={hospital.logo_url} alt="Logo" fill className="object-contain" />
           </div>
         )}
-        <form action={updateHospitalLogo} className="space-y-3">
+        <SaveForm action={updateHospitalLogo} saveLabel="저장" className="space-y-3">
           <FileDropzone
             name="logo_file"
             accept="image/*"
             currentPreviewUrl={hospital?.logo_url ?? undefined}
             label={hospital?.logo_url ? "로고 교체" : "로고 업로드"}
           />
-          <button
-            type="submit"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            저장
-          </button>
-        </form>
+        </SaveForm>
       </section>
 
       {/* ── Section 2: Hero Image ── */}
@@ -79,20 +74,14 @@ export default async function HospitalMediaPage() {
             <Image src={hospital.hero_image_url} alt="Hero" fill className="object-cover" />
           </div>
         )}
-        <form action={updateHospitalHero} className="space-y-3">
+        <SaveForm action={updateHospitalHero} saveLabel="저장" className="space-y-3">
           <FileDropzone
             name="hero_file"
             accept="image/*"
             currentPreviewUrl={hospital?.hero_image_url ?? undefined}
             label={hospital?.hero_image_url ? "히어로 이미지 교체" : "히어로 이미지 업로드"}
           />
-          <button
-            type="submit"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            저장
-          </button>
-        </form>
+        </SaveForm>
       </section>
 
       {/* ── Section 3: Photo Gallery ── */}
@@ -120,15 +109,9 @@ export default async function HospitalMediaPage() {
           </div>
         )}
 
-        <form action={addHospitalGalleryImage} className="space-y-3">
+        <SaveForm action={addHospitalGalleryImage} saveLabel="사진 추가" className="space-y-3" resetOnSuccess>
           <FileDropzone name="image_file" accept="image/*" label="사진 추가" />
-          <button
-            type="submit"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            사진 추가
-          </button>
-        </form>
+        </SaveForm>
       </section>
 
       {/* ── Section 4: YouTube Videos ── */}
@@ -160,7 +143,7 @@ export default async function HospitalMediaPage() {
           </div>
         )}
 
-        <form action={addHospitalVideo} className="space-y-3">
+        <SaveForm action={addHospitalVideo} saveLabel="영상 추가" className="space-y-3" resetOnSuccess>
           <YouTubePreviewInput
             name="url"
             label="YouTube URL *"
@@ -192,13 +175,7 @@ export default async function HospitalMediaPage() {
               </select>
             </div>
           </div>
-          <button
-            type="submit"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            영상 추가
-          </button>
-        </form>
+        </SaveForm>
       </section>
     </div>
   );

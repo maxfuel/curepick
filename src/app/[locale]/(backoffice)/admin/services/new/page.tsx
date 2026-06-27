@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { createService } from "@/lib/actions/admin-services";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
+import { SaveForm } from "@/components/ui/SaveForm";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -35,7 +36,7 @@ export default async function NewServicePage({ params }: Props) {
 
       <h1 className="text-2xl font-semibold mb-6">{t("newService")}</h1>
 
-      <form action={handleCreate} className="space-y-4">
+      <SaveForm action={handleCreate} cancelHref={`/${locale}/admin/services`} saveLabel={t("save")} cancelLabel={t("cancel")} className="space-y-4">
         <MultilingualInput name="name" label={t("fieldName")} />
         <div>
           <label className="text-sm font-medium">{t("fieldSlug")}</label>
@@ -77,21 +78,7 @@ export default async function NewServicePage({ params }: Props) {
           <input type="checkbox" name="is_featured" value="on" />
           {t("fieldFeatured")}
         </label>
-        <div className="flex gap-3 pt-2">
-          <button
-            type="submit"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            {t("save")}
-          </button>
-          <Link
-            href={`/${locale}/admin/services`}
-            className="rounded-md bg-muted px-4 py-2 text-sm font-medium hover:bg-muted/70"
-          >
-            {t("cancel")}
-          </Link>
-        </div>
-      </form>
+      </SaveForm>
     </div>
   );
 }

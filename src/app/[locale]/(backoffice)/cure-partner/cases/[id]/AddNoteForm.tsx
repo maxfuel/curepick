@@ -9,6 +9,7 @@ interface Props {
 
 export function AddNoteForm({ caseId }: Props) {
   const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -21,6 +22,8 @@ export function AddNoteForm({ caseId }: Props) {
       try {
         await addCaseNote(caseId, content);
         if (textareaRef.current) textareaRef.current.value = "";
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to add note");
       }
@@ -36,13 +39,17 @@ export function AddNoteForm({ caseId }: Props) {
         className="w-full rounded-md border bg-background px-3 py-2 text-sm resize-none"
       />
       {error && <p className="text-xs text-destructive">{error}</p>}
-      <button
-        type="submit"
-        disabled={isPending}
-        className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-      >
-        {isPending ? "Saving…" : "Add Note"}
-      </button>
+      {saved ? (
+        <p className="text-sm font-medium text-green-600">✓ 저장완료</p>
+      ) : (
+        <button
+          type="submit"
+          disabled={isPending}
+          className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+        >
+          {isPending ? "Saving…" : "Add Note"}
+        </button>
+      )}
     </form>
   );
 }

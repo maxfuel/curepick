@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createCategory, deleteCategory, deleteService } from "@/lib/actions/admin-services";
 import { DeleteButton } from "@/components/ui/DeleteButton";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
+import { SaveForm } from "@/components/ui/SaveForm";
 import type { Json } from "@/lib/types/database";
 
 interface Props {
@@ -142,7 +143,7 @@ export default async function AdminServicesPage({ params, searchParams }: Props)
           {/* Create category form */}
           <div className="rounded-lg border p-4">
             <h2 className="text-sm font-semibold mb-3">카테고리 추가</h2>
-            <form action={createCategory} className="space-y-3">
+            <SaveForm action={createCategory} saveLabel={t("addCategory")} className="space-y-3" resetOnSuccess>
               <MultilingualInput name="name" label={t("categoryName")} />
               <div className="flex gap-2 items-center">
                 <input
@@ -158,14 +159,8 @@ export default async function AdminServicesPage({ params, searchParams }: Props)
                   placeholder="순서"
                   className="rounded-md border bg-background px-3 py-2 text-sm w-20"
                 />
-                <button
-                  type="submit"
-                  className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 whitespace-nowrap"
-                >
-                  {t("addCategory")}
-                </button>
               </div>
-            </form>
+            </SaveForm>
           </div>
         </div>
       )}

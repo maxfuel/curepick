@@ -10,6 +10,7 @@ import {
   deleteFaq,
 } from "@/lib/actions/admin-services";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
+import { SaveForm } from "@/components/ui/SaveForm";
 import type { Json } from "@/lib/types/database";
 
 interface Props {
@@ -66,7 +67,7 @@ export default async function EditServicePage({ params }: Props) {
 
       <h1 className="text-2xl font-semibold mb-6">{t("editService")}</h1>
 
-      <form action={updateAction} className="space-y-4 mb-10">
+      <SaveForm action={updateAction} cancelHref={`/${locale}/admin/services`} saveLabel={t("save")} cancelLabel={t("cancel")} className="space-y-4 mb-10">
         <MultilingualInput name="name" label={t("fieldName")} value={asMultilingual(service.name)} />
         <div>
           <label className="text-sm font-medium">{t("fieldSlug")}</label>
@@ -121,21 +122,7 @@ export default async function EditServicePage({ params }: Props) {
           />
           {t("fieldFeatured")}
         </label>
-        <div className="flex gap-3 pt-2">
-          <button
-            type="submit"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            {t("save")}
-          </button>
-          <Link
-            href={`/${locale}/admin/services`}
-            className="rounded-md bg-muted px-4 py-2 text-sm font-medium hover:bg-muted/70"
-          >
-            {t("cancel")}
-          </Link>
-        </div>
-      </form>
+      </SaveForm>
 
       {/* Procedures section */}
       <section className="mb-10">

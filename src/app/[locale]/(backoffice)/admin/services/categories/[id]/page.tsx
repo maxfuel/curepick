@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { updateCategory } from "@/lib/actions/admin-services";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
 import { parseMultilingual } from "@/lib/utils/multilingual";
+import { SaveForm } from "@/components/ui/SaveForm";
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -26,7 +27,6 @@ export default async function EditCategoryPage({ params }: Props) {
   async function handleUpdate(formData: FormData) {
     "use server";
     await updateCategory(id, formData);
-    redirect(backHref);
   }
 
   return (
@@ -41,7 +41,7 @@ export default async function EditCategoryPage({ params }: Props) {
 
       <h1 className="text-2xl font-semibold mb-6">카테고리 수정</h1>
 
-      <form action={handleUpdate} className="space-y-4">
+      <SaveForm action={handleUpdate} cancelHref={backHref} saveLabel="저장" cancelLabel="취소" className="space-y-4">
         <MultilingualInput
           name="name"
           label="카테고리 이름"
@@ -65,21 +65,7 @@ export default async function EditCategoryPage({ params }: Props) {
             className="mt-1 w-24 rounded-md border bg-background px-3 py-2 text-sm block"
           />
         </div>
-        <div className="flex gap-3 pt-2">
-          <button
-            type="submit"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            저장
-          </button>
-          <Link
-            href={backHref}
-            className="rounded-md bg-muted px-4 py-2 text-sm font-medium hover:bg-muted/70"
-          >
-            취소
-          </Link>
-        </div>
-      </form>
+      </SaveForm>
     </div>
   );
 }
