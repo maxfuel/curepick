@@ -169,6 +169,51 @@ export default async function AdminServicesPage({ params, searchParams }: Props)
       {/* ── Procedures Tab ── */}
       {tab === "procedures" && (
         <div className="space-y-6">
+          {/* Single add form at the top */}
+          <div className="rounded-lg border p-4">
+            <h2 className="text-sm font-semibold mb-3">시술 추가</h2>
+            <form action={createProcedure} className="space-y-3">
+              <div>
+                <label className="text-sm font-medium block mb-1">서비스 선택</label>
+                <select
+                  name="service_id"
+                  required
+                  className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                >
+                  <option value="">서비스를 선택하세요</option>
+                  {categories?.map((cat) => {
+                    const catServices = servicesByCategory.get(cat.id) ?? [];
+                    if (catServices.length === 0) return null;
+                    return (
+                      <optgroup key={cat.id} label={getEn(cat.name)}>
+                        {catServices.map((svc) => (
+                          <option key={svc.id} value={svc.id}>
+                            {getEn(svc.name)}
+                          </option>
+                        ))}
+                      </optgroup>
+                    );
+                  })}
+                </select>
+              </div>
+              <MultilingualInput name="name" label={t("procName")} />
+              <div className="flex gap-2">
+                <input
+                  name="slug"
+                  placeholder="slug (자동 생성)"
+                  className="flex-1 rounded-md border bg-background px-3 py-2 text-sm"
+                />
+                <button
+                  type="submit"
+                  className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 whitespace-nowrap cursor-pointer"
+                >
+                  {t("addProcedure")}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Procedure lists grouped by category / service */}
           {categories?.map((cat) => {
             const catServices = servicesByCategory.get(cat.id) ?? [];
             if (catServices.length === 0) return null;
@@ -194,33 +239,13 @@ export default async function AdminServicesPage({ params, searchParams }: Props)
                           서비스 편집 →
                         </Link>
                       </div>
-                      <div className="rounded-lg border overflow-hidden mb-3">
+                      <div className="rounded-lg border overflow-hidden">
                         <ProceduresSortableTable
                           procedures={svc.procedures}
                           deleteLabel={t("delete")}
                           noProceduresLabel={t("noProcedures")}
                         />
                       </div>
-                      <form
-                        action={createProcedure}
-                        className="space-y-2 rounded-lg border p-3 bg-muted/20"
-                      >
-                        <input type="hidden" name="service_id" value={svc.id} />
-                        <MultilingualInput name="name" label={t("procName")} />
-                        <div className="flex gap-2">
-                          <input
-                            name="slug"
-                            placeholder="slug (자동 생성)"
-                            className="flex-1 rounded-md border bg-background px-3 py-2 text-sm"
-                          />
-                          <button
-                            type="submit"
-                            className="rounded-md bg-muted px-3 py-2 text-sm font-medium hover:bg-muted/70 whitespace-nowrap cursor-pointer"
-                          >
-                            {t("addProcedure")}
-                          </button>
-                        </div>
-                      </form>
                     </div>
                   ))}
                 </div>
