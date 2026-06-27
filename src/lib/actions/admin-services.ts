@@ -108,3 +108,35 @@ export async function deleteFaq(id: string) {
   await supabase.from("faqs").delete().eq("id", id);
   revalidatePath("/admin/services");
 }
+
+// ─── Bulk reorder ────────────────────────────────────────────────────────────
+
+export async function reorderCategories(items: { id: string; sort_order: number }[]) {
+  const supabase = await createClient();
+  await Promise.all(
+    items.map(({ id, sort_order }) =>
+      supabase.from("categories").update({ sort_order }).eq("id", id)
+    )
+  );
+  revalidatePath("/admin/services");
+}
+
+export async function reorderServices(items: { id: string; sort_order: number }[]) {
+  const supabase = await createClient();
+  await Promise.all(
+    items.map(({ id, sort_order }) =>
+      supabase.from("services").update({ sort_order }).eq("id", id)
+    )
+  );
+  revalidatePath("/admin/services");
+}
+
+export async function reorderProcedures(items: { id: string; sort_order: number }[]) {
+  const supabase = await createClient();
+  await Promise.all(
+    items.map(({ id, sort_order }) =>
+      supabase.from("procedures").update({ sort_order }).eq("id", id)
+    )
+  );
+  revalidatePath("/admin/services");
+}

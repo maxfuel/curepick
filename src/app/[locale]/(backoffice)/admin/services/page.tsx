@@ -1,10 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { createCategory, deleteCategory, deleteService } from "@/lib/actions/admin-services";
-import { DeleteButton } from "@/components/ui/DeleteButton";
+import { createCategory } from "@/lib/actions/admin-services";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
 import { SaveForm } from "@/components/ui/SaveForm";
+import { CategoriesSortableTable } from "@/components/backoffice/admin/CategoriesSortableTable";
+import { ServiceGroupSortableTable } from "@/components/backoffice/admin/ServiceGroupSortableTable";
 import type { Json } from "@/lib/types/database";
 
 interface Props {
@@ -94,50 +95,10 @@ export default async function AdminServicesPage({ params, searchParams }: Props)
         <div className="space-y-6">
           {/* Category list table */}
           <div className="rounded-lg border overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-muted/50">
-                  <th className="text-left px-4 py-2 font-medium w-12">순서</th>
-                  <th className="text-left px-4 py-2 font-medium">이름 (EN)</th>
-                  <th className="text-left px-4 py-2 font-medium">이름 (KO)</th>
-                  <th className="text-left px-4 py-2 font-medium">Slug</th>
-                  <th className="px-4 py-2 w-28" />
-                </tr>
-              </thead>
-              <tbody>
-                {categories && categories.length > 0 ? (
-                  categories.map((cat) => (
-                    <tr key={cat.id} className="border-b last:border-0 hover:bg-muted/10">
-                      <td className="px-4 py-2 text-muted-foreground text-xs font-mono">
-                        #{cat.sort_order}
-                      </td>
-                      <td className="px-4 py-2 font-medium">{getEn(cat.name)}</td>
-                      <td className="px-4 py-2 text-muted-foreground">{getKo(cat.name)}</td>
-                      <td className="px-4 py-2 text-muted-foreground font-mono text-xs">
-                        {cat.slug}
-                      </td>
-                      <td className="px-4 py-2">
-                        <div className="flex items-center justify-end gap-3">
-                          <Link
-                            href={`/${locale}/admin/services/categories/${cat.id}`}
-                            className="text-primary text-xs hover:underline"
-                          >
-                            수정
-                          </Link>
-                          <DeleteButton action={deleteCategory.bind(null, cat.id)} />
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground text-sm">
-                      카테고리가 없습니다.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <CategoriesSortableTable
+              categories={categories ?? []}
+              locale={locale}
+            />
           </div>
 
           {/* Create category form */}
@@ -178,50 +139,13 @@ export default async function AdminServicesPage({ params, searchParams }: Props)
                   </span>
                   {getEn(cat.name)}
                 </div>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b bg-muted/20">
-                      <th className="text-left px-4 py-2 font-medium">{t("colName")}</th>
-                      <th className="text-left px-4 py-2 font-medium">{t("colSlug")}</th>
-                      <th className="text-left px-4 py-2 font-medium">순서</th>
-                      <th className="text-left px-4 py-2 font-medium">{t("colFeatured")}</th>
-                      <th className="px-4 py-2" />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {catServices.length > 0 ? (
-                      catServices.map((svc) => (
-                        <tr key={svc.id} className="border-b last:border-0 hover:bg-muted/10">
-                          <td className="px-4 py-2">{getEn(svc.name)}</td>
-                          <td className="px-4 py-2 text-muted-foreground font-mono text-xs">
-                            {svc.slug}
-                          </td>
-                          <td className="px-4 py-2 text-muted-foreground text-xs">
-                            {svc.sort_order}
-                          </td>
-                          <td className="px-4 py-2">{svc.is_featured ? "✓" : ""}</td>
-                          <td className="px-4 py-2">
-                            <div className="flex items-center gap-2">
-                              <Link
-                                href={`/${locale}/admin/services/${svc.id}`}
-                                className="text-primary text-xs hover:underline"
-                              >
-                                {t("edit")}
-                              </Link>
-                              <DeleteButton action={deleteService.bind(null, svc.id)} label={t("delete")} />
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan={5} className="px-4 py-3 text-muted-foreground text-xs">
-                          {t("noServices")}
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                <ServiceGroupSortableTable
+                  services={catServices}
+                  locale={locale}
+                  editLabel={t("edit")}
+                  deleteLabel={t("delete")}
+                  noServicesLabel={t("noServices")}
+                />
               </div>
             );
           })}

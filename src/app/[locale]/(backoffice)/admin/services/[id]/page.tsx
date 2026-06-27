@@ -5,10 +5,10 @@ import Link from "next/link";
 import {
   updateService,
   createProcedure,
-  deleteProcedure,
   createFaq,
   deleteFaq,
 } from "@/lib/actions/admin-services";
+import { ProceduresSortableTable } from "@/components/backoffice/admin/ProceduresSortableTable";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
 import { SaveForm } from "@/components/ui/SaveForm";
 import type { Json } from "@/lib/types/database";
@@ -128,38 +128,11 @@ export default async function EditServicePage({ params }: Props) {
       <section className="mb-10">
         <h2 className="text-lg font-semibold mb-3">{t("procedures")}</h2>
         <div className="rounded-lg border overflow-hidden mb-4">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b bg-muted/50">
-                <th className="text-left px-4 py-2 font-medium">{t("colName")}</th>
-                <th className="text-left px-4 py-2 font-medium">{t("colSlug")}</th>
-                <th className="px-4 py-2" />
-              </tr>
-            </thead>
-            <tbody>
-              {procedures && procedures.length > 0 ? (
-                procedures.map((proc) => (
-                  <tr key={proc.id} className="border-b last:border-0">
-                    <td className="px-4 py-2">{getEn(proc.name)}</td>
-                    <td className="px-4 py-2 text-muted-foreground font-mono text-xs">{proc.slug}</td>
-                    <td className="px-4 py-2">
-                      <form action={deleteProcedure.bind(null, proc.id)} className="inline">
-                        <button type="submit" className="text-destructive text-xs hover:underline">
-                          {t("delete")}
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={3} className="px-4 py-3 text-muted-foreground text-xs">
-                    {t("noProcedures")}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <ProceduresSortableTable
+            procedures={procedures ?? []}
+            deleteLabel={t("delete")}
+            noProceduresLabel={t("noProcedures")}
+          />
         </div>
         <form action={createProcedure} className="space-y-2 rounded-lg border p-3 bg-muted/20">
           <input type="hidden" name="service_id" value={id} />
