@@ -9,10 +9,10 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
-function getEn(val: Json | null | undefined): string {
+function getLang(val: Json | null | undefined, lang: string): string {
   if (!val) return "";
   if (typeof val === "object" && !Array.isArray(val)) {
-    return ((val as Record<string, unknown>).en as string) || "";
+    return ((val as Record<string, unknown>)[lang] as string) || "";
   }
   return String(val);
 }
@@ -53,7 +53,12 @@ export default async function AdminHospitalsPage({ params }: Props) {
             {hospitals && hospitals.length > 0 ? (
               hospitals.map((h) => (
                 <tr key={h.id} className="border-b last:border-0 hover:bg-muted/30">
-                  <td className="px-4 py-3 font-medium">{getEn(h.name)}</td>
+                  <td className="px-4 py-3">
+                    <span className="font-medium">{getLang(h.name, "ko") || getLang(h.name, "en")}</span>
+                    {getLang(h.name, "ko") && getLang(h.name, "en") && (
+                      <span className="block text-xs text-muted-foreground">{getLang(h.name, "en")}</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">{h.city ?? "—"}</td>
                   <td className="px-4 py-3">{h.is_featured ? "✓" : ""}</td>
                   <td className="px-4 py-3">
