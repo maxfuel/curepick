@@ -54,6 +54,7 @@ export default async function AdminDashboardPage({ params }: Props) {
     { count: totalPatients },
     { count: totalAgents },
     { count: totalCurePartners },
+    { count: totalHospitals },
     { count: completedCases },
     { count: totalReviews },
     { count: newReviews },
@@ -66,6 +67,7 @@ export default async function AdminDashboardPage({ params }: Props) {
     supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "patient"),
     supabase.from("agents").select("id", { count: "exact", head: true }),
     supabase.from("cure_partners").select("id", { count: "exact", head: true }),
+    supabase.from("hospitals").select("id", { count: "exact", head: true }),
     supabase.from("cases").select("id", { count: "exact", head: true }).eq("status", "completed"),
     supabase.from("reviews").select("id", { count: "exact", head: true }),
     supabase.from("reviews").select("id", { count: "exact", head: true }).gte("created_at", thirtyDaysAgo),
@@ -137,7 +139,7 @@ export default async function AdminDashboardPage({ params }: Props) {
         {/* 현황 */}
         <div>
           <p className="text-xs text-muted-foreground mb-2">현황</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <StatCard label="회원수" value={totalPatients ?? 0} href={`/${locale}/admin/members`} />
             <StatCard
               label="로컬에이전트"
@@ -148,6 +150,11 @@ export default async function AdminDashboardPage({ params }: Props) {
               label="큐어파트너"
               value={totalCurePartners ?? 0}
               href={`/${locale}/admin/cure-partners`}
+            />
+            <StatCard
+              label="가입병원수"
+              value={totalHospitals ?? 0}
+              href={`/${locale}/admin/hospitals`}
             />
           </div>
         </div>
