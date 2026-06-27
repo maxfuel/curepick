@@ -21,8 +21,8 @@ export default async function NewProcedurePage() {
 
   const { data: procedures } = await (supabase
     .from("procedures") as any)
-    .select("id, name, services(name, categories(name))")
-    .order("id");
+    .select("id, name, sort_order, services(name, sort_order, categories(name, sort_order))")
+    .order("sort_order");
 
   const available = (procedures ?? [])
     .filter((p: any) => !existingIds.has(p.id))
@@ -31,7 +31,15 @@ export default async function NewProcedurePage() {
       name: getLocalizedField(p.name as Json, "ko") || getLocalizedField(p.name as Json, "en"),
       serviceName: getLocalizedField(p.services?.name as Json, "ko") || getLocalizedField(p.services?.name as Json, "en"),
       categoryName: getLocalizedField(p.services?.categories?.name as Json, "ko") || getLocalizedField(p.services?.categories?.name as Json, "en"),
-    }));
+      sortOrder: (p.sort_order as number) ?? 999,
+      serviceSort: (p.services?.sort_order as number) ?? 999,
+      categorySort: (p.services?.categories?.sort_order as number) ?? 999,
+    }))
+    .sort((a: any, b: any) => {
+      if (a.categorySort !== b.categorySort) return a.categorySort - b.categorySort;
+      if (a.serviceSort !== b.serviceSort) return a.serviceSort - b.serviceSort;
+      return a.sortOrder - b.sortOrder;
+    });
 
   return (
     <div className="p-6">
