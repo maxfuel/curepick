@@ -1,7 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
-import { CategoryNav } from "./CategoryNav";
+import { CategoryNavClient } from "./CategoryNavClient";
 import { HeaderClient } from "./HeaderClient";
 import { LayoutDashboard, Building2, Stethoscope, Globe } from "lucide-react";
 import { CurepickLogo } from "@/components/ui/CurepickLogo";
@@ -11,7 +11,11 @@ export async function Header() {
   const supabase = await createClient();
 
   const [{ data: categories }, { data: { user } }] = await Promise.all([
-    supabase.from("categories").select("id, slug, name").order("sort_order", { ascending: true }).limit(8),
+    supabase
+      .from("categories")
+      .select("id, slug, name, services(id, slug, name)")
+      .order("sort_order", { ascending: true })
+      .limit(8),
     supabase.auth.getUser(),
   ]);
 
@@ -32,6 +36,14 @@ export async function Header() {
       (cat.name as Record<string, string>)?.[locale] ||
       (cat.name as Record<string, string>)?.en ||
       cat.slug,
+    services: ((cat as any).services ?? []).map((svc: any) => ({
+      id: svc.id,
+      slug: svc.slug,
+      name:
+        (svc.name as Record<string, string>)?.[locale] ||
+        (svc.name as Record<string, string>)?.en ||
+        svc.slug,
+    })),
   }));
 
   return (
@@ -41,7 +53,7 @@ export async function Header() {
           <Link href="/">
             <CurepickLogo size="sm" showTagline={true} />
           </Link>
-          <CategoryNav />
+          <CategoryNavClient categories={formattedCategories} />
         </div>
         <div className="flex items-center gap-2">
           {role === "admin" && (
