@@ -5,6 +5,7 @@ import Image from "next/image";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
 import { FileDropzone } from "@/components/ui/FileDropzone";
 import { LanguageTagPicker } from "@/components/backoffice/admin/LanguageTagPicker";
+import { DeleteButton } from "@/components/ui/DeleteButton";
 import { YouTubePreviewInput } from "@/components/ui/YouTubePreviewInput";
 import {
   updateHospital,
@@ -186,9 +187,7 @@ export default async function EditHospitalPage({ params }: Props) {
                       </td>
                       <td className="px-3 py-2 text-muted-foreground">{hp.annual_volume ?? "—"}</td>
                       <td className="px-3 py-2">
-                        <form action={removeHospitalProcedure.bind(null, hp.id)} className="inline">
-                          <button type="submit" className="cursor-pointer text-destructive text-xs hover:underline">{t("remove")}</button>
-                        </form>
+                        <DeleteButton action={removeHospitalProcedure.bind(null, hp.id)} label={t("remove")} />
                       </td>
                     </tr>
                   );
@@ -236,9 +235,7 @@ export default async function EditHospitalPage({ params }: Props) {
                   <p className="text-xs text-muted-foreground truncate">{v.url}</p>
                   <span className="inline-block mt-0.5 text-xs bg-primary/10 text-primary rounded px-1.5 py-0.5">{v.type}</span>
                 </div>
-                <form action={removeHospitalVideo.bind(null, id, i)}>
-                  <button type="submit" className="cursor-pointer text-xs text-destructive hover:underline shrink-0">Remove</button>
-                </form>
+                <DeleteButton action={removeHospitalVideo.bind(null, id, i)} label="Remove" className="cursor-pointer text-xs text-destructive hover:underline shrink-0" />
               </div>
             ))}
           </div>
@@ -274,9 +271,9 @@ export default async function EditHospitalPage({ params }: Props) {
             {galleryImages.map((url, i) => (
               <div key={i} className="group relative aspect-square overflow-hidden rounded-lg bg-muted">
                 <Image src={url} alt={`Gallery ${i + 1}`} fill className="object-cover" sizes="150px" />
-                <form action={removeHospitalGalleryImage.bind(null, id, url)} className="absolute inset-0 hidden group-hover:flex items-center justify-center bg-black/50">
-                  <button type="submit" className="rounded bg-destructive px-2 py-1 text-xs text-white font-medium">Remove</button>
-                </form>
+                <div className="absolute inset-0 hidden group-hover:flex items-center justify-center bg-black/50">
+                  <DeleteButton action={removeHospitalGalleryImage.bind(null, id, url)} label="Remove" className="rounded bg-destructive px-2 py-1 text-xs text-white font-medium" />
+                </div>
               </div>
             ))}
           </div>
@@ -303,9 +300,7 @@ export default async function EditHospitalPage({ params }: Props) {
                   <p className="text-sm font-medium">{a.title}{a.year ? ` (${a.year})` : ""}</p>
                   {a.description && <p className="text-xs text-muted-foreground mt-0.5">{a.description}</p>}
                 </div>
-                <form action={removeHospitalAward.bind(null, id, i)}>
-                  <button type="submit" className="cursor-pointer text-xs text-destructive hover:underline shrink-0">Remove</button>
-                </form>
+                <DeleteButton action={removeHospitalAward.bind(null, id, i)} label="Remove" className="cursor-pointer text-xs text-destructive hover:underline shrink-0" />
               </div>
             ))}
           </div>
@@ -361,11 +356,7 @@ export default async function EditHospitalPage({ params }: Props) {
                     <p className="text-xs text-muted-foreground">{doctor.experience_years} yrs experience</p>
                   )}
                 </div>
-                <form action={removeDoctor.bind(null, doctor.id)}>
-                  <button type="submit" className="cursor-pointer text-xs text-destructive hover:underline shrink-0">
-                    Remove
-                  </button>
-                </form>
+                <DeleteButton action={removeDoctor.bind(null, doctor.id)} label="Remove" className="cursor-pointer text-xs text-destructive hover:underline shrink-0" />
               </div>
             ))}
           </div>

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { createCategory, deleteCategory, deleteService } from "@/lib/actions/admin-services";
+import { DeleteButton } from "@/components/ui/DeleteButton";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
 import type { Json } from "@/lib/types/database";
 
@@ -114,21 +115,16 @@ export default async function AdminServicesPage({ params, searchParams }: Props)
                       <td className="px-4 py-2 text-muted-foreground font-mono text-xs">
                         {cat.slug}
                       </td>
-                      <td className="px-4 py-2 flex gap-3 justify-end">
-                        <Link
-                          href={`/${locale}/admin/services/categories/${cat.id}`}
-                          className="text-primary text-xs hover:underline"
-                        >
-                          수정
-                        </Link>
-                        <form action={deleteCategory.bind(null, cat.id)} className="inline">
-                          <button
-                            type="submit"
-                            className="text-destructive text-xs hover:underline"
+                      <td className="px-4 py-2">
+                        <div className="flex items-center justify-end gap-3">
+                          <Link
+                            href={`/${locale}/admin/services/categories/${cat.id}`}
+                            className="text-primary text-xs hover:underline"
                           >
-                            삭제
-                          </button>
-                        </form>
+                            수정
+                          </Link>
+                          <DeleteButton action={deleteCategory.bind(null, cat.id)} />
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -209,21 +205,16 @@ export default async function AdminServicesPage({ params, searchParams }: Props)
                             {svc.sort_order}
                           </td>
                           <td className="px-4 py-2">{svc.is_featured ? "✓" : ""}</td>
-                          <td className="px-4 py-2 flex gap-2">
-                            <Link
-                              href={`/${locale}/admin/services/${svc.id}`}
-                              className="text-primary text-xs hover:underline"
-                            >
-                              {t("edit")}
-                            </Link>
-                            <form action={deleteService.bind(null, svc.id)} className="inline">
-                              <button
-                                type="submit"
-                                className="text-destructive text-xs hover:underline"
+                          <td className="px-4 py-2">
+                            <div className="flex items-center gap-2">
+                              <Link
+                                href={`/${locale}/admin/services/${svc.id}`}
+                                className="text-primary text-xs hover:underline"
                               >
-                                {t("delete")}
-                              </button>
-                            </form>
+                                {t("edit")}
+                              </Link>
+                              <DeleteButton action={deleteService.bind(null, svc.id)} label={t("delete")} />
+                            </div>
                           </td>
                         </tr>
                       ))

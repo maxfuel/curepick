@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getLocalizedField } from "@/lib/utils/i18n-field";
 import { deleteHospitalProcedure } from "@/lib/actions/hospital-procedures";
 import { Link } from "@/i18n/navigation";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { DeleteButton } from "@/components/ui/DeleteButton";
 import type { Json } from "@/lib/types/database";
 
 export default async function HospitalProceduresPage() {
@@ -61,17 +62,7 @@ export default async function HospitalProceduresPage() {
                         >
                           수정
                         </Link>
-                        <form action={deleteHospitalProcedure}>
-                          <input type="hidden" name="id" value={hp.id} />
-                          <Button
-                            type="submit"
-                            variant="ghost"
-                            size="sm"
-                            className="text-destructive hover:text-destructive"
-                          >
-                            삭제
-                          </Button>
-                        </form>
+                        <DeleteButton action={deleteHospitalProcedure.bind(null, hp.id)} />
                       </div>
                     </td>
                   </tr>

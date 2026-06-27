@@ -102,7 +102,7 @@ export async function addHospitalGalleryImage(formData: FormData) {
   revalidateHospital(hospital?.slug ?? null);
 }
 
-export async function removeHospitalGalleryImage(formData: FormData) {
+export async function removeHospitalGalleryImage(imageUrl: string) {
   const profile = await getProfile();
   if (!profile?.hospital_id) return;
 
@@ -112,7 +112,6 @@ export async function removeHospitalGalleryImage(formData: FormData) {
     .eq("id", profile.hospital_id)
     .single();
 
-  const imageUrl = formData.get("image_url") as string;
   const current = ((hospital?.gallery_images as string[]) ?? []).filter((u) => u !== imageUrl);
 
   await (supabase.from("hospitals") as any)
@@ -145,7 +144,7 @@ export async function addHospitalVideo(formData: FormData) {
   revalidateHospital(hospital?.slug ?? null);
 }
 
-export async function removeHospitalVideo(formData: FormData) {
+export async function removeHospitalVideo(index: number) {
   const profile = await getProfile();
   if (!profile?.hospital_id) return;
 
@@ -155,7 +154,6 @@ export async function removeHospitalVideo(formData: FormData) {
     .eq("id", profile.hospital_id)
     .single();
 
-  const index = Number(formData.get("index"));
   const current = ((hospital?.videos as unknown[]) ?? []).filter((_, i) => i !== index);
 
   await (supabase.from("hospitals") as any)

@@ -11,6 +11,7 @@ import {
   addHospitalVideo,
   removeHospitalVideo,
 } from "@/lib/actions/hospital-media";
+import { DeleteButton } from "@/components/ui/DeleteButton";
 
 const VIDEO_TYPES = [
   { value: "general", label: "General" },
@@ -108,18 +109,12 @@ export default async function HospitalMediaPage() {
             {galleryImages.map((src, i) => (
               <div key={src} className="relative group aspect-square overflow-hidden rounded-lg border">
                 <Image src={src} alt={`Gallery ${i + 1}`} fill className="object-cover" />
-                <form
-                  action={removeHospitalGalleryImage}
-                  className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/50 transition-opacity"
-                >
-                  <input type="hidden" name="image_url" value={src} />
-                  <button
-                    type="submit"
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/50 transition-opacity">
+                  <DeleteButton
+                    action={removeHospitalGalleryImage.bind(null, src)}
                     className="rounded-md bg-destructive px-2 py-1 text-xs font-medium text-white hover:bg-destructive/90"
-                  >
-                    삭제
-                  </button>
-                </form>
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -156,15 +151,10 @@ export default async function HospitalMediaPage() {
                 <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs">
                   {VIDEO_TYPES.find((t) => t.value === v.type)?.label ?? v.type}
                 </span>
-                <form action={removeHospitalVideo}>
-                  <input type="hidden" name="index" value={i} />
-                  <button
-                    type="submit"
-                    className="shrink-0 text-destructive text-xs hover:underline"
-                  >
-                    삭제
-                  </button>
-                </form>
+                <DeleteButton
+                  action={removeHospitalVideo.bind(null, i)}
+                  className="shrink-0 text-destructive text-xs hover:underline"
+                />
               </div>
             ))}
           </div>

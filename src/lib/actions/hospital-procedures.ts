@@ -78,11 +78,9 @@ export async function updateHospitalProcedure(id: string, formData: FormData) {
   revalidatePath("/hospital/procedures");
 }
 
-export async function deleteHospitalProcedure(formData: FormData) {
+export async function deleteHospitalProcedure(id: string) {
   const profile = await getProfile();
   if (!profile?.hospital_id) return;
-
-  const id = formData.get("id") as string;
   if (!id) return;
 
   const supabase = await createClient();

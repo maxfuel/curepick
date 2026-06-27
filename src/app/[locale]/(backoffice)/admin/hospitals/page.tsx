@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { deleteHospital } from "@/lib/actions/admin-hospitals";
+import { DeleteButton } from "@/components/ui/DeleteButton";
 import type { Json } from "@/lib/types/database";
 
 interface Props {
@@ -55,18 +56,16 @@ export default async function AdminHospitalsPage({ params }: Props) {
                   <td className="px-4 py-3 font-medium">{getEn(h.name)}</td>
                   <td className="px-4 py-3 text-muted-foreground">{h.city ?? "—"}</td>
                   <td className="px-4 py-3">{h.is_featured ? "✓" : ""}</td>
-                  <td className="px-4 py-3 flex gap-3">
-                    <Link
-                      href={`/${locale}/admin/hospitals/${h.id}`}
-                      className="text-primary text-xs hover:underline"
-                    >
-                      {t("edit")}
-                    </Link>
-                    <form action={deleteHospital.bind(null, h.id)} className="inline">
-                      <button type="submit" className="text-destructive text-xs hover:underline">
-                        {t("delete")}
-                      </button>
-                    </form>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <Link
+                        href={`/${locale}/admin/hospitals/${h.id}`}
+                        className="text-primary text-xs hover:underline"
+                      >
+                        {t("edit")}
+                      </Link>
+                      <DeleteButton action={deleteHospital.bind(null, h.id)} label={t("delete")} />
+                    </div>
                   </td>
                 </tr>
               ))

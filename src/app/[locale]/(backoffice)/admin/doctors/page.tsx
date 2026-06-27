@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { deleteDoctor } from "@/lib/actions/admin-doctors";
+import { DeleteButton } from "@/components/ui/DeleteButton";
 import type { Json } from "@/lib/types/database";
 import HospitalFilter from "./HospitalFilter";
 
@@ -76,18 +77,16 @@ export default async function AdminDoctorsPage({ params, searchParams }: Props) 
                   <td className="px-4 py-3 text-muted-foreground">
                     {doc.experience_years != null ? `${doc.experience_years}yr` : "—"}
                   </td>
-                  <td className="px-4 py-3 flex gap-3">
-                    <Link
-                      href={`/${locale}/admin/doctors/${doc.id}`}
-                      className="text-primary text-xs hover:underline"
-                    >
-                      {t("edit")}
-                    </Link>
-                    <form action={deleteDoctor.bind(null, doc.id)} className="inline">
-                      <button type="submit" className="text-destructive text-xs hover:underline">
-                        {t("delete")}
-                      </button>
-                    </form>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <Link
+                        href={`/${locale}/admin/doctors/${doc.id}`}
+                        className="text-primary text-xs hover:underline"
+                      >
+                        {t("edit")}
+                      </Link>
+                      <DeleteButton action={deleteDoctor.bind(null, doc.id)} label={t("delete")} />
+                    </div>
                   </td>
                 </tr>
               ))
