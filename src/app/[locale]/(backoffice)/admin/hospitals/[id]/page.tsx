@@ -21,6 +21,7 @@ import {
   addHospitalAward,
   removeHospitalAward,
 } from "@/lib/actions/admin-hospitals";
+import { deleteDoctor } from "@/lib/actions/admin-doctors";
 import type { Json } from "@/lib/types/database";
 
 interface Props {
@@ -44,6 +45,14 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
   const { tab = "info" } = await searchParams;
   const supabase = await createClient();
   const t = await getTranslations("admin.hospitals");
+
+  const doctors = tab === "doctors"
+    ? ((await supabase
+        .from("doctors")
+        .select("id, name, slug, specialty, photo_url, experience_years")
+        .eq("hospital_id", id)
+        .order("name->en")).data ?? [])
+    : [];
 
   const [{ data: hospital }, { data: rawCategories }, { data: hospitalProcs }] = await Promise.all([
     (supabase.from("hospitals") as any).select("*").eq("id", id).single(),
@@ -90,6 +99,7 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
     { key: "info",       label: "기본 정보", href: `/${locale}/admin/hospitals/${id}` },
     { key: "media",      label: "미디어",    href: `/${locale}/admin/hospitals/${id}?tab=media` },
     { key: "procedures", label: "시술/인증", href: `/${locale}/admin/hospitals/${id}?tab=procedures` },
+    { key: "doctors",    label: "의사",      href: `/${locale}/admin/hospitals/${id}?tab=doctors` },
   ];
 
   return (
@@ -273,6 +283,64 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
               </SaveForm>
             </div>
           </section>
+        </div>
+      )}
+
+      {/* ── Tab: 의사 ───────────────────────────────────────────── */}
+      {tab === "doctors" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-semibold">소속 의사</h2>
+            <a
+              href={`/${locale}/admin/doctors/new?hospital_id=${id}`}
+              className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              + 새 의사 추가
+            </a>
+          </div>
+
+          {doctors.length > 0 ? (
+            <div className="rounded-lg border overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/50">
+                    <th className="text-left px-4 py-2 font-medium">이름</th>
+                    <th className="text-left px-4 py-2 font-medium">전문분야</th>
+                    <th className="text-left px-4 py-2 font-medium">경력(년)</th>
+                    <th className="px-4 py-2" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {doctors.map((doc) => (
+                    <tr key={doc.id} className="border-b last:border-0 hover:bg-muted/10">
+                      <td className="px-4 py-2 font-medium">{getEn(doc.name as Json)}</td>
+                      <td className="px-4 py-2 text-muted-foreground">{getEn(doc.specialty as Json) || "—"}</td>
+                      <td className="px-4 py-2 text-muted-foreground">{doc.experience_years ?? "—"}</td>
+                      <td className="px-4 py-2">
+                        <div className="flex items-center justify-end gap-3">
+                          <a
+                            href={`/${locale}/admin/doctors/${doc.id}`}
+                            className="text-primary text-xs hover:underline"
+                          >
+                            수정
+                          </a>
+                          <DeleteButton
+                            action={deleteDoctor.bind(null, doc.id)}
+                            label="삭제"
+                            className="cursor-pointer text-xs text-destructive hover:underline"
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground py-6 text-center">
+              이 병원에 등록된 의사가 없습니다.
+            </p>
+          )}
         </div>
       )}
 
