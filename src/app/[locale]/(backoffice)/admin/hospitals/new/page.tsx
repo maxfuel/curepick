@@ -1,6 +1,7 @@
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
-import { FileDropzone } from "@/components/ui/FileDropzone";
+import { LanguageTagPicker } from "@/components/backoffice/admin/LanguageTagPicker";
 import { createHospital } from "@/lib/actions/admin-hospitals";
 
 interface Props {
@@ -14,6 +15,7 @@ export default async function NewHospitalPage({ params }: Props) {
   async function handleCreate(formData: FormData) {
     "use server";
     await createHospital(formData);
+    redirect(`/${locale}/admin/hospitals`);
   }
 
   return (
@@ -63,15 +65,8 @@ export default async function NewHospitalPage({ params }: Props) {
 
         <div className="space-y-1">
           <label className="text-sm font-medium">{t("fieldLanguages")}</label>
-          <input
-            name="languages"
-            type="text"
-            placeholder="en, ko, zh, ja"
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-          />
+          <LanguageTagPicker name="languages" />
         </div>
-
-        <FileDropzone name="logo_file" accept="image/*" label={t("fieldLogo")} />
 
         <div className="flex gap-4">
           <label className="flex items-center gap-2 text-sm">

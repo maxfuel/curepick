@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
 import { DoctorPhotoInput } from "@/components/backoffice/admin/DoctorPhotoInput";
+import { LanguageTagPicker } from "@/components/backoffice/admin/LanguageTagPicker";
 import { updateDoctor } from "@/lib/actions/admin-doctors";
 import type { Json } from "@/lib/types/database";
 
@@ -65,12 +66,7 @@ export default async function EditDoctorPage({ params }: Props) {
 
         <div className="space-y-1">
           <label className="text-sm font-medium">{t("fieldLanguages")}</label>
-          <input
-            name="languages"
-            type="text"
-            defaultValue={(doctor.languages as string[] | null)?.join(", ") ?? ""}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-          />
+          <LanguageTagPicker name="languages" defaultValue={(doctor.languages as string[] | null) ?? []} />
         </div>
 
         <DoctorPhotoInput currentPhotoUrl={doctor.photo_url} />

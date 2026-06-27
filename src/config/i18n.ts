@@ -26,7 +26,9 @@ export type Locale = LangCode;
 export const defaultLocale: Locale = "en";
 
 export function getLangLabel(code: string): string {
-  return SUPPORTED_LANGS.find((l) => l.code === code)?.label ?? code.toUpperCase();
+  const lang = SUPPORTED_LANGS.find((l) => l.code === code);
+  if (!lang) return code.toUpperCase();
+  return `${lang.label}${lang.name}`;
 }
 export const localeNames = Object.fromEntries(
   SUPPORTED_LANGS.map((l) => [l.code, l.name])

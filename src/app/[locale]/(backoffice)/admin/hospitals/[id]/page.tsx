@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { MultilingualInput } from "@/components/backoffice/admin/MultilingualInput";
 import { FileDropzone } from "@/components/ui/FileDropzone";
+import { LanguageTagPicker } from "@/components/backoffice/admin/LanguageTagPicker";
 import { YouTubePreviewInput } from "@/components/ui/YouTubePreviewInput";
 import {
   updateHospital,
@@ -103,7 +104,10 @@ export default async function EditHospitalPage({ params }: Props) {
             <Field label="Founded Year" name="founded_year" type="number" defaultValue={hospital.founded_year ?? ""} />
             <Field label="Annual Patients" name="annual_patients" type="number" defaultValue={hospital.annual_patients ?? ""} />
           </div>
-          <Field label={t("fieldLanguages") + " (comma-separated)"} name="languages" defaultValue={(hospital.languages as string[] | null)?.join(", ") ?? ""} />
+          <div className="space-y-1">
+            <label className="text-sm font-medium">{t("fieldLanguages")}</label>
+            <LanguageTagPicker name="languages" defaultValue={(hospital.languages as string[] | null) ?? []} />
+          </div>
 
           <div className="flex gap-4">
             <label className="flex items-center gap-2 text-sm">
