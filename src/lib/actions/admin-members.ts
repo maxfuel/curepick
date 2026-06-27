@@ -24,7 +24,12 @@ export async function updateUserRole(
   newRole: AssignableRole,
   hospitalId?: string | null
 ) {
-  await assertAdmin();
+  try {
+    await assertAdmin();
+  } catch (err) {
+    console.error("[updateUserRole] assertAdmin failed:", err);
+    throw err;
+  }
 
   if (!VALID_ROLES.includes(newRole)) throw new Error("Invalid role");
 
@@ -32,7 +37,7 @@ export async function updateUserRole(
 
   const update: Record<string, unknown> = { role: newRole };
   if (newRole === "hospital_staff") {
-    update.hospital_id = hospitalId ?? null;
+    update.hospital_id = hospitalId || null;
   } else {
     update.hospital_id = null;
   }
@@ -42,7 +47,10 @@ export async function updateUserRole(
     .update(update)
     .eq("id", userId);
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error("[updateUserRole] Supabase update error:", error);
+    throw new Error(error.message);
+  }
 
   revalidatePath("/admin/members");
 }

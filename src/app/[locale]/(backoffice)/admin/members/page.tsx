@@ -14,7 +14,7 @@ export default async function AdminMembersPage() {
     supabase
       .from("hospitals")
       .select("id, name")
-      .order("name"),
+      .order("created_at", { ascending: true }),
   ]);
 
   return (
