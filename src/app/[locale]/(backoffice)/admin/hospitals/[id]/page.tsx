@@ -7,11 +7,12 @@ import { FileDropzone } from "@/components/ui/FileDropzone";
 import { LanguageTagPicker } from "@/components/backoffice/admin/LanguageTagPicker";
 import { DeleteButton } from "@/components/ui/DeleteButton";
 import { YouTubePreviewInput } from "@/components/ui/YouTubePreviewInput";
+import { SaveForm } from "@/components/ui/SaveForm";
+import { ProcedureAddSection } from "@/components/backoffice/admin/ProcedureAddSection";
 import {
   updateHospital,
   updateHospitalLogo,
   updateHospitalHero,
-  upsertHospitalProcedure,
   removeHospitalProcedure,
   addHospitalVideo,
   removeHospitalVideo,
@@ -44,9 +45,11 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
   const supabase = await createClient();
   const t = await getTranslations("admin.hospitals");
 
-  const [{ data: hospital }, { data: allProcedures }, { data: hospitalProcs }] = await Promise.all([
+  const [{ data: hospital }, { data: rawCategories }, { data: hospitalProcs }] = await Promise.all([
     (supabase.from("hospitals") as any).select("*").eq("id", id).single(),
-    supabase.from("procedures").select("id, name").order("name->en"),
+    (supabase.from("categories") as any)
+      .select("id, name, services(id, name, sort_order, procedures(id, name, sort_order))")
+      .order("sort_order"),
     supabase
       .from("hospital_procedures")
       .select("id, procedure_id, cost_min, cost_max, cost_currency, annual_volume, specialist_count, waiting_time_days, procedures(name)")
@@ -56,8 +59,22 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
   if (!hospital) notFound();
 
   const handleUpdate = updateHospital.bind(null, id);
-  const assignedProcedureIds = new Set(hospitalProcs?.map((hp) => hp.procedure_id) ?? []);
-  const availableProcedures = allProcedures?.filter((p) => !assignedProcedureIds.has(p.id)) ?? [];
+  const assignedProcedureIds = (hospitalProcs?.map((hp) => hp.procedure_id) ?? []) as string[];
+
+  const categoryTree = (rawCategories ?? []).map((cat: any) => ({
+    id: cat.id as string,
+    name: getEn(cat.name),
+    services: ((cat.services ?? []) as any[])
+      .sort((a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      .map((svc: any) => ({
+        id: svc.id as string,
+        name: getEn(svc.name),
+        procedures: ((svc.procedures ?? []) as any[])
+          .sort((a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+          .map((proc: any) => ({ id: proc.id as string, name: getEn(proc.name) })),
+      }))
+      .filter((svc: any) => svc.procedures.length > 0),
+  })).filter((cat: any) => cat.services.length > 0);
 
   const videos: HospitalVideo[] = Array.isArray(hospital.videos) ? hospital.videos : [];
   const galleryImages: string[] = Array.isArray(hospital.gallery_images) ? hospital.gallery_images : [];
@@ -100,7 +117,7 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
 
       {/* ── Tab: 기본 정보 ──────────────────────────────────────── */}
       {tab === "info" && (
-        <form action={handleUpdate} className="space-y-4">
+        <SaveForm action={handleUpdate} cancelHref={`/${locale}/admin/hospitals`} saveLabel={t("save")} cancelLabel={t("cancel")}>
           <MultilingualInput name="name" label={t("fieldName")} value={getMultilingual(hospital.name)} />
           <MultilingualInput name="description" label={t("fieldDescription")} multiline value={getMultilingual(hospital.description)} />
           <MultilingualInput name="address" label={t("fieldAddress")} value={getMultilingual(hospital.address)} />
@@ -136,16 +153,7 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
               {t("fieldInternational")}
             </label>
           </div>
-
-          <div className="flex gap-3 pt-2">
-            <button type="submit" className="cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-              {t("save")}
-            </button>
-            <a href={`/${locale}/admin/hospitals`} className="cursor-pointer rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted">
-              {t("cancel")}
-            </a>
-          </div>
-        </form>
+        </SaveForm>
       )}
 
       {/* ── Tab: 미디어 ─────────────────────────────────────────── */}
@@ -159,17 +167,16 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
                 <Image src={hospital.logo_url} alt="Logo" fill className="object-contain" />
               </div>
             )}
-            <form action={uploadLogo} className="rounded-lg border p-4 space-y-3">
-              <FileDropzone
-                name="logo_file"
-                accept="image/*"
-                currentPreviewUrl={hospital.logo_url}
-                label={hospital.logo_url ? "로고 교체" : "로고 업로드"}
-              />
-              <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">
-                저장
-              </button>
-            </form>
+            <div className="rounded-lg border p-4">
+              <SaveForm action={uploadLogo} saveLabel="저장" className="space-y-3">
+                <FileDropzone
+                  name="logo_file"
+                  accept="image/*"
+                  currentPreviewUrl={hospital.logo_url}
+                  label={hospital.logo_url ? "로고 교체" : "로고 업로드"}
+                />
+              </SaveForm>
+            </div>
           </section>
 
           {/* Hero Image */}
@@ -181,17 +188,16 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
                 <Image src={hospital.hero_image_url} alt="Hero" fill className="object-cover" />
               </div>
             )}
-            <form action={uploadHero} className="rounded-lg border p-4 space-y-3">
-              <FileDropzone
-                name="hero_file"
-                accept="image/*"
-                currentPreviewUrl={hospital.hero_image_url}
-                label={hospital.hero_image_url ? "히어로 이미지 교체" : "히어로 이미지 업로드"}
-              />
-              <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">
-                저장
-              </button>
-            </form>
+            <div className="rounded-lg border p-4">
+              <SaveForm action={uploadHero} saveLabel="저장" className="space-y-3">
+                <FileDropzone
+                  name="hero_file"
+                  accept="image/*"
+                  currentPreviewUrl={hospital.hero_image_url}
+                  label={hospital.hero_image_url ? "히어로 이미지 교체" : "히어로 이미지 업로드"}
+                />
+              </SaveForm>
+            </div>
           </section>
 
           {/* Photo Gallery */}
@@ -216,12 +222,11 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
               </div>
             )}
 
-            <form action={addGallery} className="rounded-lg border p-4 space-y-3">
-              <FileDropzone name="image_file" accept="image/*" label="사진 추가" />
-              <button type="submit" className="rounded-md bg-secondary px-3 py-2 text-sm font-medium hover:bg-secondary/80">
-                업로드
-              </button>
-            </form>
+            <div className="rounded-lg border p-4">
+              <SaveForm action={addGallery} saveLabel="업로드" resetOnSuccess className="space-y-3">
+                <FileDropzone name="image_file" accept="image/*" label="사진 추가" />
+              </SaveForm>
+            </div>
           </section>
 
           {/* YouTube Videos */}
@@ -248,26 +253,25 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
               </div>
             )}
 
-            <form action={addVideo} className="rounded-lg border p-4 space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                <Field label="영상 제목" name="title" placeholder="예: 병원 투어" />
-                <div className="space-y-1">
-                  <label className="text-sm font-medium">영상 유형</label>
-                  <select name="type" className="w-full rounded-md border bg-background px-3 py-2 text-sm">
-                    <option value="youtube">일반</option>
-                    <option value="facility">시설 투어</option>
-                    <option value="testimonial">환자 스토리</option>
-                    <option value="doctor">의사 인터뷰</option>
-                  </select>
+            <div className="rounded-lg border p-4">
+              <SaveForm action={addVideo} saveLabel="영상 추가" resetOnSuccess className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label="영상 제목" name="title" placeholder="예: 병원 투어" />
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium">영상 유형</label>
+                    <select name="type" className="w-full rounded-md border bg-background px-3 py-2 text-sm">
+                      <option value="youtube">일반</option>
+                      <option value="facility">시설 투어</option>
+                      <option value="testimonial">환자 스토리</option>
+                      <option value="doctor">의사 인터뷰</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2">
+                    <YouTubePreviewInput name="url" required label="YouTube URL *" />
+                  </div>
                 </div>
-                <div className="col-span-2">
-                  <YouTubePreviewInput name="url" required label="YouTube URL *" />
-                </div>
-              </div>
-              <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">
-                영상 추가
-              </button>
-            </form>
+              </SaveForm>
+            </div>
           </section>
         </div>
       )}
@@ -311,29 +315,11 @@ export default async function EditHospitalPage({ params, searchParams }: Props) 
               </div>
             )}
 
-            {availableProcedures.length > 0 && (
-              <form action={upsertHospitalProcedure} className="rounded-lg border p-4 space-y-3">
-                <input type="hidden" name="hospital_id" value={id} />
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="col-span-2 space-y-1">
-                    <label className="text-sm font-medium">{t("addProcedure")}</label>
-                    <select name="procedure_id" required className="w-full rounded-md border bg-background px-3 py-2 text-sm">
-                      <option value="">{t("selectProcedure")}</option>
-                      {availableProcedures.map((p) => (
-                        <option key={p.id} value={p.id}>{getEn(p.name)}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <Field label={t("colCostMin")} name="cost_min" type="number" />
-                  <Field label={t("colCostMax")} name="cost_max" type="number" />
-                  <Field label={t("colCurrency")} name="cost_currency" defaultValue="USD" />
-                  <Field label={t("colVolume")} name="annual_volume" type="number" />
-                </div>
-                <button type="submit" className="cursor-pointer rounded-md bg-secondary px-3 py-1.5 text-sm font-medium hover:bg-secondary/80">
-                  {t("addProcedureBtn")}
-                </button>
-              </form>
-            )}
+            <ProcedureAddSection
+              hospitalId={id}
+              categories={categoryTree}
+              assignedProcedureIds={assignedProcedureIds}
+            />
           </section>
 
           {/* Awards & Accreditations */}
